@@ -462,6 +462,15 @@ function CheckoutContent() {
                         className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
                     />
                     <input
+                        name="packetaAddress"
+                        value={packetaPoint ? packetaPoint.city + ", " + packetaPoint.street + ", " + packetaPoint.zip: ""}
+                        readOnly
+                        type="hidden"
+                        required
+                        className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
+                    />
+                    
+                    <input
                         name="quantity"
                         value={quantity}
                         readOnly

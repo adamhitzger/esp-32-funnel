@@ -23,7 +23,8 @@ export const orderSchema = z.object({
     packetaId: z.number(),
     deliveryPrice: z.number(),
     quantity: z.number(), 
-    sale: z.number()
+    sale: z.number(),
+    packetaAddress: z.string()
 });
 
 export type CreateOrderType = z.infer<typeof orderSchema>

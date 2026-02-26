@@ -47,6 +47,12 @@ export const orders = defineType({
             title: "PSČ",
             name: "psc"
         }),
+         defineField({
+            type: "number",
+            title:"Množství esPÉČEK",
+            name: "quantity", 
+            validation: rule => rule.positive().integer().min(0),
+        }),
         defineField({
             type: "number",
             title:"Celková cena",
@@ -61,15 +67,21 @@ export const orders = defineType({
         }),
         defineField({
             type: "boolean",
-            title:"Hodnota dopravy",
+            title:"Doprava zdarma",
             name: "del_price",
         }),
         defineField({
             type: "number",
-            title:"ID Zásilkovny",
+            title:"ID Pick-up pointu",
             name: "packetaId", 
             validation: rule => rule.positive().integer().min(0),
         }),
+        defineField({
+            type: "string",
+            title:"Adresa Pick-up pontu",
+            name: "packetaAddress",
+        }),
+       
         defineField({
             type: "string",
             title:"Štítek ze Zásilkovny",

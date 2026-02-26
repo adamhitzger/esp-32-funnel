@@ -3,6 +3,8 @@ import axios, {AxiosError, AxiosInstance} from "axios"
 import { CreatePaymentResponse, GetProjects, ThePayConfig, ThePayPayment } from "@/types";
 import { Currency } from "lucide-react";
 import { CreateOrderType } from "../schema";
+import { normalizePhone } from "@/lib/utils";
+import Error from "next/error";
 
 const BASE_URLS = {
   prod: "https://api.thepay.cz",
@@ -112,7 +114,7 @@ export class ThePayClient {
                         name: order.firstName,
                         surname: order.lastName,
                         email: order.email,
-                        phone: order.phone,
+                        phone: normalizePhone(order.phone),
                         shipping_address: {
                             country_code: "CZ",
                             city: order.city,
@@ -125,13 +127,13 @@ export class ThePayClient {
                             type: "item",
                             name: "ESP32 Devkit",
                             count: order.quantity,
-                            total_price: itemPrice
+                            total_price: Number(itemPrice)*100
                         },
                         {
                                 type: "item",
                                 name: "Doprava",
                                 count: 1,
-                                total_price: order.deliveryPrice
+                                total_price: order.deliveryPrice*100
                         }
                     ]
                 },
@@ -149,7 +151,11 @@ export class ThePayClient {
             console.log("[ThePay] createPayment: ", res.data)
             return res.data as CreatePaymentResponse       
         }catch(error){
-            console.error("[ThePay] createPayment error: ", error);
+            const e = error as AxiosError
+            console.error("[ThePay] createPayment error response: ", e.response);
+            console.error("[ThePay] createPayment error status: ", e.response?.status);
+            console.error("[ThePay] createPayment error status text: ", e.response?.statusText);
+            console.error("[ThePay] createPayment error message: ", e.message);
             throw error
         }
     }

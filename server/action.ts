@@ -176,6 +176,7 @@ export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formD
 
 export async function createOrder(prevState: ActionRes<CreateOrderType>, formData: FormData): Promise<ActionRes<CreateOrderType> & CreatePaymentResponse>{
     let revalidate = false;
+    let inputs = {};
     try{
 
         const nonValidate: CreateOrderType = {
@@ -190,11 +191,12 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
                 packetaId: Number(formData.get("packetaId")),
                 deliveryPrice: Number((formData.get("deliveryPrice"))),
                 quantity: Number(formData.get("quantity")), 
-                sale: Number(formData.get("sale"))
+                sale: Number(formData.get("sale")),
+                packetaAddress: formData.get("packetaAddress") as string
         }
-        
+        inputs = nonValidate;
         const validate = orderSchema.safeParse(nonValidate)
-  
+        console.log(validate.error)
         if(!validate.success){
             return {
                 submitted: true,
@@ -227,9 +229,11 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             psc: data.zip,
             total: Number(totalPrice),
             couponValue:Number(data.sale.toFixed(2)),
-            del_price: data.deliveryPrice > 0?true:false,
+            quantity: Number(data.quantity),
+            del_price: Number(data.deliveryPrice) === 0 ? true : false,
             packetaId: data.packetaId,
             status: "Přijatá",
+            packetaAddress: data.packetaAddress
         })
 
         const orderId: string = orderCreate._id
@@ -268,6 +272,7 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             success: false,
             pay_url: "",
             detail_url: "",
+            inputs: inputs as CreateOrderType,
             message: "Problém se zpracováním platby na naší straně. Zkuste znovu později. Omlouváme se."
         }
     }finally{

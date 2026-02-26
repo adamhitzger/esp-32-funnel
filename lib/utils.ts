@@ -6,3 +6,7 @@ export const UNIT_PRICE: number = 149
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+export function normalizePhone(phone: string): string {
+  return phone.replace(/\D/g, "")
+}
