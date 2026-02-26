@@ -63,11 +63,11 @@ export async function GET(req: NextRequest) {
       const newStatus = mapPaymentStateToOrderStatus(payment?.state)
 
       if (newStatus) {
-        await sanity
+       const updateOrderStatus = await sanity
           .patch(paymentUid) // _id = payment_uid
           .set({ status: newStatus })
           .commit()
-
+        console.log("[ThePay] Order status:", updateOrderStatus)
         console.log("[ThePay] Order updated:", paymentUid, newStatus)
       }
     }
