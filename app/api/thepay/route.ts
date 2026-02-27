@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
       projectId,
       type,
     })
-
+console.log("STEP 1")
     // ❗ vždy vrať 200 i když něco chybí (ThePay retry)
     if (!paymentUid) {
       return NextResponse.json({ ok: true })
@@ -54,9 +54,10 @@ export async function GET(req: NextRequest) {
     // 🔹 zajímá nás hlavně změna stavu
     if (type === "state_changed") {
       const payment = await thePayClient.getPaymentDetail(paymentUid)
-      
+      console.log("STEP 2")
       if(payment){
       const newStatus = mapPaymentStateToOrderStatus(payment?.state)
+      console.log("STEP 3", newStatus)
       if (newStatus) {
         if(newStatus === "Zaplacená"){
           const id = paymentUid
@@ -65,6 +66,7 @@ export async function GET(req: NextRequest) {
           if (!order) {
             return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
           }
+          console.log("STEP 4")
           const {firstName, lastName, email, phone,packetaId , total} = order
           const packeta = await createPacket({
             name: firstName,
@@ -75,16 +77,16 @@ export async function GET(req: NextRequest) {
             total: total,
             uid: id
           })
-          if (!packetaId) {
+          if (!packeta) {
               return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
             }
-
+console.log("STEP 5", packeta)
           const invoice = await thePayClient.getAndSavePDF(paymentUid)
-
+          
           if(!invoice){
             return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
           }
-        
+        console.log("STEP 6", invoice)
           const updateOrderStatus = await sanity
               .patch(paymentUid) // _id = payment_uid
               .set({ 
