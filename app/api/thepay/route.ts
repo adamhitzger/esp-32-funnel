@@ -111,7 +111,13 @@ console.log("STEP 5", packeta)
           .commit()
            console.log("[ThePay] Order status:", updateOrderStatus)*/
         }
-        
+        const updateOrderStatus = await sanity
+          .patch(paymentUid) // _id = payment_uid
+          .set({ 
+            status: newStatus,
+          })
+          .commit()
+           console.log("[ThePay] Order status:", updateOrderStatus)
         console.log("[ThePay] Order updated:", paymentUid, newStatus)
       }else{
          return NextResponse.json({ ok: true, message: "[ThePay] Nepodařilo se fetchnout objednavku z ThePay" })
