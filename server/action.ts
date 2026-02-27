@@ -308,7 +308,7 @@ const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
   })
   const pResponse = await new Parser({explicitArray: false}).parseStringPromise(await packeta.text())
   if(pResponse.response.status !== "ok"){
-    console.error("Problém s vytvořením zásilky: ",pResponse.response)
+    console.error("Problém s vytvořením zásilky: ",pResponse.response.detail.attributes.fault)
     return;
   }
   packetaCode = pResponse.response.result.barcodeText;
