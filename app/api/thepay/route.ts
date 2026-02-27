@@ -79,7 +79,7 @@ console.log("STEP 1")
             uid: id
           })
           if (!packeta) {
-              return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
+              return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
             }
 console.log("STEP 5", packeta)
           const invoice = await thePayClient.getAndSavePDF(paymentUid)
