@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@sanity/client"
+import { sanityClient as sanity, sanityFetch } from "@/sanity/lib/client"
 import { thePayClient } from "@/server/thepay/client"
-
-// ✅ Sanity client
-const sanity = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  apiVersion: "2024-01-01",
-  token: process.env.SANITY_API_TOKEN,
-  useCdn: false,
-})
+import { createPacket } from "@/server/action"
+import { Order } from "@/app/status/[id]/page"
+import { GET_ORDER_BY_ID } from "@/sanity/lib/queries"
 
 // ✅ mapování payment state → order status
 function mapPaymentStateToOrderStatus(state?: string): string | null {
@@ -24,7 +18,7 @@ function mapPaymentStateToOrderStatus(state?: string): string | null {
 
     case "refunded":
     case "partially_refunded":
-      return "Vrácení"
+      return "Vrácená"
 
     case "expired":
     case "error":
@@ -59,16 +53,65 @@ export async function GET(req: NextRequest) {
     // 🔹 zajímá nás hlavně změna stavu
     if (type === "state_changed") {
       const payment = await thePayClient.getPaymentDetail(paymentUid)
-
+      if(payment){
       const newStatus = mapPaymentStateToOrderStatus(payment?.state)
-
       if (newStatus) {
-       const updateOrderStatus = await sanity
+        if(newStatus === "Zaplacená"){
+          const id = paymentUid
+          const order = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
+      
+          if (!order) {
+            return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
+          }
+          const {firstName, lastName, email, phone,packetaId , total} = order
+          const packeta = await createPacket({
+            name: firstName,
+            surname: lastName,
+            email,
+            phone,
+            packetaId: Number(packetaId),
+            total: total,
+            uid: id
+          })
+          if (!packetaId) {
+              return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
+            }
+
+          const invoice = await thePayClient.getAndSavePDF(paymentUid)
+
+          if(!invoice){
+            return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
+          }
+        
+          const updateOrderStatus = await sanity
+              .patch(paymentUid) // _id = payment_uid
+              .set({ 
+                status: newStatus,
+                barcode: packeta,
+                invoice: {
+                  _type: "file",
+                  asset: {
+                    _type: "reference",
+                    _ref: invoice,
+                  },
+                }
+              })
+              .commit()
+            console.log("[ThePay] Order status:", updateOrderStatus)
+        }else{
+          const updateOrderStatus = await sanity
           .patch(paymentUid) // _id = payment_uid
-          .set({ status: newStatus })
+          .set({ 
+            status: newStatus,
+          })
           .commit()
-        console.log("[ThePay] Order status:", updateOrderStatus)
+           console.log("[ThePay] Order status:", updateOrderStatus)
+        }
+        
         console.log("[ThePay] Order updated:", paymentUid, newStatus)
+      }else{
+         return NextResponse.json({ ok: false, message: "[ThePay] Nepodařilo se fetchnout objednavku z ThePay" })
+      }
       }
     }
 
@@ -77,8 +120,7 @@ export async function GET(req: NextRequest) {
       console.log(
         "[ThePay] offset_account_obtained for payment:",
         paymentUid
-      )
-     
+      )     
     }
     return NextResponse.json({ ok: true })
   } catch (err) {

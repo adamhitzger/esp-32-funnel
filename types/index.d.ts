@@ -56,6 +56,7 @@ export interface ThePayConfig {
   merchantId: string;
   apiPassword: string;
   projectId: string;
+  language: "cs" | "sk" | "en" | "de"
   env?: ThePayEnv;
 }
 
@@ -140,4 +141,14 @@ export interface ThePayEvent {
 
 export interface ThePayParent {
   recurring_payments_available: boolean;
+}
+
+export interface BarcodeSend {
+    email: string;
+    name: string;
+    surname: string;
+    phone: string;
+    packetaId: number;
+    total: number;
+    uid: string
 }

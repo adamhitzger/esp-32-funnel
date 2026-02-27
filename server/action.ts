@@ -1,6 +1,6 @@
 "use server"
 
-import { ActionRes, CreatePaymentResponse, GetProjects, SanityMetadata } from "@/types";
+import { ActionRes, BarcodeSend, CreatePaymentResponse, GetProjects, SanityMetadata } from "@/types";
 import { CreateOrderType, newsletterSchema, NewsletterType, orderSchema } from "./schema";
 import { revalidatePath } from "next/cache";
 import { verifyCaptchaToken } from "./captcha";
@@ -9,6 +9,7 @@ import { GET_COUPON, GET_CUR_USER } from "@/sanity/lib/queries";
 import { Coupon } from "@/types";
 import { thePayClient } from "./thepay/client";
 import { UNIT_PRICE } from "@/lib/utils";
+import {Builder, Parser} from "xml2js"
 
 export async function getCoupon(coupon: string): Promise<Coupon | null>{
     const isValid = await sanityFetch<Coupon>({
@@ -279,3 +280,42 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
         if(revalidate) revalidatePath("/checkout")
     }
 }
+
+export async function createPacket({name, surname, email, phone,packetaId, total, uid}: BarcodeSend){
+let packetaCode: string = "";
+
+        const rBody = {
+          createPacket: {
+            apiPassword: process.env.PACKETA_API_PASSWORD,
+            packetAttributes: {
+                number: `${packetaId}${total}${uid}`,
+                name: name,
+                surname: surname,
+                email: email,
+                phone: String(phone),
+                addressId: packetaId,
+                value: total,
+                weight: 1,
+                eshop: "HydrooCann.com",
+                adultContent: true,   
+            }
+          }
+        }
+        try{
+const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
+    method: "POST",
+    body: new Builder().buildObject(rBody)
+  })
+  const pResponse = await new Parser({explicitArray: false}).parseStringPromise(await packeta.text())
+  if(pResponse.response.status !== "ok"){
+    console.error("Problém s vytvořením zásilky: ",pResponse.response.status)
+    return;
+  }
+  packetaCode = pResponse.response.result.barcodeText;
+  if(!packetaCode) alert("Problém s vytvořením štítku.")
+  }catch(error){
+    console.error("Error při vytváření packety: ", error)
+    }
+    return packetaCode
+    
+} 

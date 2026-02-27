@@ -5,6 +5,9 @@ import { Currency } from "lucide-react";
 import { CreateOrderType } from "../schema";
 import { normalizePhone } from "@/lib/utils";
 import Error from "next/error";
+import fs from "fs";
+import { writeFile } from "fs/promises";
+import { sanityClient } from "@/sanity/lib/client";
 
 const BASE_URLS = {
   prod: "https://api.thepay.cz",
@@ -24,6 +27,7 @@ export class ThePayClient {
     private baseUrl: string;
     private projectId: string;
     private gateUrl: string;
+    private language: string;
 
     constructor(config: ThePayConfig) {
         this.merchantId = config.merchantId;
@@ -31,6 +35,7 @@ export class ThePayClient {
         this.baseUrl = BASE_URLS[config.env ?? "prod"];
         this.projectId = config.projectId;
         this. gateUrl = GATE_URLS[config.env ?? "prod"];
+        this. language = config.language;
         
         this.axios = axios.create({
             baseURL: this.baseUrl,
@@ -189,11 +194,52 @@ export class ThePayClient {
             throw error
         }
     }
+
+    public async getAndSavePDF(
+         uid: string,//sanity order._id
+    ):Promise<string | undefined>{
+         try{
+        const { hash, date } = this.createSignature();
+        const response = await this.axios.get(`/v1/projects/${this.projectId}/payments/${uid}/generate_confirmation`, 
+            {
+                params: {
+                    merchant_id: this.merchantId,
+                    language: this.language
+                },
+                headers: {
+                    Signature: hash,
+                    SignatureDate: date,
+                },
+                responseType: "blob"
+            })
+
+            const asset = await sanityClient.assets.upload(
+                "file",
+                Buffer.from(response.data),
+                {
+                    filename: `${uid}.pdf`,
+                    contentType: "application/pdf"
+                }
+            )
+            if(asset._id){
+                return asset._id
+            }
+            console.log("[ThePay] getProjects: ", response.status) 
+        }catch(error){
+             const e = error as AxiosError
+            console.error("[ThePay] getAndSavePDF error response: ", e.response);
+            console.error("[ThePay] getAndSavePDF error status: ", e.response?.status);
+            console.error("[ThePay] getAndSavePDF error status text: ", e.response?.statusText);
+            console.error("[ThePay] getAndSavePDF error message: ", e.message);
+            throw error
+        }
+    }
 }
 
 export const thePayClient = new ThePayClient({
     merchantId: process.env.THEPAY_MERCHANT_ID as string,
     apiPassword: process.env.THEPAY_PASSWORD as string,
     projectId: process.env.THEPAY_PROJECT_ID as string,
+    language: "cs",
     env: "test"
 })

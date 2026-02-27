@@ -92,7 +92,7 @@ export const orders = defineType({
             title:"Status",
             name: "status", 
             options: {
-                list: ["Přijatá", "Zaplacená" ,"Odeslaná", "Vyzvednutá", "Zrušená", "Vrácení"],
+                list: ["Přijatá", "Zaplacená" ,"Odeslaná", "Vyzvednutá", "Zrušená", "Vrácená"],
                 layout: "dropdown",
             }
         }),  
