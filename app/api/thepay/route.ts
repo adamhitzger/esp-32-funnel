@@ -87,30 +87,29 @@ console.log("STEP 5", packeta)
           if(!invoice){
             return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
           }*/
-        //console.log("STEP 6", invoice)
-          const updateOrderStatus = await sanity
+       // console.log("STEP 6", invoice)
+         /* const updateOrderStatus = await sanity
               .patch(paymentUid) // _id = payment_uid
               .set({ 
                 status: newStatus,
-                /*barcode: packeta,
+                barcode: packeta,
                 invoice: {
                   _type: "file",
                   asset: {
                     _type: "reference",
                     _ref: invoice,
                   },
-                }*/
-              })
-              .commit()
-            console.log("[ThePay] Order status:", updateOrderStatus)
+                }
+              }).commit()
+            console.log("[ThePay] Order status:", updateOrderStatus)*/
         }else{
-          const updateOrderStatus = await sanity
+          /*const updateOrderStatus = await sanity
           .patch(paymentUid) // _id = payment_uid
           .set({ 
             status: newStatus,
           })
           .commit()
-           console.log("[ThePay] Order status:", updateOrderStatus)
+           console.log("[ThePay] Order status:", updateOrderStatus)*/
         }
         
         console.log("[ThePay] Order updated:", paymentUid, newStatus)
