@@ -69,7 +69,7 @@ console.log("STEP 1")
           }
           console.log("STEP 4")
           const {firstName, lastName, email, phone,packetaId , total} = order
-          const packeta = await createPacket({
+          /*const packeta = await createPacket({
             name: firstName,
             surname: lastName,
             email,
@@ -80,8 +80,8 @@ console.log("STEP 1")
           })
           if (!packeta) {
               return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
-            }
-console.log("STEP 5", packeta)
+            }*/
+//console.log("STEP 5", packeta)
           const invoice = await thePayClient.getAndSavePDF(paymentUid)
           
           if(!invoice){
@@ -92,7 +92,7 @@ console.log("STEP 5", packeta)
               .patch(paymentUid) // _id = payment_uid
               .set({ 
                 status: newStatus,
-                barcode: packeta,
+                barcode: "packeta",
                 invoice: {
                   _type: "file",
                   asset: {

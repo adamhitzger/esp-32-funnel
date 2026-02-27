@@ -297,7 +297,6 @@ let packetaCode: string = "";
                 value: total,
                 weight: 1,
                 eshop: "especko.cz",
-                adultContent: true,   
             }
           }
         }
