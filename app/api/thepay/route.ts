@@ -64,6 +64,7 @@ console.log("STEP 1")
           console.log("ID",id)
           const order = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
           console.log(order)
+          console.log(order)
           if (!order) {
             return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
           }
