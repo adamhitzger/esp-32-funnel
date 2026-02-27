@@ -62,7 +62,7 @@ console.log("STEP 1")
         if(newStatus === "Zaplacená"){
           const id = paymentUid
           const order = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
-          
+          console.log(order)
           if (!order) {
             return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
           }
