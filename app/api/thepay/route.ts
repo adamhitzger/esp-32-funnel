@@ -62,7 +62,7 @@ console.log("STEP 1")
         if(newStatus === "Zaplacená"){
           const id = paymentUid
           console.log("ID",id)
-         /* const order: Order | null = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
+         const order: Order | null = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
           console.log(order)
           if (!order) {
             return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
@@ -86,9 +86,9 @@ console.log("STEP 5", packeta)
           
           if(!invoice){
             return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
-          }*/
-       // console.log("STEP 6", invoice)
-         /* const updateOrderStatus = await sanity
+          }
+       console.log("STEP 6", invoice)
+          const updateOrderStatus = await sanity
               .patch(paymentUid) // _id = payment_uid
               .set({ 
                 status: newStatus,
@@ -101,23 +101,17 @@ console.log("STEP 5", packeta)
                   },
                 }
               }).commit()
-            console.log("[ThePay] Order status:", updateOrderStatus)*/
+            console.log("[ThePay] Order status:", updateOrderStatus)
         }else{
-          /*const updateOrderStatus = await sanity
-          .patch(paymentUid) // _id = payment_uid
-          .set({ 
-            status: newStatus,
-          })
-          .commit()
-           console.log("[ThePay] Order status:", updateOrderStatus)*/
-        }
-        const updateOrderStatus = await sanity
+          const updateOrderStatus = await sanity
           .patch(paymentUid) // _id = payment_uid
           .set({ 
             status: newStatus,
           })
           .commit()
            console.log("[ThePay] Order status:", updateOrderStatus)
+        }
+        
         console.log("[ThePay] Order updated:", paymentUid, newStatus)
       }else{
          return NextResponse.json({ ok: true, message: "[ThePay] Nepodařilo se fetchnout objednavku z ThePay" })
