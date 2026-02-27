@@ -61,6 +61,7 @@ console.log("STEP 1")
       if (newStatus) {
         if(newStatus === "Zaplacená"){
           const id = paymentUid
+          console.log("ID",id)
           const order = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
           console.log(order)
           if (!order) {
