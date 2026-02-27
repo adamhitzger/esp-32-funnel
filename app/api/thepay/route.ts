@@ -129,7 +129,7 @@ console.log("STEP 5", packeta)
     }
     return NextResponse.json({ ok: true })
   } catch (err) {
-    console.error("[ThePay webhook error]",err.message)
+    console.error("[ThePay webhook error]",err)
 
     // ❗ stále vracíme 200 → zabráníme retry bouři
     return NextResponse.json({ ok: true })
