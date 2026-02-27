@@ -4,6 +4,7 @@ import { thePayClient } from "@/server/thepay/client"
 import { createPacket } from "@/server/action"
 import { Order } from "@/app/status/[id]/page"
 import { GET_ORDER_BY_ID } from "@/sanity/lib/queries"
+import Error from "next/error"
 
 // ✅ mapování payment state → order status
 function mapPaymentStateToOrderStatus(state?: string): string | null {
@@ -53,13 +54,14 @@ export async function GET(req: NextRequest) {
     // 🔹 zajímá nás hlavně změna stavu
     if (type === "state_changed") {
       const payment = await thePayClient.getPaymentDetail(paymentUid)
+      
       if(payment){
       const newStatus = mapPaymentStateToOrderStatus(payment?.state)
       if (newStatus) {
         if(newStatus === "Zaplacená"){
           const id = paymentUid
           const order = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
-      
+          
           if (!order) {
             return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
           }
@@ -124,7 +126,7 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json({ ok: true })
   } catch (err) {
-    console.error("[ThePay webhook error]", err)
+    console.error("[ThePay webhook error]",err)
 
     // ❗ stále vracíme 200 → zabráníme retry bouři
     return NextResponse.json({ ok: true })

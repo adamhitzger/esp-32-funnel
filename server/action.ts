@@ -296,7 +296,7 @@ let packetaCode: string = "";
                 addressId: packetaId,
                 value: total,
                 weight: 1,
-                eshop: "HydrooCann.com",
+                eshop: "especko.cz",
                 adultContent: true,   
             }
           }
