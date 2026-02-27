@@ -65,7 +65,7 @@ console.log("STEP 1")
           const order = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
           console.log(order)
           if (!order) {
-            return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
+            return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
           }
           console.log("STEP 4")
           const {firstName, lastName, email, phone,packetaId , total} = order
@@ -79,13 +79,13 @@ console.log("STEP 1")
             uid: id
           })
           if (!packeta) {
-              return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
+              return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
             }
 console.log("STEP 5", packeta)
           const invoice = await thePayClient.getAndSavePDF(paymentUid)
           
           if(!invoice){
-            return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
+            return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
           }
         console.log("STEP 6", invoice)
           const updateOrderStatus = await sanity
@@ -115,7 +115,7 @@ console.log("STEP 5", packeta)
         
         console.log("[ThePay] Order updated:", paymentUid, newStatus)
       }else{
-         return NextResponse.json({ ok: false, message: "[ThePay] Nepodařilo se fetchnout objednavku z ThePay" })
+         return NextResponse.json({ ok: true, message: "[ThePay] Nepodařilo se fetchnout objednavku z ThePay" })
       }
       }
     }
@@ -129,7 +129,7 @@ console.log("STEP 5", packeta)
     }
     return NextResponse.json({ ok: true })
   } catch (err) {
-    console.error("[ThePay webhook error]",err)
+    console.error("[ThePay webhook error]",err.message)
 
     // ❗ stále vracíme 200 → zabráníme retry bouři
     return NextResponse.json({ ok: true })
