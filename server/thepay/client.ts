@@ -1,12 +1,10 @@
 import crypto from "crypto"
 import axios, {AxiosError, AxiosInstance} from "axios"
 import { CreatePaymentResponse, GetProjects, ThePayConfig, ThePayPayment } from "@/types";
-import { Currency } from "lucide-react";
 import { CreateOrderType } from "../schema";
 import { normalizePhone } from "@/lib/utils";
-import Error from "next/error";
-import fs from "fs";
 import { writeFile } from "fs/promises";
+import path from "path"
 import { sanityClient } from "@/sanity/lib/client";
 
 const BASE_URLS = {
@@ -210,7 +208,7 @@ export class ThePayClient {
                     Signature: hash,
                     SignatureDate: date,
                 },
-                responseType: "blob"
+                responseType: "arraybuffer"
             })
 
             const asset = await sanityClient.assets.upload(

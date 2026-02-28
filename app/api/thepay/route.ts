@@ -68,8 +68,8 @@ console.log("STEP 1")
             return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
           }
           console.log("STEP 4")
-          const {firstName, lastName, email, phone,packetaId , total} = order
-          /*const packeta = await createPacket({
+          /*const {firstName, lastName, email, phone,packetaId , total} = order
+          const packeta = await createPacket({
             name: firstName,
             surname: lastName,
             email,
