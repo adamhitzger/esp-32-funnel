@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
           console.log("[Cron] Updated:", o._id, newStatus)
 
           // ✉️ email až po úspěchu
-          await sendStatusMail(o, getEmailText(statusCode.statusCode))
+          await sendStatusMail(o, getEmailText(statusCode.statusCode), null)
         } catch (err) {
           console.error("[Cron] Order failed:", o._id, err)
         }

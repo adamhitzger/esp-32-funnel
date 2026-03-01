@@ -26,7 +26,7 @@ const transporter = nodemailer.createTransport({
         } 
 });
 
-export async function sendStatusMail(order: Order, subject: string): Promise<boolean>{
+export async function sendStatusMail(order: Order, subject: string, invoice: string | null): Promise<boolean>{
     try{
          const mailOptions = {
             from: process.env.FROM_EMAIL,
@@ -39,9 +39,9 @@ export async function sendStatusMail(order: Order, subject: string): Promise<boo
             }]
         }
 
-        if(order.invoice){
+        if(invoice !== null ){
             mailOptions.attachments = mailOptions.attachments ?? [];
-            mailOptions.attachments.push({filename: `faktura.jpg`, path: order.invoice})
+            mailOptions.attachments.push({filename: `faktura.jpg`, path: invoice})
         }
 
         const mailSend = await transporter.sendMail(mailOptions)
@@ -487,15 +487,19 @@ export async function uploadPdfToSanity(
     contentType: "application/pdf",
   });
 
-  return asset._id;
+
+  return {
+    id: asset._id,
+    url: asset.url
+};
 }
 
-export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, asset_id: string}> {
+export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, asset_id?: string, url: string}> {
   // už existuje → negeneruj
   if (order?.invoice) {
     return {
         created: false,
-        asset_id: order.invoice
+        url: order.invoice
     }
   }
 
@@ -515,6 +519,7 @@ export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, 
 
   return {
         created: true,
-        asset_id: assetId
+        url: assetId.url,
+        asset_id: assetId.id
     };
 }

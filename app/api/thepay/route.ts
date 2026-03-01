@@ -104,7 +104,7 @@ export async function GET(req: NextRequest) {
               }).commit()
             console.log("[ThePay] Order status:", updateOrderStatus)
             console.log("STEP 7")
-            const sendMail = await sendStatusMail(order, "Objednávka byla zaplacena.")
+            const sendMail = await sendStatusMail(order, "Objednávka byla zaplacena.", invoice.url)
             if(!sendMail){
               return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se odeslat email" })
             }
