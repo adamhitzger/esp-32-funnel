@@ -106,7 +106,7 @@ export class ThePayClient {
 
             const res = await this.axios.post(`/v1/projects/${this.projectId}/payments`,
                 {
-                    amount: (Number(amount) * 100).toString(),
+                    amount: (Number(amount) * 100).toFixed(0),
                     currency_code: "CZK",
                     uid: uid,
                     order_id: uid,

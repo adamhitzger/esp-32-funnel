@@ -265,7 +265,7 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             adr_number: data.adressNumber,
             city: data.city,
             psc: data.zip,
-            total: String(totalPrice),
+            total: String(totalPrice.toFixed(2)),
             couponValue:String(data.sale.toFixed(2)),
             quantity: Number(data.quantity),
             del_price: Number(data.deliveryPrice) === 0 ? true : false,
@@ -410,7 +410,7 @@ let cachedExecutablePath: string | null = null;
 let downloadPromise: Promise<string> | null = null;
 
 const CHROMIUM_PACK_URL = 
-  `https://especko/chromium-pack.tar`
+  `https://especko.cz/chromium-pack.tar`
 
 async function getChromiumPath(): Promise<string> {
   if (cachedExecutablePath) return cachedExecutablePath;
