@@ -28,5 +28,26 @@ export const GET_ORDER_BY_ID = groq`*[_type=="orders" && _id == $id][0]{
     del_price,
     packetaId,
     packetaAddress,
+    status,
+    "invoice":invoice.asset->url
+}`
+
+export const GET_PAID_ORDERS = groq`*[_type=="orders" && status != "Vrácená" && status != "Zrušená" && status != "Vyzvednutá" status != "Přijatá"]{
+    _id,
+    firstName,
+    lastName,
+    email,
+    phone,
+    address,
+    adr_number,
+    city,
+    psc,
+    quantity,
+    total,
+    couponValue,
+    del_price,
+    packetaId,
+    packetaAddress,
+    barcode,
     status
 }`

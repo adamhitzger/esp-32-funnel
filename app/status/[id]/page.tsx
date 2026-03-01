@@ -16,25 +16,11 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
+  Check,
 } from "lucide-react"
+import { Order } from "@/types"
 
-export interface Order {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  address: string
-  adr_number: string
-  city: string
-  psc: string
-  quantity: number
-  total: number
-  couponValue: number | null
-  del_price: boolean
-  packetaId: string | null
-  packetaAddress: string | null
-  status: string
-}
+
 
 const STATUS_MAP: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   pending: {
@@ -42,39 +28,53 @@ const STATUS_MAP: Record<string, { label: string; color: string; icon: React.Rea
     color: "text-yellow-400 bg-yellow-400/10 border-yellow-400/30",
     icon: <Clock className="w-4 h-4" />,
   },
-  processing: {
-    label: "Zpracovává se",
+  paid: {
+    label: "Zaplacená",
     color: "text-blue-400 bg-blue-400/10 border-blue-400/30",
-    icon: <Loader2 className="w-4 h-4 animate-spin" />,
+    icon: <Check className="w-4 h-4 animate-pulse" />,
   },
   shipped: {
-    label: "Odesláno",
+    label: "Odesláná",
     color: "text-electric-cyan bg-electric-cyan/10 border-electric-cyan/30",
     icon: <Truck className="w-4 h-4" />,
   },
   delivered: {
-    label: "Doručeno",
+    label: "Vyzvednutá",
     color: "text-green-400 bg-green-400/10 border-green-400/30",
     icon: <CheckCircle2 className="w-4 h-4" />,
   },
   cancelled: {
-    label: "Zrušeno",
+    label: "Zrušená",
     color: "text-red-400 bg-red-400/10 border-red-400/30",
     icon: <XCircle className="w-4 h-4" />,
   },
+  refunded: {
+    label: "Vrácená",
+    color: "text-red-400 bg-red-400/10 border-red-400/30",
+    icon: <XCircle className="w-4 h-4" />,
+  },
+}
+
+const STATUS_TRANSLATION: Record<string, string> = {
+  "Přijatá": "pending",
+  "Zaplacená": "paid",
+  "Odesláná": "shipped",
+  "Vyzvednutá": "delivered",
+  "Zrušená": "cancelled",
+  "Vrácená": "refunded",
 }
 
 export default async function OrderPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
   const order: Order | null = await sanityClient.fetch(GET_ORDER_BY_ID, { id })
-
+  console.log(order)
   if (!order) {
     notFound()
   }
 
-  const status = STATUS_MAP[order.status] || STATUS_MAP.pending
-
+  const normalizedStatus = STATUS_TRANSLATION[order.status]
+  const status = STATUS_MAP[normalizedStatus]
   return (
     <div className="min-h-screen bg-background">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

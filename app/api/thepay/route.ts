@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 import { sanityClient as sanity, sanityFetch } from "@/sanity/lib/client"
 import { thePayClient } from "@/server/thepay/client"
-import { createPacket } from "@/server/action"
-import { Order } from "@/app/status/[id]/page"
+import { createPacket, ensureInvoicePdf, sendStatusMail } from "@/server/action"
+import { Order } from "@/types"
 import { GET_ORDER_BY_ID } from "@/sanity/lib/queries"
-import Error from "next/error"
+
 
 // ✅ mapování payment state → order status
 function mapPaymentStateToOrderStatus(state?: string): string | null {
@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
       projectId,
       type,
     })
-console.log("STEP 1")
+    console.log("STEP 1")
     // ❗ vždy vrať 200 i když něco chybí (ThePay retry)
     if (!paymentUid) {
       return NextResponse.json({ ok: true })
@@ -82,12 +82,13 @@ console.log("STEP 1")
               return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
             }*/
 //console.log("STEP 5", packeta)
-          const invoice = await thePayClient.getAndSavePDF(paymentUid)
+          const invoice = await ensureInvoicePdf(order);
           
-          if(!invoice){
+          if(!invoice.asset_id){
             return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
           }
-       console.log("STEP 6", invoice)
+          
+         console.log("STEP 6", invoice)
           const updateOrderStatus = await sanity
               .patch(paymentUid) // _id = payment_uid
               .set({ 
@@ -102,6 +103,11 @@ console.log("STEP 1")
                 }
               }).commit()
             console.log("[ThePay] Order status:", updateOrderStatus)
+            console.log("STEP 7")
+            const sendMail = await sendStatusMail(order, "Objednávka byla zaplacena.")
+            if(!sendMail){
+              return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se odeslat email" })
+            }
         }else{
           const updateOrderStatus = await sanity
           .patch(paymentUid) // _id = payment_uid

@@ -152,3 +152,24 @@ export interface BarcodeSend {
     total: number;
     uid: string
 }
+
+export interface Order {
+  _id: string;
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  address: string
+  adr_number: string
+  city: string
+  psc: string
+  quantity: number
+  total: string
+  barcode: string
+  couponValue: string | null
+  del_price: boolean
+  packetaId: string | null
+  packetaAddress: string | null
+  status: string;
+  invoice: string | null
+}

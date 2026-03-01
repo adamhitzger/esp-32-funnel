@@ -1,6 +1,6 @@
 "use server"
 
-import { ActionRes, BarcodeSend, CreatePaymentResponse, GetProjects, SanityMetadata } from "@/types";
+import { ActionRes, BarcodeSend, CreatePaymentResponse, GetProjects, Order, SanityMetadata } from "@/types";
 import { CreateOrderType, newsletterSchema, NewsletterType, orderSchema } from "./schema";
 import { revalidatePath } from "next/cache";
 import { verifyCaptchaToken } from "./captcha";
@@ -10,6 +10,43 @@ import { Coupon } from "@/types";
 import { thePayClient } from "./thepay/client";
 import { UNIT_PRICE } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
+import nodemailer from "nodemailer"
+import { renderOrderStatusEmail } from "@/components/email/template";
+
+const transporter = nodemailer.createTransport({
+     host: "smtp.seznam.cz",
+        port: 587,
+        secure: false,
+        auth: {
+         user: process.env.FROM_EMAIL!,
+         pass: process.env.FROM_EMAIL_PASSWORD!,
+        },
+        tls: {
+         ciphers: "SSLv3"
+        } 
+});
+
+export async function sendStatusMail(order: Order, subject: string): Promise<boolean>{
+    try{
+         const mailOptions = {
+            from: process.env.FROM_EMAIL,
+            to: order.email,
+            subject: subject,
+            html: await renderOrderStatusEmail(order)
+        }
+
+        const mailSend = await transporter.sendMail(mailOptions)
+
+        if(!mailSend.accepted){
+            return false
+        }else {
+            return true
+        }
+    }catch(error){
+        console.log("[SendStatusMail] Error: ", error)
+        return false
+    }
+}
 
 export async function getCoupon(coupon: string): Promise<Coupon | null>{
     const isValid = await sanityFetch<Coupon>({
@@ -228,8 +265,8 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             adr_number: data.adressNumber,
             city: data.city,
             psc: data.zip,
-            total: Number(totalPrice),
-            couponValue:Number(data.sale.toFixed(2)),
+            total: String(totalPrice),
+            couponValue:String(data.sale.toFixed(2)),
             quantity: Number(data.quantity),
             del_price: Number(data.deliveryPrice) === 0 ? true : false,
             packetaId: data.packetaId,
@@ -281,6 +318,54 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
     }
 }
 
+export async function getPacketStatus(packetId: string): Promise<{ok: boolean, statusCode: number | null, message?: string}>{
+    const rBody = {
+        packetStatus: {
+            apiPassword: process.env.PACKETA_API_PASSWORD,
+            packetId: packetId
+        }
+    }
+
+    try{
+        const response = await fetch(
+            "https://www.zasilkovna.cz/api/rest", 
+        {
+            method: "POST",
+            body: new Builder().buildObject(rBody)
+        })
+
+        const pResponse= await new Parser({ 
+            explicitArray: false 
+        })
+        .parseStringPromise(
+            await response.text()
+        );
+
+        if(pResponse.response.status !== "ok"){
+            console.error("Problém se statusem: ",pResponse.response.status)
+            return {
+                ok: false,
+                statusCode: null,
+                message: `${JSON.parse(pResponse.response.status)}`
+            };
+        }
+        const packetStatus = Number(pResponse.response.result.statusCode)
+        const codeText = String(pResponse.response.result.codeText)
+        return {
+            ok: true,
+            statusCode: packetStatus,
+            message: codeText
+        };
+    }catch(error){
+        console.error("Error při statu packety: ", error)
+        return {
+                ok: false,
+                statusCode: null,
+                message: `${error}`
+            };
+    }
+}
+
 export async function createPacket({name, surname, email, phone,packetaId, total, uid}: BarcodeSend){
 let packetaCode: string = "";
 
@@ -301,20 +386,126 @@ let packetaCode: string = "";
           }
         }
         try{
-const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
-    method: "POST",
-    body: new Builder().buildObject(rBody)
-  })
-  const pResponse = await new Parser({explicitArray: false}).parseStringPromise(await packeta.text())
-  if(pResponse.response.status !== "ok"){
-    console.error("Problém s vytvořením zásilky: ",pResponse.response.detail.attributes.fault)
-    return;
-  }
-  packetaCode = pResponse.response.result.barcodeText;
-  if(!packetaCode) alert("Problém s vytvořením štítku.")
-  }catch(error){
-    console.error("Error při vytváření packety: ", error)
-    }
+            const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
+                method: "POST",
+                body: new Builder().buildObject(rBody)
+            })
+            const pResponse = await new Parser({explicitArray: false}).parseStringPromise(await packeta.text())
+            if(pResponse.response.status !== "ok"){
+                console.error("Problém s vytvořením zásilky: ",pResponse.response.detail.attributes.fault)
+                return;
+            }
+        packetaCode = pResponse.response.result.barcodeText;
+        if(!packetaCode) alert("Problém s vytvořením štítku.")
+        }catch(error){
+            console.error("Error při vytváření packety: ", error)
+        }
     return packetaCode
     
 } 
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+let cachedExecutablePath: string | null = null;
+let downloadPromise: Promise<string> | null = null;
+
+const CHROMIUM_PACK_URL = 
+  `https://especko/chromium-pack.tar`
+
+async function getChromiumPath(): Promise<string> {
+  if (cachedExecutablePath) return cachedExecutablePath;
+
+  if (!downloadPromise) {
+    const chromium = (await import("@sparticuz/chromium-min")).default;
+    downloadPromise = chromium.executablePath(CHROMIUM_PACK_URL).then((p) => {
+      cachedExecutablePath = p;
+      return p;
+    });
+  }
+
+  return downloadPromise;
+}
+
+export async function generatePdf(html: string): Promise<Buffer> {
+  let browser;
+
+  try {
+    const isVercel = !!process.env.VERCEL_ENV;
+
+    let puppeteer: any;
+    let launchOptions: any = { headless: true };
+
+    if (isVercel) {
+      const chromium = (await import("@sparticuz/chromium-min")).default;
+      puppeteer = await import("puppeteer-core");
+
+      const executablePath = await getChromiumPath();
+
+      launchOptions = {
+        ...launchOptions,
+        args: chromium.args,
+        executablePath,
+      };
+    } else {
+      puppeteer = await import("puppeteer");
+    }
+
+    browser = await puppeteer.launch(launchOptions);
+    const page = await browser.newPage();
+
+    await page.setContent(html, {
+      waitUntil: "load",
+    });
+
+    const pdf = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      preferCSSPageSize: true,
+    });
+
+    return Buffer.from(pdf);
+  } finally {
+    if (browser) await browser.close();
+  }
+}
+
+export async function uploadPdfToSanity(
+  buffer: Buffer,
+  filename: string
+) {
+  const asset = await sanityClient.assets.upload("file", buffer, {
+    filename,
+    contentType: "application/pdf",
+  });
+
+  return asset._id;
+}
+
+export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, asset_id: string}> {
+  // už existuje → negeneruj
+  if (order?.invoice) {
+    return {
+        created: false,
+        asset_id: order.invoice
+    }
+  }
+
+  order.status = "Zaplacená"
+
+  // 1️⃣ render email
+  const html = await renderOrderStatusEmail(order);
+
+  // 2️⃣ generate pdf
+  const pdfBuffer = await generatePdf(html);
+
+  // 3️⃣ upload
+  const assetId = await uploadPdfToSanity(
+    pdfBuffer,
+    `invoice-${order._id}.pdf`
+  );
+
+  return {
+        created: true,
+        asset_id: assetId
+    };
+}

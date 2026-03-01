@@ -54,16 +54,14 @@ export const orders = defineType({
             validation: rule => rule.positive().integer().min(0),
         }),
         defineField({
-            type: "number",
+            type: "string",
             title:"Celková cena",
             name: "total",
-            validation: rule => rule.positive().integer().min(0), 
         }),
         defineField({
-            type: "number",
+            type: "string",
             title:"Hodnota kuponu",
             name: "couponValue",
-            validation: rule => rule.positive().integer().min(0), 
         }),
         defineField({
             type: "boolean",
