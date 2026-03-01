@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
           if(!invoice.asset_id){
             return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
           }
-          
+
          console.log("STEP 6", invoice)
           const updateOrderStatus = await sanity
               .patch(paymentUid) // _id = payment_uid
@@ -98,7 +98,7 @@ export async function GET(req: NextRequest) {
                   _type: "file",
                   asset: {
                     _type: "reference",
-                    _ref: invoice,
+                    _ref: invoice.asset_id,
                   },
                 }
               }).commit()
