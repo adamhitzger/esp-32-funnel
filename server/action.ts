@@ -32,7 +32,16 @@ export async function sendStatusMail(order: Order, subject: string): Promise<boo
             from: process.env.FROM_EMAIL,
             to: order.email,
             subject: subject,
-            html: await renderOrderStatusEmail(order)
+            html: await renderOrderStatusEmail(order),
+            attachments: [{
+                filename: "",
+                path: "",
+            }]
+        }
+
+        if(order.invoice){
+            mailOptions.attachments = mailOptions.attachments ?? [];
+            mailOptions.attachments.push({filename: `faktura.jpg`, path: order.invoice})
         }
 
         const mailSend = await transporter.sendMail(mailOptions)
