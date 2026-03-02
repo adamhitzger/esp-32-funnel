@@ -43,7 +43,7 @@ const card = "#222240"
 const borderColor = "#333355"
 const textPrimary = "#e8e8f0"
 const textMuted = "#8888aa"
-const accent = "#00c8ff"
+const accent = "#143bba"
 
 function TableRow({
   label,

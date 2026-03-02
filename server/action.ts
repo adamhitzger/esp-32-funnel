@@ -487,11 +487,10 @@ export async function uploadPdfToSanity(
     contentType: "application/pdf",
   });
 
-
-  return {
-    id: asset._id,
-    url: asset.url
-};
+    return {
+        id: asset._id,
+        url: asset.url
+    };
 }
 
 export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, asset_id?: string, url: string}> {

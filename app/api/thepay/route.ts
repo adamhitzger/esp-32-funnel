@@ -81,7 +81,7 @@ export async function GET(req: NextRequest) {
           if (!packeta) {
               return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
             }*/
-//console.log("STEP 5", packeta)
+            //console.log("STEP 5", packeta)
           const invoice = await ensureInvoicePdf(order);
           
           if(!invoice.asset_id){

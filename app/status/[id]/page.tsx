@@ -139,13 +139,13 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
                 <span className="text-muted-foreground">{"Počet"}</span>
                 <span className="text-foreground">{order.quantity} ks</span>
               </div>
-              {order.couponValue && order.couponValue > 0 && (
+              {order.couponValue && Number(order.couponValue) > 0 && (
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground flex items-center gap-1">
                     <Tag className="w-3 h-3" />
                     {"Sleva"}
                   </span>
-                  <span className="text-electric-cyan font-medium">-${order.couponValue.toFixed(2)}</span>
+                  <span className="text-electric-cyan font-medium">-${order.couponValue}</span>
                 </div>
               )}
               <div className="flex items-center justify-between text-sm">
@@ -156,7 +156,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
               </div>
               <div className="border-t border-border pt-3 flex items-center justify-between">
                 <span className="font-semibold text-foreground">{"Celkem"}</span>
-                <span className="text-2xl font-bold text-electric-cyan">{order.total.toFixed(2)} Kč</span>
+                <span className="text-2xl font-bold text-electric-cyan">{order.total} Kč</span>
               </div>
             </div>
           </div>
