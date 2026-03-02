@@ -79,10 +79,11 @@ function TableRow({
 }
 
 interface OrderStatusEmailProps {
-  order: Order
+  order: Order,
+  isInvoice: boolean
 }
 
-export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
+export function OrderStatusEmail({ order, isInvoice }: OrderStatusEmailProps) {
   const status = STATUS_MAP[order.status] ?? STATUS_MAP["Přijatá"]
   const unitPrice = UNIT_PRICE
   const subtotal = unitPrice * order.quantity
@@ -303,6 +304,7 @@ export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
           )}
 
           {/* CTA Button */}
+          {isInvoice? null:
           <Section style={{ textAlign: "center" as const, padding: "24px 0" }}>
             <Button
               href={`${baseUrl}/status/${order._id}`}
@@ -320,7 +322,7 @@ export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
               Zobrazit objednávku online
             </Button>
           </Section>
-
+      }
           {/* Footer */}
           <Hr style={{ borderColor: borderColor, margin: "8px 0 24px" }} />
 
@@ -347,6 +349,6 @@ export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
   )
 }
 
-export async function renderOrderStatusEmail(order: Order): Promise<string> {
-  return render(<OrderStatusEmail order={order} />)
+export async function renderOrderStatusEmail(order: Order, isInvoice: boolean): Promise<string> {
+  return render(<OrderStatusEmail order={order} isInvoice={isInvoice}/>)
 }

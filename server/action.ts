@@ -28,20 +28,20 @@ const transporter = nodemailer.createTransport({
 
 export async function sendStatusMail(order: Order, subject: string, invoice: string | null): Promise<boolean>{
     try{
+        let attachments = []
+        if(invoice !== null ){
+            attachments.push({
+                filename: `faktura-${order._id}.pdf`, 
+                path: invoice,   
+                contentType: "application/pdf"
+            })
+        }
          const mailOptions = {
             from: process.env.FROM_EMAIL,
             to: order.email,
             subject: subject,
-            html: await renderOrderStatusEmail(order),
-            attachments: [{
-                filename: "",
-                path: "",
-            }]
-        }
-
-        if(invoice !== null ){
-            mailOptions.attachments = mailOptions.attachments ?? [];
-            mailOptions.attachments.push({filename: `faktura.jpg`, path: invoice})
+            html: await renderOrderStatusEmail(order, false),
+            attachments,
         }
 
         const mailSend = await transporter.sendMail(mailOptions)
@@ -506,7 +506,7 @@ export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, 
   order.status = "Zaplacená"
 
   // 1️⃣ render email
-  const html = await renderOrderStatusEmail(order);
+  const html = await renderOrderStatusEmail(order, true);
 
   // 2️⃣ generate pdf
   const pdfBuffer = await generatePdf(html);
