@@ -3,6 +3,7 @@ import './globals.css'
 import { Toaster } from '@/components/ui/sonner';
 import { Geist, Geist_Mono } from 'next/font/google'
 import RecaptchaProvider from "@/components/recaptcha";
+import { Footer } from '@/components/footer';
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -11,8 +12,8 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://especko.cz"),
   title: {
-    default: "ESP32 DevKit | ElectroCore - Pohon vaše IoT projekty",
-    template: "%s | ElectroCore",
+    default: "ESP32 DevKit | especko.cz - Pohon vaše IoT projekty",
+    template: "%s | especko.cz",
   },
   description:
     "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Dvoujádrový procesor 240 MHz, 4MB Flash, 520KB SRAM. Ideální pro IoT, automatizaci a vestavěné systémy.",
@@ -27,11 +28,11 @@ export const metadata: Metadata = {
     "Arduino",
     "embedded",
     "automatizace",
-    "ElectroCore",
+    "especko.cz",
   ],
-  authors: [{ name: "ElectroCore", url: "https://especko.cz" }],
-  creator: "ElectroCore",
-  publisher: "ElectroCore",
+  authors: [{ name: "especko.cz", url: "https://especko.cz" }],
+  creator: "especko.cz",
+  publisher: "especko.cz",
   formatDetection: {
     email: false,
     address: false,
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "cs_CZ",
     url: "https://especko.cz",
-    siteName: "ElectroCore",
+    siteName: "especko.cz",
     title: "ESP32 DevKit | Pohon vaše IoT projekty",
     description:
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ESP32 DevKit | ElectroCore",
+    title: "ESP32 DevKit | especko.cz",
     description:
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
     images: ["/images/esp32.jpg"],
@@ -104,6 +105,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <RecaptchaProvider>
         {children}
+        <Footer/>
         <Toaster/>
         </RecaptchaProvider>
       </body>

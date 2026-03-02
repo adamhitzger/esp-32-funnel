@@ -12,6 +12,7 @@ import { createOrder, getCoupon } from "@/server/action"
 import { toast } from "sonner"
 import { ActionRes, CreatePaymentResponse } from "@/types"
 import { CreateOrderType } from "@/server/schema"
+import { Footer } from "@/components/footer"
 
 declare global {
   interface Window {
@@ -518,6 +519,7 @@ export default function CheckoutPage() {
       }
     >
       <CheckoutContent />
+      <Footer/>
     </Suspense>
   )
 }
