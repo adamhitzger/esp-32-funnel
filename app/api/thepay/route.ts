@@ -65,12 +65,13 @@ export async function GET(req: NextRequest) {
           if (!order) {
             return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
           }
+          
           if (order.status === newStatus) {
               console.log("[ThePay] Already processed — skipping");
               return NextResponse.json({ ok: true });
           }
       if (newStatus) {
-        if(newStatus === "Zaplacená"){
+        if(newStatus === "Zaplacená" && order?.invoice !== null){
           
          
           console.log("STEP 4")
@@ -110,6 +111,9 @@ export async function GET(req: NextRequest) {
                 }
               }).commit()
             console.log("[ThePay] Order status:", updateOrderStatus)
+            if(!updateOrderStatus){
+              return NextResponse.json({ ok: true, message: "[ThePay /api] Objedavka jiz zmenena skrz webhook byla" })
+            }
             console.log("STEP 7")
             const sendMail = await sendStatusMail(order, "Objednávka byla zaplacena.", invoice.url)
             if(!sendMail){
