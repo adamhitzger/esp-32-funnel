@@ -154,6 +154,7 @@ export interface BarcodeSend {
 }
 
 export interface Order {
+  _rev: string;
   _id: string;
   firstName: string
   lastName: string

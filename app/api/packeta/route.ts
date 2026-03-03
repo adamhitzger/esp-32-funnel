@@ -44,6 +44,11 @@ export async function GET(req: NextRequest) {
 
           console.log("[Cron] Updated:", o._id, newStatus)
 
+          if (!updated) {
+              console.log("[Cron] Skipped (race):", o._id)
+              return
+            }
+
           // ✉️ email až po úspěchu
           await sendStatusMail(o, getEmailText(statusCode.statusCode), null)
         } catch (err) {

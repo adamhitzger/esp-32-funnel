@@ -57,16 +57,22 @@ export async function GET(req: NextRequest) {
       console.log("STEP 2")
       if(payment){
       const newStatus = mapPaymentStateToOrderStatus(payment?.state)
-      console.log("STEP 3", newStatus)
-      if (newStatus) {
-        if(newStatus === "Zaplacená"){
-          const id = paymentUid
+      const id = paymentUid
           console.log("ID",id)
-         const order: Order | null = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
+      console.log("STEP 3", newStatus)
+     const order: Order | null = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
           console.log(order)
           if (!order) {
             return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
           }
+          if (order.status === newStatus) {
+              console.log("[ThePay] Already processed — skipping");
+              return NextResponse.json({ ok: true });
+          }
+      if (newStatus) {
+        if(newStatus === "Zaplacená"){
+          
+         
           console.log("STEP 4")
           /*const {firstName, lastName, email, phone,packetaId , total} = order
           const packeta = await createPacket({
@@ -91,6 +97,7 @@ export async function GET(req: NextRequest) {
          console.log("STEP 6", invoice)
           const updateOrderStatus = await sanity
               .patch(paymentUid) // _id = payment_uid
+              .ifRevisionId(order._rev)
               .set({ 
                 status: newStatus,
                 barcode: "packeta",
@@ -109,6 +116,7 @@ export async function GET(req: NextRequest) {
               return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se odeslat email" })
             }
         }else{
+          
           const updateOrderStatus = await sanity
           .patch(paymentUid) // _id = payment_uid
           .set({ 

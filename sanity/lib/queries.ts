@@ -15,6 +15,7 @@ export const GET_COUPON = groq`*[_type=="coupons" && name == $name][0]{
 
 export const GET_ORDER_BY_ID = groq`*[_type=="orders" && _id == $id][0]{
     _id,
+    _rev,
     firstName,
     lastName,
     email,
@@ -35,6 +36,7 @@ export const GET_ORDER_BY_ID = groq`*[_type=="orders" && _id == $id][0]{
 
 export const GET_PAID_ORDERS = groq`*[_type=="orders" && status != "Vrácená" && status != "Zrušená" && status != "Vyzvednutá" && status != "Přijatá"]{
     _id,
+    _rev,
     firstName,
     lastName,
     email,
