@@ -519,7 +519,6 @@ export default function CheckoutPage() {
       }
     >
       <CheckoutContent />
-      <Footer/>
     </Suspense>
   )
 }

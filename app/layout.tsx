@@ -5,7 +5,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import RecaptchaProvider from "@/components/recaptcha";
 import { Footer } from '@/components/footer';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
-
+import CookiesBanner from '@/components/cookies-banner';
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
@@ -110,6 +110,7 @@ export default function RootLayout({
         {children}
         <Footer/>
         <Toaster/>
+         <CookiesBanner/>
         </RecaptchaProvider>
       </body>
     </html>

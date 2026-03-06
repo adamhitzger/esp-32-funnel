@@ -2,7 +2,6 @@ import { HeroSection } from "@/components/hero-section"
 import { FeaturesSection } from "@/components/features-section"
 import { SpecsSection } from "@/components/specs-section"
 import { NewsletterSection } from "@/components/newsletter-section"
-import CookiesBanner from "@/components/cookies-banner"
 
 const SITE_URL = "https://especko.cz"
 
@@ -111,7 +110,7 @@ export default function Home() {
       <FeaturesSection />
       <SpecsSection />
       <NewsletterSection />
-      <CookiesBanner/>
+     
     </main>
       </>
   )

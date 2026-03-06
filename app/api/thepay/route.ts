@@ -75,6 +75,7 @@ export async function GET(req: NextRequest) {
           
          
           console.log("STEP 4")
+
           const {firstName, lastName, email, phone,packetaId , total} = order
           const packeta = await createPacket({
             name: firstName,
@@ -101,7 +102,7 @@ export async function GET(req: NextRequest) {
               .ifRevisionId(order._rev)
               .set({ 
                 status: newStatus,
-                barcode: "packeta",
+                barcode: packeta,
                 invoice: {
                   _type: "file",
                   asset: {
