@@ -1,16 +1,16 @@
 const specs = [
   { label: "Procesor", value: "Xtensa LX6 dvoujádrový" },
-  { label: "Taktovací frekvence", value: "Až 240 MHz" },
-  { label: "SRAM", value: "520 KB" },
-  { label: "Flash", value: "4 MB (externí)" },
-  { label: "WiFi", value: "802.11 b/g/n" },
+  { label: "Taktovací frekvence", value: "80–240 MHz" },
+  { label: "Interní SRAM", value: "520 KB" },
+  { label: "Flash paměť", value: "4 MB externí SPI Flash" },
+  { label: "Wi-Fi", value: "802.11 b/g/n (2.4 GHz)" },
   { label: "Bluetooth", value: "v4.2 BR/EDR + BLE" },
-  { label: "GPIO piny", value: "34 programovatelných" },
-  { label: "ADC kanály", value: "18 (12bitových)" },
-  { label: "DAC kanály", value: "2 (8bitové)" },
-  { label: "Provozní napětí", value: "3,3V" },
-  { label: "Vstupní napětí", value: "5V (USB)" },
-  { label: "Rozměry", value: "51 x 25,5 mm" },
+  { label: "GPIO", value: "až 34 pinů (ne všechny plně univerzální)" },
+  { label: "ADC", value: "až 18 kanálů, 12bit" },
+  { label: "DAC", value: "2 kanály, 8bit" },
+  { label: "Provozní napětí", value: "3,3 V" },
+  { label: "Napájení přes USB", value: "5 V" },
+  { label: "Rozměry desky", value: "cca 51 × 25,5 mm (dle verze)" },
 ]
 
 export function SpecsSection() {

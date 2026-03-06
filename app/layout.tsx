@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { Geist, Geist_Mono } from 'next/font/google'
 import RecaptchaProvider from "@/components/recaptcha";
 import { Footer } from '@/components/footer';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -103,6 +104,8 @@ export default function RootLayout({
   return (
     <html lang="cs">
       <body className="font-sans antialiased">
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_KEY as string} />
+        {/*<GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_KEY as string}/>*/}
         <RecaptchaProvider>
         {children}
         <Footer/>

@@ -75,19 +75,19 @@ export async function GET(req: NextRequest) {
           
          
           console.log("STEP 4")
-          /*const {firstName, lastName, email, phone,packetaId , total} = order
+          const {firstName, lastName, email, phone,packetaId , total} = order
           const packeta = await createPacket({
             name: firstName,
             surname: lastName,
             email,
             phone,
             packetaId: Number(packetaId),
-            total: total,
+            total: Number(total),
             uid: id
           })
           if (!packeta) {
               return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
-            }*/
+            }
             //console.log("STEP 5", packeta)
           const invoice = await ensureInvoicePdf(order);
           
