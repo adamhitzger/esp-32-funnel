@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
               return NextResponse.json({ ok: true });
           }
       if (newStatus) {
-        if(newStatus === "Zaplacená" && order?.invoice !== null){
+        if(newStatus === "Zaplacená"){
           
          
           console.log("STEP 4")
