@@ -495,7 +495,7 @@ export async function uploadPdfToSanity(
 
 export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, asset_id?: string, url: string}> {
   // už existuje → negeneruj
-  if (order?.invoice) {
+  if (order?.invoice !== null) {
     return {
         created: false,
         url: order.invoice
