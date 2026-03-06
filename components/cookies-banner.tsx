@@ -73,7 +73,6 @@ export default function CookiesBanner() {
                   id="provoz"
                   name="provoz"
                   defaultChecked
-                  disabled
                   className="border-electric-cyan data-[state=checked]:bg-electric-cyan data-[state=checked]:border-electric-cyan"
                 />
                 <label
