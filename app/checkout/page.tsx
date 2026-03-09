@@ -173,7 +173,7 @@ function CheckoutContent() {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground">ESP32 DevKit V1</h3>
+                  <h3 className="font-semibold text-foreground">ESP-32 S3 USB-C</h3>
                   <p className="text-sm text-muted-foreground mt-1">{"Vývojová deska s USB-C"}</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {"Množství:"} <span className="text-foreground font-medium">{quantity} ks</span>
@@ -284,6 +284,9 @@ function CheckoutContent() {
                       placeholder="vas@email.cz"
                       className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
                     />
+                    {state.errors?.email ? 
+                    <span className="text-electric-orange">{state.errors?.email}</span>
+                    : null}
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -300,7 +303,11 @@ function CheckoutContent() {
                         placeholder="Jan"
                         className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
                       />
+                      {state.errors?.firstName ? 
+                    <span className="text-electric-orange">{state.errors?.firstName}</span>
+                    : null}
                     </div>
+                    
                     <div>
                       <label htmlFor="lastName" className="block text-sm text-muted-foreground mb-1.5">
                         {"Přijmení"}
@@ -314,6 +321,9 @@ function CheckoutContent() {
                         placeholder="Novak"
                         className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
                       />
+                      {state.errors?.lastName ? 
+                    <span className="text-electric-orange">{state.errors?.lastName}</span>
+                    : null}
                     </div>
                   </div>
                   <div>
@@ -329,6 +339,9 @@ function CheckoutContent() {
                       placeholder="Zadejte ve formátu: +420 606 846 532"
                       className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
                     />
+                    {state.errors?.phone ? 
+                    <span className="text-electric-orange">{state.errors?.phone}</span>
+                    : null}
                   </div>
                 </div>
               </div>
@@ -351,6 +364,9 @@ function CheckoutContent() {
                       placeholder="Vodičkova"
                       className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
                     />
+                    {state.errors?.address ? 
+                    <span className="text-electric-orange">{state.errors?.address}</span>
+                    : null}
                   </div>
                   <div>
                     <label htmlFor="adressNumber" className="block text-sm text-muted-foreground mb-1.5">
@@ -365,6 +381,9 @@ function CheckoutContent() {
                       placeholder="123"
                       className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
                     />
+                    {state.errors?.adressNumber ? 
+                    <span className="text-electric-orange">{state.errors?.adressNumber}</span>
+                    : null}
                   </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -381,6 +400,9 @@ function CheckoutContent() {
                         placeholder="Praha"
                         className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
                       />
+                      {state.errors?.city ? 
+                    <span className="text-electric-orange">{state.errors?.city}</span>
+                    : null}
                     </div>
                     <div>
                       <label htmlFor="zip" className="block text-sm text-muted-foreground mb-1.5">
@@ -395,6 +417,9 @@ function CheckoutContent() {
                         placeholder="110 00"
                         className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
                       />
+                      {state.errors?.zip ? 
+                    <span className="text-electric-orange">{state.errors?.zip}</span>
+                    : null}
                     </div>
                   </div>
                 </div>

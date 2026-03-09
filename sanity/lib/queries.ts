@@ -31,6 +31,7 @@ export const GET_ORDER_BY_ID = groq`*[_type=="orders" && _id == $id][0]{
     packetaId,
     packetaAddress,
     status,
+    barcode,
     "invoice":invoice.asset->url
 }`
 

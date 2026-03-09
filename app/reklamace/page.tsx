@@ -6,19 +6,7 @@ export const metadata: Metadata = {
   title: "Reklamační řád",
   description:
     "Reklamační řád e-shopu especko.cz. Informace o postupu při reklamaci zboží.",
-    keywords: [
-    "ESP32",
-    "ESP32 DevKit",
-    "mikrokontrolér",
-    "IoT",
-    "WiFi modul",
-    "Bluetooth",
-    "vývojová deska",
-    "Arduino",
-    "embedded",
-    "automatizace",
-    "especko.cz",
-  ],
+    
   authors: [{ name: "especko.cz", url: "https://especko.cz" }],
   creator: "especko.cz",
   publisher: "especko.cz",
@@ -37,7 +25,7 @@ export const metadata: Metadata = {
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
     images: [
       {
-        url: "/images/esp32.jpg",
+        url: "/images/esp32.png",
         width: 1200,
         height: 630,
         alt: "ESP32 DevKit vývojová deska",
@@ -68,19 +56,9 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+        url: "/especko.ico",
       },
     ],
-    apple: "/apple-icon.png",
   },
 }
 
@@ -145,11 +123,15 @@ export default function Reklamace() {
 
         <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
           <p className="text-sm text-muted-foreground">
-            Provozovatel:{" "}
+            Provozovatelé:{" "}
             <span className="text-foreground">
               David Havel, IČO: 19203144
             </span>
-            , se sídlem Brixenská 3711, 580 01 Havlíčkův Brod.
+            , se sídlem Brixenská 3711, 580 01 Havlíčkův Brod a
+              <span className="text-foreground">
+              Adam Hitzger, IČO: 19712049
+            </span>
+            , se sídlem Ledečská 2984, 580 01 Havlíčkův Brod
           </p>
           <p className="text-xs text-muted-foreground mt-2">
             V Havlíčkově Brodě dne 02.01.2026

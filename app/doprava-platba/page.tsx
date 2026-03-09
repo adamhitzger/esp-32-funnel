@@ -68,19 +68,9 @@ keywords: [
   icons: {
     icon: [
       {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+        url: "/especko.ico",
       },
     ],
-    apple: "/apple-icon.png",
   },
 }
 
@@ -162,7 +152,11 @@ export default function DopravaPlatba() {
         {/* Info */}
         <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
           <p className="text-sm text-muted-foreground">
-            Provozovatel:{" "}
+            Provozovatelé:{" "}
+            <span className="text-foreground">
+              Adam Hitzger, IČO: 19712049 
+            </span>
+            , se sídlem Ledečská 2984, 580 01 Havlíčkův Brod.
             <span className="text-foreground">
               David Havel, IČO: 19203144
             </span>

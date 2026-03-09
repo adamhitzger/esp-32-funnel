@@ -115,7 +115,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
             <div className="flex items-center gap-4 mb-6">
               <div className="relative w-20 h-20 rounded-xl bg-secondary/50 border border-border overflow-hidden shrink-0">
                 <Image
-                  src="/images/esp32.jpg"
+                  src="/images/esp32.png"
                   alt="ESP32 DevKit"
                   fill
                   className="object-contain p-2"
@@ -145,7 +145,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
                     <Tag className="w-3 h-3" />
                     {"Sleva"}
                   </span>
-                  <span className="text-electric-cyan font-medium">-${order.couponValue}</span>
+                  <span className="text-electric-cyan font-medium">-{order.couponValue} Kč</span>
                 </div>
               )}
               <div className="flex items-center justify-between text-sm">
@@ -225,6 +225,12 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">{"Adresa pobočky"}</span>
                       <span className="text-foreground font-medium text-right max-w-[60%]">{order.packetaAddress}</span>
+                    </div>
+                  )}
+                  {order.barcode && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">{"Trasovací číslo"}</span>
+                      <span className="text-foreground font-medium text-right max-w-[60%]">{order.barcode}</span>
                     </div>
                   )}
                 </div>

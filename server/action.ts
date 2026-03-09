@@ -250,13 +250,14 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
                 success: false,
                 message: "Nezadali jste platná data",
                 inputs: nonValidate,
+                errors: validate.error.flatten().fieldErrors,
                 pay_url: "",
                 detail_url: "",
             }
         }
 
         const data = validate.data;
-
+        inputs = data;
       console.log(data)
 
         const totalPrice: number = data.quantity * UNIT_PRICE + data.deliveryPrice - data.sale
@@ -297,7 +298,7 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
                 submitted: true,
                 success: false,
                 message: "Nepodařilo se spojit s platební bránou. Objednávka se nezdařila",
-                inputs: nonValidate,
+                inputs: data,
                 pay_url: "",
                 detail_url: "",
             }

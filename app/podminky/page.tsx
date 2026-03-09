@@ -5,20 +5,7 @@ import { ArrowLeft, FileText } from "lucide-react"
 export const metadata: Metadata = {
   title: "Obchodní podmínky",
   description:
-    "Obchodní podmínky e-shopu ElectroCore provozovaného Davidem Havlem, IČO: 19203144.",
-keywords: [
-    "ESP32",
-    "ESP32 DevKit",
-    "mikrokontrolér",
-    "IoT",
-    "WiFi modul",
-    "Bluetooth",
-    "vývojová deska",
-    "Arduino",
-    "embedded",
-    "automatizace",
-    "especko.cz",
-  ],
+    "Obchodní podmínky e-shopu",
   authors: [{ name: "especko.cz", url: "https://especko.cz" }],
   creator: "especko.cz",
   publisher: "especko.cz",
@@ -49,7 +36,7 @@ keywords: [
     title: "ESP32 DevKit | especko.cz",
     description:
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
-    images: ["/images/esp32.jpg"],
+    images: ["/images/esp32.png"],
   },
   robots: {
     index: true,
@@ -67,29 +54,23 @@ keywords: [
   },
   icons: {
     icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+     {
+        url: "/especko.ico",
       },
     ],
-    apple: "/apple-icon.png",
   },
 }
 
 const COMPANY = "David Havel"
 const ICO = "19203144"
 const ADDRESS = "Brixenská 3711, 580 01 Havlíčkův Brod"
-const ACCOUNT = "123-7895890287/0100"
 const EMAIL = "info@especko.cz"
 const PHONE = "+420 605 017 703"
+const COMPANY2 = "Adam Hitzger"
+const ICO2 = "19712049"
+const ADDRESS2 = "Ledečská 2984, 580 01 Havlíčkův Brod"
+const ACCOUNT = "4259630093/0800"
+const PHONE2 = "+420 605 859 361"
 const WEB = "especko.cz"
 
 export default function Podminky() {
@@ -114,8 +95,8 @@ export default function Podminky() {
         </div>
 
         <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
-          Obchodní firma {COMPANY} se sídlem {ADDRESS} a identifikačním číslem
-          (IČO) {ICO} pro prodej zboží prostřednictvím on-line obchodu
+          Obchodní firma {COMPANY2} se sídlem {ADDRESS2} a identifikačním číslem
+          (IČO) {ICO2} pro prodej zboží prostřednictvím on-line obchodu
           umístěného na internetové adrese www.{WEB}
         </p>
 
@@ -128,8 +109,9 @@ export default function Podminky() {
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>
                 Tyto obchodní podmínky (dále jen &quot;obchodní podmínky&quot;)
-                podnikatele {COMPANY}, se sídlem {ADDRESS}, identifikační
-                číslo: {ICO} (dále jen &quot;prodávající&quot;) upravují v
+                podnikatelé {COMPANY}, se sídlem {ADDRESS}, identifikační
+                číslo: {ICO} a {COMPANY2}, se sídlem {ADDRESS2}, identifikační
+                číslo: {ICO2} (dále jen &quot;prodávající&quot;) upravují v
                 souladu s ustanovením § 1751 odst. 1 zákona č. 89/2012 Sb.,
                 občanský zákoník, ve znění pozdějších předpisů (dále jen
                 &quot;občanský zákoník&quot;) vzájemná práva a povinnosti
@@ -372,7 +354,7 @@ export default function Podminky() {
                 .
               </li>
               <li>
-                Kontaktní údaje prodávajícího: adresa pro doručování {ADDRESS},
+                Kontaktní údaje prodávajícího: adresa pro doručování {ADDRESS2},
                 adresa elektronické pošty{" "}
                 <a
                   href={`mailto:${EMAIL}`}
@@ -385,7 +367,7 @@ export default function Podminky() {
                   href={`tel:${PHONE.replace(/\s/g, "")}`}
                   className="text-electric-cyan hover:underline"
                 >
-                  {PHONE}
+                  {PHONE2}
                 </a>
                 .
               </li>
