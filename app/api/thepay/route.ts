@@ -73,30 +73,12 @@ export async function GET(req: NextRequest) {
             }
       if (newStatus) {
         if(newStatus === "Zaplacená"){
-          
-         
-          console.log("STEP 4")
-          
-          
-          const invoice = await ensureInvoicePdf(order);
-          console.log("STEP 5.5 invoice created:", invoice.created, invoice.asset_id, invoice.url)
-          if(!invoice.url){
-            return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
-          }
 
-         console.log("STEP 6", invoice)
           const updateOrderStatus = await sanity
               .patch(paymentUid) // _id = payment_uid
               .ifRevisionId(order._rev)
               .set({ 
                 status: newStatus,
-                invoice: {
-                  _type: "file",
-                  asset: {
-                    _type: "reference",
-                    _ref: invoice.asset_id,
-                  },
-                }
               }).commit()
             console.log("[ThePay] Order status:", updateOrderStatus)
             if(!updateOrderStatus){
@@ -119,6 +101,12 @@ export async function GET(req: NextRequest) {
               return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
           }
           console.log("STEP 8 Packeta Code:", packeta)
+          }
+
+          const invoice = await ensureInvoicePdf(order);
+          console.log("STEP 5.5 invoice created:", invoice.created, invoice.asset_id, invoice.url)
+          if(!invoice.url){
+            return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
           }
             const sendMail = await sendStatusMail(order, "Objednávka byla zaplacena.", invoice.url)
             if(!sendMail){

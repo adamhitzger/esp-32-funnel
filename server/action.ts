@@ -12,6 +12,7 @@ import { UNIT_PRICE } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
+import { id } from "date-fns/locale";
 
 const transporter = nodemailer.createTransport({
      host: "smtp.seznam.cz",
@@ -410,7 +411,7 @@ let packetaCode: string = "";
         const updateOrderStatus = await sanityClient
               .patch(uid) 
               .set({ 
-                barcode: packeta,
+                barcode: packetaCode,
               }).commit()
             console.log("[createPacket] Order status:", updateOrderStatus)
         }catch(error){
@@ -487,7 +488,8 @@ export async function generatePdf(html: string): Promise<Buffer> {
 
 export async function uploadPdfToSanity(
   buffer: Buffer,
-  filename: string
+  filename: string,
+  id: string
 ) {
 
   const file = await sanityFetch<SanityFileAsset>({
@@ -507,6 +509,19 @@ const asset = await sanityClient.assets.upload("file", buffer, {
     filename,
     contentType: "application/pdf",
   });
+
+  const updateOrderStatus = await sanityClient
+                .patch(id) // _id = payment_uid
+                .set({ 
+                  invoice: {
+                    _type: "file",
+                    asset: {
+                      _type: "reference",
+                      _ref: asset.asset_id,
+                    },
+                  }
+                }).commit()
+              console.log("[ThePay] Order status:", updateOrderStatus)
 
     return {
         created: true, 
@@ -538,7 +553,8 @@ export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, 
   // 3️⃣ upload
   const assetId = await uploadPdfToSanity(
     pdfBuffer,
-    `invoice-${order._id}.pdf`
+    `invoice-${order._id}.pdf`,
+    order._id
   );
 
   return {
