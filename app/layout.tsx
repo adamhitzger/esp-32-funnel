@@ -18,19 +18,6 @@ export const metadata: Metadata = {
   },
   description:
     "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Dvoujádrový procesor 240 MHz, 4MB Flash, 520KB SRAM. Ideální pro IoT, automatizaci a vestavěné systémy.",
-  keywords: [
-    "ESP32",
-    "ESP32 DevKit",
-    "mikrokontrolér",
-    "IoT",
-    "WiFi modul",
-    "Bluetooth",
-    "vývojová deska",
-    "Arduino",
-    "embedded",
-    "automatizace",
-    "especko.cz",
-  ],
   authors: [{ name: "especko.cz", url: "https://especko.cz" }],
   creator: "especko.cz",
   publisher: "especko.cz",
@@ -49,7 +36,7 @@ export const metadata: Metadata = {
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
     images: [
       {
-        url: "/images/esp32.jpg",
+        url: "/images/esp32.png",
         width: 1200,
         height: 630,
         alt: "ESP32 DevKit vývojová deska",
@@ -61,7 +48,7 @@ export const metadata: Metadata = {
     title: "ESP32 DevKit | especko.cz",
     description:
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
-    images: ["/images/esp32.jpg"],
+    images: ["/images/esp32.png"],
   },
   robots: {
     index: true,
@@ -80,19 +67,9 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+        url: "/especko.ico",
       },
     ],
-    apple: "/apple-icon.png",
   },
 }
 

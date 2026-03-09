@@ -68,9 +68,9 @@ export function HeroSection() {
             <div className="relative">
               <div className="absolute -top-12 -left-12 w-64 h-64 bg-electric-cyan/30 rounded-full blur-[100px]" />
               <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-electric-orange/25 rounded-full blur-[80px]" />
-              <div className="relative rounded-3xl overflow-hidden border-2 border-electric-cyan/30 bg-gradient-to-br from-card/80 to-secondary/50 backdrop-blur-sm p-6 md:p-10 shadow-[0_0_80px_rgba(0,200,255,0.25)]">
+              <div className="relative rounded-3xl overflow-hidden border-2 border-electric-cyan/30 bg-linear-to-br from-card/80 to-secondary/50 backdrop-blur-sm p-6 md:p-10 shadow-[0_0_80px_rgba(0,200,255,0.25)]">
                 <Image
-                  src="/images/esp32.jpg"
+                  src="/images/esp32.png"
                   alt="ESP32 DevKit mikrokontrolér"
                   width={600}
                   height={450}
@@ -191,7 +191,7 @@ export function HeroSection() {
               </Button>
 
               <p className="text-center text-sm text-muted-foreground mt-4">
-                {"Bezpečná platba kartou"}
+                {"Bezpečná platba kartou skrz The Pay"}
               </p>
             </div>
           </div>

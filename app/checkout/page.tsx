@@ -166,7 +166,7 @@ function CheckoutContent() {
               <div className="flex gap-4 mb-6">
                 <div className="relative w-24 h-24 rounded-xl overflow-hidden border border-border shrink-0">
                   <Image
-                    src="/images/esp32.jpg"
+                    src="/images/esp32.png"
                     alt="ESP32 DevKit"
                     fill
                     className="object-cover"

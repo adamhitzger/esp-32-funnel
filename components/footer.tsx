@@ -23,7 +23,7 @@ export function Footer() {
 
             <nav className="flex items-center gap-6 text-sm">
               <Link href="/" className="text-muted-foreground hover:text-electric-cyan transition-colors">
-                Produkty
+                Produkt
               </Link>
               <Link href="/doprava-platba" className="text-muted-foreground hover:text-electric-cyan transition-colors">
                 Doprava a platba
@@ -47,7 +47,7 @@ export function Footer() {
                 Reklamační řád
               </Link>
               <Link href="/unsubscribe" className="text-muted-foreground hover:text-electric-cyan transition-colors">
-                Odhlášení z odběru
+                Odhlášení z newsletteru
               </Link>
             </nav>
 

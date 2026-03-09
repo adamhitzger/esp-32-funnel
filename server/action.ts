@@ -147,7 +147,7 @@ export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formD
         
         const captchaData = await verifyCaptchaToken(token);
 
-        if (!captchaData || !captchaData.success || captchaData.score < 0.8) {
+        if (!captchaData || !captchaData.success || captchaData.score < 0.6) {
             return {
                 submitted: true,
                 success: false,

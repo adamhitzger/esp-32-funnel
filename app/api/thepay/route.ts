@@ -34,6 +34,7 @@ function mapPaymentStateToOrderStatus(state?: string): string | null {
 
 export async function GET(req: NextRequest) {
   try {
+    let packeta: string | undefined = "";
     const { searchParams } = new URL(req.url)
 
     const paymentUid = searchParams.get("payment_uid")
@@ -56,28 +57,28 @@ export async function GET(req: NextRequest) {
       const payment = await thePayClient.getPaymentDetail(paymentUid)
       console.log("STEP 2")
       if(payment){
-      const newStatus = mapPaymentStateToOrderStatus(payment?.state)
-      const id = paymentUid
-          console.log("ID",id)
-      console.log("STEP 3", newStatus)
-     const order: Order | null = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
-          console.log(order)
-          if (!order) {
-            return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
-          }
-          
-          if (order.status === newStatus) {
-              console.log("[ThePay] Already processed — skipping");
-              return NextResponse.json({ ok: true });
-          }
+        const newStatus = mapPaymentStateToOrderStatus(payment?.state)
+        const id = paymentUid
+            console.log("ID",id)
+        console.log("STEP 3", newStatus)
+        const order: Order | null = await sanityFetch<Order>({query: GET_ORDER_BY_ID, params: { id }})
+            console.log(order)
+            if (!order) {
+              return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se fetchnout objednávku ze Sanity" })
+            }
+            
+            if (order.status === newStatus) {
+                console.log("[ThePay] Already processed — skipping");
+                return NextResponse.json({ ok: true });
+            }
       if (newStatus) {
         if(newStatus === "Zaplacená"){
           
          
           console.log("STEP 4")
-
+          if(!order.barcode){
           const {firstName, lastName, email, phone,packetaId , total} = order
-          const packeta = await createPacket({
+          packeta = await createPacket({
             name: firstName,
             surname: lastName,
             email,
@@ -86,13 +87,16 @@ export async function GET(req: NextRequest) {
             total: Number(total),
             uid: id
           })
+
           if (!packeta) {
               return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
-            }
-            //console.log("STEP 5", packeta)
-          const invoice = await ensureInvoicePdf(order);
+          }
+          console.log("STEP 5 Packeta Code:", packeta)
+          }
           
-          if(!invoice.asset_id){
+          const invoice = await ensureInvoicePdf(order);
+          console.log("STEP 5.5 invoice created:", invoice.created, invoice.asset_id, invoice.url)
+          if(!invoice.url){
             return NextResponse.json({ ok: true, message: "[ThePay /api] Nepodařilo se získat fakturu od ThePay" })
           }
 

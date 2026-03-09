@@ -77,7 +77,7 @@ export default function UnsubscribePage() {
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-foreground">
-                    {"Odhlášení z odběru"}
+                    {"Odhlášení z newsletteru"}
                   </h1>
                   <p className="text-sm text-muted-foreground">
                     {"Zadejte svůj e-mail pro odhlášení"}
