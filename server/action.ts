@@ -376,7 +376,7 @@ export async function getPacketStatus(packetId: string): Promise<{ok: boolean, s
     }
 }
 
-export async function createPacket({name, surname, email, phone,packetaId, total, uid, _rev}: BarcodeSend){
+export async function createPacket({name, surname, email, phone,packetaId, total, uid}: BarcodeSend){
 let packetaCode: string = "";
 
         const rBody = {
@@ -408,8 +408,7 @@ let packetaCode: string = "";
         packetaCode = pResponse.response.result.barcodeText;
         if(!packetaCode) console.error("Problém s vytvořením štítku.");
         const updateOrderStatus = await sanityClient
-              .patch(uid) // _id = payment_uid
-              .ifRevisionId(_rev)
+              .patch(uid) 
               .set({ 
                 barcode: packeta,
               }).commit()

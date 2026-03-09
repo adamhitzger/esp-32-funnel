@@ -170,7 +170,6 @@ export interface BarcodeSend {
     packetaId: number;
     total: number;
     uid: string;
-    _rev: string;
 }
 
 export interface Order {

@@ -76,24 +76,7 @@ export async function GET(req: NextRequest) {
           
          
           console.log("STEP 4")
-          if(!order.barcode){
-          const {firstName, lastName, email, phone,packetaId , total} = order
-          packeta = await createPacket({
-            name: firstName,
-            surname: lastName,
-            email,
-            phone,
-            packetaId: Number(packetaId),
-            total: Number(total),
-            uid: id,
-            _rev: order._rev
-          })
-
-          if (!packeta) {
-              return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
-          }
-          console.log("STEP 5 Packeta Code:", packeta)
-          }
+          
           
           const invoice = await ensureInvoicePdf(order);
           console.log("STEP 5.5 invoice created:", invoice.created, invoice.asset_id, invoice.url)
@@ -107,7 +90,6 @@ export async function GET(req: NextRequest) {
               .ifRevisionId(order._rev)
               .set({ 
                 status: newStatus,
-                barcode: packeta,
                 invoice: {
                   _type: "file",
                   asset: {
@@ -121,6 +103,23 @@ export async function GET(req: NextRequest) {
               return NextResponse.json({ ok: true, message: "[ThePay /api] Objedavka jiz zmenena skrz webhook byla" })
             }
             console.log("STEP 7")
+        if(!order.barcode){
+          const {firstName, lastName, email, phone,packetaId , total} = order
+          packeta = await createPacket({
+            name: firstName,
+            surname: lastName,
+            email,
+            phone,
+            packetaId: Number(packetaId),
+            total: Number(total),
+            uid: id,
+          })
+
+          if (!packeta) {
+              return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se zapsat do Zásilkovny" })
+          }
+          console.log("STEP 8 Packeta Code:", packeta)
+          }
             const sendMail = await sendStatusMail(order, "Objednávka byla zaplacena.", invoice.url)
             if(!sendMail){
               return NextResponse.json({ ok: false, message: "[ThePay /api] Nepodařilo se odeslat email" })
