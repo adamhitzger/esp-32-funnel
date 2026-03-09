@@ -1,6 +1,6 @@
 "use server"
 
-import { ActionRes, BarcodeSend, CreatePaymentResponse, GetProjects, Order, SanityMetadata } from "@/types";
+import { ActionRes, BarcodeSend, CreatePaymentResponse, GetProjects, Order, SanityFileAsset, SanityMetadata } from "@/types";
 import { CreateOrderType, newsletterSchema, NewsletterType, orderSchema } from "./schema";
 import { revalidatePath } from "next/cache";
 import { verifyCaptchaToken } from "./captcha";
@@ -376,7 +376,7 @@ export async function getPacketStatus(packetId: string): Promise<{ok: boolean, s
     }
 }
 
-export async function createPacket({name, surname, email, phone,packetaId, total, uid}: BarcodeSend){
+export async function createPacket({name, surname, email, phone,packetaId, total, uid, _rev}: BarcodeSend){
 let packetaCode: string = "";
 
         const rBody = {
@@ -406,7 +406,14 @@ let packetaCode: string = "";
                 return;
             }
         packetaCode = pResponse.response.result.barcodeText;
-        if(!packetaCode) alert("Problém s vytvořením štítku.")
+        if(!packetaCode) console.error("Problém s vytvořením štítku.");
+        const updateOrderStatus = await sanityClient
+              .patch(uid) // _id = payment_uid
+              .ifRevisionId(_rev)
+              .set({ 
+                barcode: packeta,
+              }).commit()
+            console.log("[createPacket] Order status:", updateOrderStatus)
         }catch(error){
             console.error("Error při vytváření packety: ", error)
         }
@@ -483,15 +490,33 @@ export async function uploadPdfToSanity(
   buffer: Buffer,
   filename: string
 ) {
-  const asset = await sanityClient.assets.upload("file", buffer, {
+
+  const file = await sanityFetch<SanityFileAsset>({
+  query: `*[_type == "sanity.fileAsset" && originalFilename == $name][0]`,
+  params: { name: filename }
+})
+
+if (file) {
+  console.log("File exists:", file._id)
+  return {
+        created: false, 
+        id: file._id,
+        url: file.url
+    };
+}  else{
+const asset = await sanityClient.assets.upload("file", buffer, {
     filename,
     contentType: "application/pdf",
   });
 
     return {
+        created: true, 
         id: asset._id,
         url: asset.url
     };
+}
+
+  
 }
 
 export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, asset_id?: string, url: string}> {
@@ -518,7 +543,7 @@ export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, 
   );
 
   return {
-        created: true,
+        created: assetId.created,
         url: assetId.url,
         asset_id: assetId.id
     };

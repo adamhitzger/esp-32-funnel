@@ -143,6 +143,25 @@ export interface ThePayParent {
   recurring_payments_available: boolean;
 }
 
+export interface SanityFileAsset {
+  _createdAt: string
+  _id: string
+  _originalId?: string
+  _rev: string
+  _type: "sanity.fileAsset"
+  _updatedAt: string
+
+  assetId: string
+  extension: string
+  mimeType: string
+  originalFilename: string
+  path: string
+  sha1hash: string
+  size: number
+  uploadId?: string
+  url: string
+}
+
 export interface BarcodeSend {
     email: string;
     name: string;
@@ -150,7 +169,8 @@ export interface BarcodeSend {
     phone: string;
     packetaId: number;
     total: number;
-    uid: string
+    uid: string;
+    _rev: string;
 }
 
 export interface Order {

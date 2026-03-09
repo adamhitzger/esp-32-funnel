@@ -68,25 +68,21 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
+        url: "/especko.ico",
       },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
+     
     ],
-    apple: "/apple-icon.png",
   },
 }
 
 const COMPANY = "David Havel"
 const ICO = "19203144"
 const ADDRESS = "Brixenská 3711, 580 01 Havlíčkův Brod"
+
+
+const COMPANY2 = "David Havel"
+const ICO2 = "19712049"
+const ADDRESS2 = "Ledečská 2984, 580 01 Havlíčkův Brod"
 
 export default function Zasady() {
   return (
@@ -110,7 +106,8 @@ export default function Zasady() {
         </div>
 
         <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
-          Obchodní firma {COMPANY} se sídlem {ADDRESS} a identifikačním číslem
+          Podnikatelé {COMPANY2} se sídlem {ADDRESS2} a identifikačním číslem
+          (IČO) {ICO2}, {COMPANY} se sídlem {ADDRESS} a identifikačním číslem
           (IČO) {ICO} (dále jen &quot;správce&quot;) tímto v souladu s
           ustanovením článku 12 a násl. Nařízení Evropského parlamentu a Rady
           (EU) 2016/679 účinného od 25.5.2018 informuje své zákazníky o

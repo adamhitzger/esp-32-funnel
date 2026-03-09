@@ -85,7 +85,8 @@ export async function GET(req: NextRequest) {
             phone,
             packetaId: Number(packetaId),
             total: Number(total),
-            uid: id
+            uid: id,
+            _rev: order._rev
           })
 
           if (!packeta) {

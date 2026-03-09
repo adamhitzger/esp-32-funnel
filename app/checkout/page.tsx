@@ -524,7 +524,7 @@ function CheckoutContent() {
               </Button>
 
               <p className="text-center text-xs text-muted-foreground">
-                {"Kliknutím na tlačítko souhlasíte s obchodními podmínkami. Vaše data jsou v bezpečí."}
+                Kliknutím na tlačítko souhlasíte s <Link href={"/podminky"} className="underline underline-offset-1">obchodními podmínkami</Link>. Vaše data jsou v bezpečí."
               </p>
             </form>
           </div>
