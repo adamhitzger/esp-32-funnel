@@ -5,20 +5,7 @@ import { ArrowLeft, Shield } from "lucide-react"
 export const metadata: Metadata = {
   title: "Zásady zpracování osobních údajů",
   description:
-    "Zásady zpracování osobních údajů e-shopu especko.cz provozovaného Davidem Havlem, IČO: 19203144.",
-    keywords: [
-    "ESP32",
-    "ESP32 DevKit",
-    "mikrokontrolér",
-    "IoT",
-    "WiFi modul",
-    "Bluetooth",
-    "vývojová deska",
-    "Arduino",
-    "embedded",
-    "automatizace",
-    "especko.cz",
-  ],
+    "Zásady zpracování osobních údajů e-shopu especko.cz provozovaného Adamem Hitzgerem, IČO: 19203144.",
   authors: [{ name: "especko.cz", url: "https://especko.cz" }],
   creator: "especko.cz",
   publisher: "especko.cz",
@@ -75,12 +62,8 @@ export const metadata: Metadata = {
   },
 }
 
-const COMPANY = "David Havel"
-const ICO = "19203144"
-const ADDRESS = "Brixenská 3711, 580 01 Havlíčkův Brod"
 
-
-const COMPANY2 = "David Havel"
+const COMPANY2 = "Adam Hitzger"
 const ICO2 = "19712049"
 const ADDRESS2 = "Ledečská 2984, 580 01 Havlíčkův Brod"
 
@@ -106,9 +89,8 @@ export default function Zasady() {
         </div>
 
         <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
-          Podnikatelé {COMPANY2} se sídlem {ADDRESS2} a identifikačním číslem
-          (IČO) {ICO2}, {COMPANY} se sídlem {ADDRESS} a identifikačním číslem
-          (IČO) {ICO} (dále jen &quot;správce&quot;) tímto v souladu s
+          OSVČ {COMPANY2} se sídlem {ADDRESS2} a identifikačním číslem
+          (IČO) {ICO2}, (dále jen &quot;správce&quot;) tímto v souladu s
           ustanovením článku 12 a násl. Nařízení Evropského parlamentu a Rady
           (EU) 2016/679 účinného od 25.5.2018 informuje své zákazníky o
           zpracování jejich osobních údajů v případě, že využijí jejich služeb.
@@ -179,7 +161,7 @@ export default function Zasady() {
               5. Poučení subjektu údajů
             </h2>
             <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-              {COMPANY} informuje své zákazníky, že mají právo:
+              Prodávající informuje své zákazníky, že mají právo:
             </p>
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>

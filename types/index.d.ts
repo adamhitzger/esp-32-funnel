@@ -1,3 +1,5 @@
+import type { PortableTextBlock } from "next-sanity";
+
 export interface ActionRes<T> {
     success: boolean;
     submitted: boolean;
@@ -61,14 +63,15 @@ export interface ThePayConfig {
 }
 
 export interface GetProject {
-    project_id: number;
-    project_url: string;
-    account_iban: string;
+  project_id: number;
+  project_url: string;
+  account_iban: string;
 }
 
 export interface CreatePaymentResponse {
   pay_url: string;
   detail_url: string;
+  transaction_id?: string;
 }
 
 export interface RefundRequest {
@@ -160,6 +163,15 @@ export interface SanityFileAsset {
   size: number
   uploadId?: string
   url: string
+}
+export interface Article {
+  _id: string;
+  heading: string;
+  slug: { current: string };
+  datum: string;
+  image: any;
+  description: string;
+  content: PortableTextBlock[];
 }
 
 export interface BarcodeSend {

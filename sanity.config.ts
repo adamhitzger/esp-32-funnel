@@ -3,11 +3,11 @@
 /**
  * This configuration is used to for the Sanity Studio that’s mounted on the `/app/studio/[[...tool]]/page.tsx` route
  */
-
+import {StreamLanguage} from '@codemirror/language'
 import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
-
+import {codeInput} from "@sanity/code-input"
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import {apiVersion, dataset, projectId} from './sanity/env'
 import {schema} from './sanity/schemaTypes'
@@ -24,5 +24,13 @@ export default defineConfig({
     // Vision is for querying with GROQ from inside the Studio
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({defaultApiVersion: apiVersion}),
+    codeInput({
+      codeModes: [
+        {
+          name: "c",
+          loader: () => import("@codemirror/legacy-modes/mode/clike").then(({c}) => StreamLanguage.define(c)),
+        }
+      ]
+    })
   ],
 })

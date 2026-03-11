@@ -29,12 +29,11 @@ const STATUS_MAP: Record<string, { label: string; color: string; bg: string; bor
 }
 
 const COMPANY = {
-  name: "ElectroCore",
-  street: "Technická 42",
-  city: "Praha 6",
-  psc: "160 00",
-  ico: "12345678",
-  dic: "CZ12345678",
+  name: "Adam Hitzger",
+  street: "Ledečská 2984",
+  city: "Havlíčkův Brod",
+  psc: "580 01",
+  ico: "19712049",
   email: "info@especko.cz",
 }
 
@@ -114,7 +113,7 @@ export function OrderStatusEmail({ order, isInvoice }: OrderStatusEmailProps) {
               {COMPANY.street}, {COMPANY.city}, {COMPANY.psc}
             </Text>
             <Text style={{ margin: "2px 0 0", fontSize: 13, color: textMuted }}>
-              IČO: {COMPANY.ico} | DIČ: {COMPANY.dic}
+              IČO: {COMPANY.ico} 
             </Text>
           </Section>
 
@@ -331,7 +330,7 @@ export function OrderStatusEmail({ order, isInvoice }: OrderStatusEmailProps) {
               {COMPANY.name} | {COMPANY.street}, {COMPANY.city}, {COMPANY.psc}
             </Text>
             <Text style={{ margin: "4px 0 0", fontSize: 13, color: textMuted }}>
-              IČO: {COMPANY.ico} | DIČ: {COMPANY.dic}
+              IČO: {COMPANY.ico} 
             </Text>
             <Text style={{ margin: "8px 0 0", fontSize: 12, color: "#666680" }}>
               Tento e-mail byl odeslán automaticky. V případě dotazů nás kontaktujte na{" "}

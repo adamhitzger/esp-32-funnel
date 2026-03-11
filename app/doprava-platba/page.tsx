@@ -157,11 +157,7 @@ export default function DopravaPlatba() {
               Adam Hitzger, IČO: 19712049 
             </span>
             , se sídlem Ledečská 2984, 580 01 Havlíčkův Brod.
-            <span className="text-foreground">
-              David Havel, IČO: 19203144
-            </span>
-            , se sídlem Brixenská 3711, 580 01 Havlíčkův Brod.
-          </p>
+           </p>
         </div>
       </div>
     </main>

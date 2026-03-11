@@ -197,7 +197,8 @@ export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formD
             return{
                 submitted: true,
                 success: true,
-                message: "Váš e-mail máme uložený. Vyčkejte na newsletter!"
+                message: "Váš e-mail máme uložený. Vyčkejte na newsletter!",
+                inputs: data
             }
         }
 
@@ -208,7 +209,8 @@ export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formD
         return {
                 submitted: true,
                 success: true,
-                message: "Uložili jsme Váš e-mail! Brzy Vás kontaktujeme s novinkami!"
+                message: "Uložili jsme Váš e-mail! Brzy Vás kontaktujeme s novinkami!",
+                inputs: data
         }
     }catch(error){
         console.log("Error v akci saveNewsletter: ", error)
@@ -302,12 +304,14 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
                 inputs: data,
                 pay_url: "",
                 detail_url: "",
+                transaction_id: orderId
             }
         }else{
 
             return {
                 submitted: true,
                 success: true,
+                inputs: data,
                 pay_url: String(createPayment?.pay_url),
                 detail_url: String(createPayment?.detail_url),
                 message: "Objednávka proběhla"

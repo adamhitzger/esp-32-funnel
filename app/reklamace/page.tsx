@@ -123,12 +123,8 @@ export default function Reklamace() {
 
         <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
           <p className="text-sm text-muted-foreground">
-            Provozovatelé:{" "}
+            Provozovatel:{" "}
             <span className="text-foreground">
-              David Havel, IČO: 19203144
-            </span>
-            , se sídlem Brixenská 3711, 580 01 Havlíčkův Brod a
-              <span className="text-foreground">
               Adam Hitzger, IČO: 19712049
             </span>
             , se sídlem Ledečská 2984, 580 01 Havlíčkův Brod

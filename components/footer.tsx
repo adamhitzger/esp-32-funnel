@@ -50,14 +50,11 @@ export function Footer() {
                 Odhlášení z newsletteru
               </Link>
             </nav>
-    <div className="flex flex-col space-y-3">
+   
      <p className="text-xs text-muted-foreground text-center">
               Adam Hitzger, IČO: 19712049 | Ledečská 2984, 580 01 Havlíčkův Brod
             </p>
-             <p className="text-xs text-muted-foreground text-center">
-              David Havel, IČO: 19203144 | Brixenská 3711, 580 01 Havlíčkův Brod
-            </p>
-    </div>
+           
            
           </div>
 

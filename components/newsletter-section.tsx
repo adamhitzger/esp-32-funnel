@@ -1,13 +1,13 @@
 "use client"
 
-import { useActionState, useEffect, useState, useTransition } from "react"
+import { useTransition } from "react"
 import { Mail, ArrowRight, CheckCircle2 } from "lucide-react"
 import { ActionRes } from "@/types"
 import { NewsletterType } from "@/server/schema"
 import { saveNewsletter } from "@/server/action"
 import { toast } from "sonner"
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3"
-
+import { sendGTMEvent } from '@next/third-parties/google';
 const actionState: ActionRes<NewsletterType> = {
   submitted: false,
   success: false,
@@ -34,6 +34,10 @@ export function NewsletterSection() {
               toast.error(send.message)
             }else{
               toast.success(send.message)
+              sendGTMEvent({
+                   event: "submit_newsletter",
+                   email: String(send.inputs?.email),
+              })                                 
             }
          }
       })

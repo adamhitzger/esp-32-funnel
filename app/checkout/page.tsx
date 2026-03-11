@@ -12,8 +12,7 @@ import { createOrder, getCoupon } from "@/server/action"
 import { toast } from "sonner"
 import { ActionRes, CreatePaymentResponse } from "@/types"
 import { CreateOrderType } from "@/server/schema"
-import { Footer } from "@/components/footer"
-
+import { sendGTMEvent } from "@next/third-parties/google"
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +25,8 @@ const actionState: ActionRes<CreateOrderType>  & CreatePaymentResponse= {
   success: false,
   message:"", 
   pay_url: "",
-  detail_url: ""
+  detail_url: "",
+  transaction_id: "",
 }
 
 function CheckoutContent() {
@@ -105,6 +105,14 @@ function CheckoutContent() {
     if(state.submitted){
       if(state.success){
         toast.success(state.message)
+        sendGTMEvent({
+            event: "create_payment",
+            quantity: quantity,
+            value: finalPrice,
+            currency: "CZK",
+            transaction_id: state.transaction_id,
+            email: String(state.inputs?.email), 
+        })
         redirect(state.pay_url)
       }else {
         toast.error(state.message)
