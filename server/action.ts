@@ -521,11 +521,11 @@ const asset = await sanityClient.assets.upload("file", buffer, {
                     _type: "file",
                     asset: {
                       _type: "reference",
-                      _ref: asset.asset_id,
+                      _ref: asset.assetId,
                     },
                   }
                 }).commit()
-              console.log("[ThePay] Order status:", updateOrderStatus)
+              console.log("[ThePay uploadPdf] Pdf created status:", updateOrderStatus)
 
     return {
         created: true, 
