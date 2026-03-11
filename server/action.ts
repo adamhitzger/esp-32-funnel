@@ -521,7 +521,7 @@ const asset = await sanityClient.assets.upload("file", buffer, {
                     _type: "file",
                     asset: {
                       _type: "reference",
-                      _ref: asset.assetId,
+                      _ref: asset._id,
                     },
                   }
                 }).commit()
