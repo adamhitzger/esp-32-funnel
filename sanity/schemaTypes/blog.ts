@@ -42,10 +42,16 @@ export const blogSchema = defineType({
                 {type: "block"},
                 {type: "image"},
                 {type: "code", options: {
+                    language:"cpp",
                     languageAlternatives: [
-                        {title: "C", value: "c", mode: "c-like"}
-                    ]
-                }}
+                        {title: 'Javascript', value: 'javascript'},
+      {title: 'HTML', value: 'html'},
+      {title: 'CSS', value: 'css'},
+                        {title: "C", value: "c", mode: "cpp"}
+                    ],
+                    withFilename: true,
+                }},
+                
             ]
         })
     ],

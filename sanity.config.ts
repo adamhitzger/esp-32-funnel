@@ -28,7 +28,7 @@ export default defineConfig({
       codeModes: [
         {
           name: "c",
-          loader: () => import("@codemirror/legacy-modes/mode/clike").then(({c}) => StreamLanguage.define(c)),
+          loader: () => import("@codemirror/legacy-modes/mode/clike").then(({cpp}) => StreamLanguage.define(cpp)),
         }
       ]
     })

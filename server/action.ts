@@ -148,11 +148,12 @@ export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formD
         
         const captchaData = await verifyCaptchaToken(token);
 
-        if (!captchaData || !captchaData.success || captchaData.score < 0.6) {
+        if (!captchaData || !captchaData.success || captchaData.score < 0.4) {
+            
             return {
                 submitted: true,
                 success: false,
-                message: "Ověření selhalo",  
+                message: "Ověření Google Captcha selhalo",  
             };
         } 
         const nonValidate: NewsletterType = {
@@ -201,8 +202,6 @@ export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formD
                 inputs: data
             }
         }
-
-        
 
         revalidate = true;
 
@@ -525,7 +524,7 @@ const asset = await sanityClient.assets.upload("file", buffer, {
                     },
                   }
                 }).commit()
-              console.log("[ThePay uploadPdf] Pdf created status:", updateOrderStatus)
+    console.log("[ThePay uploadPdf] Pdf created status:", updateOrderStatus)
 
     return {
         created: true, 

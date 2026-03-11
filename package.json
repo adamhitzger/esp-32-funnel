@@ -10,6 +10,7 @@
     "postinstall": "node scripts/postinstall.mjs"
   },
   "dependencies": {
+    "@codemirror/lang-cpp": "^6.0.3",
     "@codemirror/language": "^6.12.2",
     "@hookform/resolvers": "^3.9.1",
     "@next/third-parties": "^16.1.6",

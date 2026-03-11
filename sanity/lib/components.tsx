@@ -124,15 +124,18 @@ export const components: Partial<PortableTextComponents> = {
                 )}
             </figure>
         ),
-        code: ({value}: {value: any}) => (
+        code: ({value}: {value: any}) => {
+            console.log(value)
+            return(
             <div className="my-8">
                 <CodeBlock
                     language={value.language}
-                    filename={value.filename || `example.${value.language}`}
+                    filename={value.filename}
                     highlightLines={value.highlightedLines}
                     code={value.code}
                 />
             </div>
         )
+        }
     },
 }
