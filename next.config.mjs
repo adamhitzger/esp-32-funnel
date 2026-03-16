@@ -5,8 +5,14 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+          {
+            protocol: "https",
+            hostname: "api.paylibo.com",
+          },
+    ],
   },
-   serverExternalPackages: ["@sparticuz/chromium-min", "puppeteer-core"],
+  serverExternalPackages: ["@sparticuz/chromium-min", "puppeteer-core"],
 }
 
 export default nextConfig

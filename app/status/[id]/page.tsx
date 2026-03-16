@@ -17,6 +17,8 @@ import {
   XCircle,
   Loader2,
   Check,
+  QrCode,
+  Download,
 } from "lucide-react"
 import { Order } from "@/types"
 
@@ -75,6 +77,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
 
   const normalizedStatus = STATUS_TRANSLATION[order.status]
   const status = STATUS_MAP[normalizedStatus]
+  
   return (
     <div className="min-h-screen bg-background">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -96,6 +99,8 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
             <h1 className="text-3xl font-bold text-foreground">{"Detail objednávky"}</h1>
             <p className="text-sm text-muted-foreground mt-1">
               {"ID:"} <span className="font-mono text-foreground/70">{id}</span>
+               {"Konstantní symbol:"} <span className="font-mono text-foreground/70">{order.ks}</span>
+                {"Variabilní symbol:"} <span className="font-mono text-foreground/70">{order.vs}</span>
             </p>
           </div>
           <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium ${status.color}`}>
@@ -107,7 +112,23 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Product */}
           <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
+            {order.status === "Přijatá" && 
+            <>
             <div className="flex items-center gap-2 mb-6">
+              <QrCode className="w-5 h-5 text-electric-cyan" />
+              <h2 className="text-lg font-semibold text-foreground">{"QR kód"}</h2>
+            </div>
+            
+            <Image
+              src={`https://api.paylibo.com/paylibo/generator/czech/image?accountNumber=4259630093&bankCode=0800&amount=${order.total}&currency=CZK&vs=${order.vs}&ks=${order.ks}&message=${order.quantity}xESP32-S3`}
+              alt="QR platba"
+              width={200}
+              height={200}
+              />
+             
+              </>
+            }
+            <div className="flex items-center gap-2 my-6">
               <Package className="w-5 h-5 text-electric-cyan" />
               <h2 className="text-lg font-semibold text-foreground">{"Produkt"}</h2>
             </div>

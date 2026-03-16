@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+export const SITE_URL = process.env.NODE_ENV === "production" ? "https://especko.cz/" : "http://localhost:3000/"
+
 export const UNIT_PRICE: number = 209
 
 export function cn(...inputs: ClassValue[]) {

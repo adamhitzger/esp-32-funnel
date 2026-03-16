@@ -17,8 +17,8 @@ export function Footer() {
               <span className="font-bold text-foreground">Espéčko.cz</span>
             </div>
 
-            <Link href="https://www.thepay.eu/" target="_blank" rel="noopener" >
-            <Image alt="The pay logo" width={256} height={128} src="https://demo.gate.thepay.cz/img/thepay-v2-220209-transparent-gpay.svg?pid=1051" />
+            <Link href="https://www.csas.cz/cs/osobni-finance" target="_blank" rel="noopener" >
+            <Image alt="Erste logo" width={150} height={96} src="/erste.png" />
           </Link>
 
             <nav className="flex items-center gap-6 text-sm">

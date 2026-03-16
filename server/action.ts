@@ -7,12 +7,19 @@ import { verifyCaptchaToken } from "./captcha";
 import { sanityClient, sanityFetch } from "@/sanity/lib/client";
 import { GET_COUPON, GET_CUR_USER } from "@/sanity/lib/queries";
 import { Coupon } from "@/types";
-import { thePayClient } from "./thepay/client";
 import { UNIT_PRICE } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
-import { id } from "date-fns/locale";
+import Stripe from 'stripe';
+
+const stripe = new Stripe(
+  process.env.STRIPE_SECRET_KEY! as string,
+  {
+    apiVersion: "2026-02-25.clover",
+    typescript: true,
+  }
+);
 
 const transporter = nodemailer.createTransport({
      host: "smtp.seznam.cz",
@@ -253,8 +260,6 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
                 message: "Nezadali jste platná data",
                 inputs: nonValidate,
                 errors: validate.error.flatten().fieldErrors,
-                pay_url: "",
-                detail_url: "",
             }
         }
 
@@ -266,6 +271,9 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
         const itemPrice: number = data.quantity * UNIT_PRICE + data.sale
         
         console.log(data, totalPrice, itemPrice)
+
+        const ks = String(Math.floor(Math.random() * 100000))
+        const vs = String(Math.floor(Math.random() * 10000))
 
         const orderCreate = await sanityClient.create({
             _type: "orders",
@@ -281,49 +289,28 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             couponValue:String(data.sale.toFixed(2)),
             quantity: Number(data.quantity),
             del_price: Number(data.deliveryPrice) === 0 ? true : false,
+            ks: ks,
+            vs: vs,
             packetaId: data.packetaId,
             status: "Přijatá",
-            packetaAddress: data.packetaAddress
+            packetaAddress: data.packetaAddress,
         })
 
         const orderId: string = orderCreate._id
 
-        const createPayment = await thePayClient.createPayment(
-            String(totalPrice),
-            orderId,
-            data,
-            String(itemPrice)
-        )
-
-        if(!createPayment?.detail_url || !createPayment?.pay_url){
-            return {
-                submitted: true,
-                success: false,
-                message: "Nepodařilo se spojit s platební bránou. Objednávka se nezdařila",
-                inputs: data,
-                pay_url: "",
-                detail_url: "",
-                transaction_id: orderId
-            }
-        }else{
-
-            return {
-                submitted: true,
-                success: true,
-                inputs: data,
-                pay_url: String(createPayment?.pay_url),
-                detail_url: String(createPayment?.detail_url),
-                message: "Objednávka proběhla"
-            }
-
+        return {
+            submitted: true,
+            success: true,
+            inputs: data,
+            message: "Objednávka proběhla",
+            transaction_id: orderId
         }
+        
     }catch(error){
         console.error("[createOrder] Error: ", error);
         return {
             submitted: true,
             success: false,
-            pay_url: "",
-            detail_url: "",
             inputs: inputs as CreateOrderType,
             message: "Problém se zpracováním platby na naší straně. Zkuste znovu později. Omlouváme se."
         }

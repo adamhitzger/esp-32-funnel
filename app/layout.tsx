@@ -80,7 +80,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cs">
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased"  suppressHydrationWarning>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_KEY as string} />
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_KEY as string}/>
         <RecaptchaProvider>

@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Check, Minus, Plus, ShoppingCart, Shield, Truck, RotateCcw } from "lucide-react"
+import { Check, Minus, Plus, ShoppingCart, Shield, Truck, RotateCcw, QrCode } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -200,9 +200,9 @@ export function HeroSection() {
                 </Link>
               </Button>
 
-              <p className="text-center text-sm text-muted-foreground mt-4">
-                {"Bezpečná platba kartou skrz The Pay"}
-              </p>
+              <div className="flex flex-row justify-center text-center text-sm  text-muted-foreground mt-4 space-x-2">
+                <p>Bezpečná platba</p> <QrCode/> <p>QR kódem na účet od České spořitelny</p>
+              </div>
             </div>
           </div>
         </div>

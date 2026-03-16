@@ -68,6 +68,16 @@ export const orders = defineType({
             title:"Doprava zdarma",
             name: "del_price",
         }),
+         defineField({
+            type: "string",
+            title: "Variabilní symbol",
+            name: "vs"
+        }),
+         defineField({
+            type: "string",
+            title: "Konstantní symbol",
+            name: "ks"
+        }),
         defineField({
             type: "number",
             title:"ID Pick-up pointu",

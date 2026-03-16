@@ -69,8 +69,6 @@ export interface GetProject {
 }
 
 export interface CreatePaymentResponse {
-  pay_url: string;
-  detail_url: string;
   transaction_id?: string;
 }
 
@@ -200,6 +198,8 @@ export interface Order {
   barcode: string
   couponValue: string | null
   del_price: boolean
+  ks: string
+  vs: string
   packetaId: string | null
   packetaAddress: string | null
   status: string;

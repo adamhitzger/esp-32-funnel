@@ -7,7 +7,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Lock, CreditCard, ShieldCheck, MapPin, Loader2, Tag, X } from "lucide-react"
 import { Suspense, useEffect } from "react"
-import { UNIT_PRICE } from "@/lib/utils"
+import { SITE_URL, UNIT_PRICE } from "@/lib/utils"
 import { createOrder, getCoupon } from "@/server/action"
 import { toast } from "sonner"
 import { ActionRes, CreatePaymentResponse } from "@/types"
@@ -24,8 +24,6 @@ const actionState: ActionRes<CreateOrderType>  & CreatePaymentResponse= {
   submitted: false,
   success: false,
   message:"", 
-  pay_url: "",
-  detail_url: "",
   transaction_id: "",
 }
 
@@ -113,13 +111,13 @@ function CheckoutContent() {
             transaction_id: state.transaction_id,
             email: String(state.inputs?.email), 
         })
-        redirect(state.pay_url)
+        redirect(SITE_URL+"status/"+state.transaction_id)
       }else {
         toast.error(state.message)
       }
     }
   },[state.message, state.submitted, state.success])
-
+  
   const showPacketaWidget = () => {
     if (window.Packeta) {
       const packetaApiKey = process.env.NEXT_PUBLIC_PACKETA_API_KEY
@@ -144,7 +142,7 @@ function CheckoutContent() {
       }, packetaOptions)
     }
   }
-
+  
   return (
     <div className="min-h-screen bg-background relative">
       {/* Background effects */}
