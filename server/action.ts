@@ -11,15 +11,6 @@ import { UNIT_PRICE } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
-import Stripe from 'stripe';
-
-const stripe = new Stripe(
-  process.env.STRIPE_SECRET_KEY! as string,
-  {
-    apiVersion: "2026-02-25.clover",
-    typescript: true,
-  }
-);
 
 const transporter = nodemailer.createTransport({
      host: "smtp.seznam.cz",
