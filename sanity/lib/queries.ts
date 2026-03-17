@@ -89,3 +89,27 @@ export const GET_ARTCILE_BY_SLUG = groq`*[_type == "article" && slug.current == 
       description,
       content
     }`
+
+export const GET_UNPAID_ORDERS = groq`*[_type=="orders" && status == "Přijatá"]{
+    _id,
+    _rev,
+    firstName,
+    lastName,
+    email,
+    phone,
+    address,
+    adr_number,
+    city,
+    psc,
+    quantity,
+    total,
+    couponValue,
+    del_price,
+    ks,
+    vs,
+    packetaId,
+    packetaAddress,
+    barcode,
+    status,
+    "invoice":invoice.asset->url
+}`

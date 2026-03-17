@@ -11,7 +11,7 @@ import { UNIT_PRICE } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
-
+import { getAccessToken } from "@/lib/erste-tokens";
 const transporter = nodemailer.createTransport({
      host: "smtp.seznam.cz",
         port: 587,
@@ -119,6 +119,7 @@ export async function signOutNewsletter(prevState: ActionRes<NewsletterType>, fo
             inputs: {email: ""},
         }
     }catch(error){
+        console.log(error)
         return{
             submitted:true,
             success: false,

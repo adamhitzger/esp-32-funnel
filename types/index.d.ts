@@ -182,6 +182,10 @@ export interface BarcodeSend {
     uid: string;
 }
 
+export interface EnVars {
+  ersteRefToken: string
+}
+
 export interface Order {
   _rev: string;
   _id: string;

@@ -3,6 +3,10 @@
     {
       "path": "/api/packeta",
       "schedule": "15 7-21 * * *"
+    },
+    {
+      "path": "/api/erste/verify-payments",
+      "schedule": "*/5 * * * *"
     }
   ]
 }

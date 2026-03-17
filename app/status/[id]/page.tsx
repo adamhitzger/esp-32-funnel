@@ -99,9 +99,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
             <h1 className="text-3xl font-bold text-foreground">{"Detail objednávky"}</h1>
             <p className="text-sm text-muted-foreground mt-1">
               {"ID:"} <span className="font-mono text-foreground/70">{id}</span>
-               {"Konstantní symbol:"} <span className="font-mono text-foreground/70">{order.ks}</span>
-                {"Variabilní symbol:"} <span className="font-mono text-foreground/70">{order.vs}</span>
-            </p>
+               </p>
             <p className="text-sm text-muted-foreground mt-1">
                {"Variabilní symbol:"} <span className="font-mono text-foreground/70">{order.vs}</span>
             </p>
