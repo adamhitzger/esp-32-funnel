@@ -21,6 +21,7 @@ import {
   Download,
 } from "lucide-react"
 import { Order } from "@/types"
+import { IconInvoice } from "@tabler/icons-react"
 
 
 
@@ -116,7 +117,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Product */}
           <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
-            {order.status === "Přijatá" && 
+            {order.status === "Přijatá" && order.invoice === null ? 
             <>
             <div className="flex items-center gap-2 mb-6">
               <QrCode className="w-5 h-5 text-electric-cyan" />
@@ -130,7 +131,20 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
               height={200}
               />
              
-              </>
+              </>: 
+               <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <IconInvoice className="w-5 h-5 text-electric-cyan" />
+                <h2 className="text-lg font-semibold text-foreground">{"Faktura"}</h2>
+              </div>
+              <div className="flex flex-row w-full justify-center ">
+                <Link href={`${order.invoice}`} >
+                  <button className="bg-electric-cyan hover:bg-electric-cyan/90 text-background shadow-[0_0_30px_rgba(0,200,255,0.4)] hover:shadow-[0_0_50px_rgba(0,200,255,0.6)] transition-all font-semibold flex py-2 px-4  items-center rounded-lg">
+                    Stáhněte zde
+                  </button>
+                  </Link>
+              </div>
+            </div>
             }
             <div className="flex items-center gap-2 my-6">
               <Package className="w-5 h-5 text-electric-cyan" />
@@ -270,9 +284,11 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">{"Stav"}</span>
-                <span className={`font-medium ${status.color.split(" ")[0]}`}>{status.label}</span>
+                <span className={`font-medium ${status.color.split(" ")[0]}`}>{status.label === "Přijatá" ? <span className="text-red-400">Nezaplacená</span> : <span className="text-green-400">Zaplacená</span>}</span>
               </div>
             </div>
+
+             
           </div>
         </div>
       </div>
