@@ -6,6 +6,8 @@ import RecaptchaProvider from "@/components/recaptcha";
 import { Footer } from '@/components/footer';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import CookiesBanner from '@/components/cookies-banner';
+import { FBPixelScript, FBPixelProvider } from '@rivercode/facebook-conversion-api-nextjs/components';
+
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
@@ -83,6 +85,7 @@ export default function RootLayout({
       <body className="font-sans antialiased"  suppressHydrationWarning>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_KEY as string} />
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_KEY as string}/>
+        <FBPixelScript/>
         <RecaptchaProvider>
         {children}
         <Footer/>

@@ -144,6 +144,12 @@ export function OrderStatusEmail({ order, isInvoice }: OrderStatusEmailProps) {
             <Text style={{ margin: "6px 0 0", fontSize: 13, color: textMuted, fontFamily: "monospace" }}>
               ID: {order._id}
             </Text>
+            <Text style={{ margin: "6px 0 0", fontSize: 13, color: textMuted, fontFamily: "monospace" }}>
+              Variabilní symbol: {order.vs}
+            </Text>
+            <Text style={{ margin: "6px 0 0", fontSize: 13, color: textMuted, fontFamily: "monospace" }}>
+              Konstantní symbol: {order.ks}
+            </Text>
           </Section>
 
           {/* Products table */}

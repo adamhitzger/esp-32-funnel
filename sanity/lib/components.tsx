@@ -108,12 +108,14 @@ export const components: Partial<PortableTextComponents> = {
         }
     },
     types: {
-        image: ({ value }: { value: any }) => (
+        image: ({ value }: { value: any }) => {
+            console.log(value)
+            return(
             <figure className="my-8">
                 <Image
                     width={800}
                     height={600}
-                    src={String(urlFor(value))}
+                    src={String(urlFor(value)) || "/placeholder.svg"}
                     alt={value.alt || "ESP32 Blog image"}
                     className="rounded-xl w-full max-w-2xl mx-auto border border-border"
                 />
@@ -123,9 +125,10 @@ export const components: Partial<PortableTextComponents> = {
                     </figcaption>
                 )}
             </figure>
-        ),
+            )
+        },
         code: ({value}: {value: any}) => {
-            console.log(value)
+            
             return(
             <div className="my-8">
                 <CodeBlock

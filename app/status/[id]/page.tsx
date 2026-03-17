@@ -102,6 +102,12 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
                {"Konstantní symbol:"} <span className="font-mono text-foreground/70">{order.ks}</span>
                 {"Variabilní symbol:"} <span className="font-mono text-foreground/70">{order.vs}</span>
             </p>
+            <p className="text-sm text-muted-foreground mt-1">
+               {"Variabilní symbol:"} <span className="font-mono text-foreground/70">{order.vs}</span>
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+             {"Konstantní symbol:"} <span className="font-mono text-foreground/70">{order.ks}</span>
+             </p>
           </div>
           <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium ${status.color}`}>
             {status.icon}
@@ -212,7 +218,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
             <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
               <div className="flex items-center gap-2 mb-4">
                 <MapPin className="w-5 h-5 text-electric-cyan" />
-                <h2 className="text-lg font-semibold text-foreground">{"Dodací adresa"}</h2>
+                <h2 className="text-lg font-semibold text-foreground">{"Fakturační adresa"}</h2>
               </div>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">

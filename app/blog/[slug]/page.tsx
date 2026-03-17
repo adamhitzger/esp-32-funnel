@@ -91,7 +91,7 @@ export default async function ArticlePage({ params }: PageProps) {
           <Button asChild variant="ghost" size="sm" className="mb-6 text-muted-foreground hover:text-foreground">
             <Link href="/blog" className="gap-2">
               <ArrowLeft className="w-4 h-4" />
-              Back to Blog
+              Zoět na články
             </Link>
           </Button>
 

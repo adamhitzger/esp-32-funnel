@@ -5,7 +5,7 @@ import { redirect, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Lock, CreditCard, ShieldCheck, MapPin, Loader2, Tag, X } from "lucide-react"
+import { ArrowLeft, Lock, CreditCard, ShieldCheck, MapPin, Loader2, Tag, X, Banknote, QrCode } from "lucide-react"
 import { Suspense, useEffect } from "react"
 import { SITE_URL, UNIT_PRICE } from "@/lib/utils"
 import { createOrder, getCoupon } from "@/server/action"
@@ -13,6 +13,8 @@ import { toast } from "sonner"
 import { ActionRes, CreatePaymentResponse } from "@/types"
 import { CreateOrderType } from "@/server/schema"
 import { sendGTMEvent } from "@next/third-parties/google"
+import { fbEvent } from '@rivercode/facebook-conversion-api-nextjs';
+
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,6 +112,16 @@ function CheckoutContent() {
             currency: "CZK",
             transaction_id: state.transaction_id,
             email: String(state.inputs?.email), 
+        })
+        fbEvent({
+            eventName: "create_payment",
+            products: [{
+              sku: "ESP32-S3",
+              quantity: quantity
+            }],
+            value: Number(finalPrice),
+            currency: "CZK",
+            emails: [String(state.inputs?.email)], 
         })
         redirect(SITE_URL+"status/"+state.transaction_id)
       }else {
@@ -430,6 +442,41 @@ function CheckoutContent() {
                   </div>
                 </div>
               </div>
+
+              <div className="rounded-2xl border border-electric-cyan/20 bg-card/80 backdrop-blur-sm p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Banknote className="w-5 h-5 text-electric-cyan" />
+                  <h2 className="text-lg font-semibold text-foreground">{"Platba"}</h2>
+                </div>
+
+                <div className="rounded-xl bg-secondary/50 border border-electric-cyan/30 p-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-electric-cyan/10 flex items-center justify-center shrink-0">
+                      <QrCode className="w-6 h-6 text-electric-cyan" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-foreground">{"Platba QR kódem"}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {"Po odeslání objednávky se QR kód zobrazí."}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <ShieldCheck className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5" />
+                      <span>
+                        {"QR kód naskenujete v mobilní aplikaci vaší banky. Platba je rychlá a bezpečná."}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-xs text-muted-foreground mt-3">
+                  {"Bankovní účet: 4259630093/0800 (České spořitelna)"}
+                </p>
+              </div>
+
 
               <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
                 <div className="flex items-center gap-2 mb-4">

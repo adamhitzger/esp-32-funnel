@@ -5,7 +5,7 @@ import { CreateOrderType, newsletterSchema, NewsletterType, orderSchema } from "
 import { revalidatePath } from "next/cache";
 import { verifyCaptchaToken } from "./captcha";
 import { sanityClient, sanityFetch } from "@/sanity/lib/client";
-import { GET_COUPON, GET_CUR_USER } from "@/sanity/lib/queries";
+import { GET_COUPON, GET_CUR_USER, GET_ORDER_BY_ID } from "@/sanity/lib/queries";
 import { Coupon } from "@/types";
 import { UNIT_PRICE } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
@@ -256,15 +256,16 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
 
         const data = validate.data;
         inputs = data;
-      console.log(data)
 
         const totalPrice: number = data.quantity * UNIT_PRICE + data.deliveryPrice - data.sale
         const itemPrice: number = data.quantity * UNIT_PRICE + data.sale
         
         console.log(data, totalPrice, itemPrice)
 
-        const ks = String(Math.floor(Math.random() * 100000))
-        const vs = String(Math.floor(Math.random() * 10000))
+        const vs = String(Math.floor(Math.random() * 100000))
+        const ks = String(Math.floor(Math.random() * 10000))
+
+    
 
         const orderCreate = await sanityClient.create({
             _type: "orders",
@@ -288,6 +289,18 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
         })
 
         const orderId: string = orderCreate._id
+        console.log("Objednavka vytvořena:",orderCreate)     
+       const sendMail = await sendStatusMail(orderCreate as unknown as Order, "Objednávka byla přijata.", null)
+        
+        if(!sendMail){
+              return {
+            submitted: true,
+            success:false,
+            inputs: data,
+            message: "Nepodařilo se odeslat email",
+            transaction_id: orderId
+        }
+        }
 
         return {
             submitted: true,

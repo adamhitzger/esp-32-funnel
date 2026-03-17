@@ -5,17 +5,24 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, Calendar } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image"
+import { fbEvent } from "@rivercode/facebook-conversion-api-nextjs"
 export function BlogPost({article}: {article: Article}){
     return(
          <Link
               href={`/blog/${article.slug.current}`}
               className="group"
-              onClick={()=> sendGTMEvent({
+              onClick={()=> {sendGTMEvent({
                    event: "view_article",
                    content_id: article._id,
                    path: `especko.cz/blog/${article.slug.current}`,
                    name: article.heading, 
-              }) }
+              }) 
+              fbEvent({
+                eventName: "view_article",
+                   firstName: `especko.cz/blog/${article.slug.current}`,
+                   lastName: article.heading, 
+              })
+              }}
             >
               <article className="h-full rounded-2xl border border-border bg-card/50 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-electric-cyan/50 hover:shadow-[0_0_30px_rgba(0,200,255,0.1)]">
                 {/* Image */}

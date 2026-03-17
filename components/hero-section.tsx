@@ -7,6 +7,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { UNIT_PRICE } from "@/lib/utils"
 import { sendGTMEvent } from '@next/third-parties/google';
+import { fbEvent } from "@rivercode/facebook-conversion-api-nextjs"
 
 const features = [
   "240MHz dvoujádrový",
@@ -191,6 +192,15 @@ export function HeroSection() {
                                   currency: "CZK",
                                   value: totalPrice,
                                   quantity: quantity
+                                })
+                                fbEvent({
+                                  eventName: "begin_checkout",
+                                  value: Number(totalPrice),
+                                  products: [{
+                                    sku: "ESP32_S3",
+                                    quantity: quantity
+                                  }],
+                                  currency: "CZK",
                                 })
                   }} 
                   href={`/checkout?quantity=${quantity}`}
