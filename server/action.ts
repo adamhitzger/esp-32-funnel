@@ -379,7 +379,7 @@ let packetaCode: string = "";
           createPacket: {
             apiPassword: process.env.PACKETA_API_PASSWORD,
             packetAttributes: {
-                number: `${packetaId}-${total}-${uid}`,
+                number: String(`${packetaId}-${total}-${uid}`).substring(0,35),
                 name: name,
                 surname: surname,
                 email: email,

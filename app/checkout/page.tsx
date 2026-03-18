@@ -272,11 +272,11 @@ function CheckoutContent() {
               <div className="mt-6 pt-4 border-t border-border space-y-3">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <ShieldCheck className="w-4 h-4 text-electric-cyan shrink-0" />
-                  <span>{"Bezpecna platba kartou"}</span>
+                  <span>{"Bezpečná platba QR kódem prostřednictvím České spořitelny"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Lock className="w-4 h-4 text-electric-cyan shrink-0" />
-                  <span>{"Sifrovane SSL spojeni"}</span>
+                  <span>{"Šifrované SSL spojení"}</span>
                 </div>
               </div>
             </div>
@@ -577,7 +577,7 @@ function CheckoutContent() {
               </Button>
 
               <p className="text-center text-xs text-muted-foreground">
-                Kliknutím na tlačítko souhlasíte s <Link href={"/podminky"} className="underline underline-offset-1">obchodními podmínkami</Link>. Vaše data jsou v bezpečí."
+                Kliknutím na tlačítko souhlasíte s <Link href={"/podminky"} className="underline underline-offset-1">obchodními podmínkami</Link>. Vaše data jsou v bezpečí.
               </p>
             </form>
           </div>

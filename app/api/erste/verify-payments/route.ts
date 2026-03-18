@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
             if (match) {
                 await sanityClient.patch(order._id).set({ status: "Zaplacená" }).commit();
                 console.log(order._id)
-                if(order.barcode == null){
+                if(order.barcode.length === 0 || order.barcode === null){
                     const {firstName, lastName, email, phone,packetaId , total} = order
                     const  packeta = await createPacket({
                             name: firstName,
@@ -85,7 +85,9 @@ export async function GET(req: NextRequest) {
                 const invoice = await ensureInvoicePdf(order);
                 console.log("Invoice",invoice)
                 const sendMail = await sendStatusMail(order, "Objednávka byla zaplacena.", invoice.url)
-
+                if(!sendMail){
+                    NextResponse.json({ error: "Problém s odesláním emailu "+order.email }, { status: 500 });
+                }
                 results.paid++;
             } else {
              results.stillPending++;
