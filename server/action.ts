@@ -325,6 +325,7 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
 }
 
 export async function getPacketStatus(packetId: string): Promise<{ok: boolean, statusCode: number | null, message?: string}>{
+    console.log(packetId)
     const rBody = {
         packetStatus: {
             apiPassword: process.env.PACKETA_API_PASSWORD,

@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     }
     try{
         const unpaidOrders = await sanityFetch<Order[]>({query: GET_UNPAID_ORDERS})
-        console.log(unpaidOrders)
+        //console.log(unpaidOrders)
         if (unpaidOrders.length === 0) {
             return NextResponse.json({ message: "Žádné nezaplacené objednávky" });
         }
@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
         if (!txRes.ok) throw new Error(`CSAS API error: ${await txRes.text()}`);
          const txData = await txRes.json();
          const transactions = txData.transactions ?? txData.items ?? [];
-         
+         console.log("START HOOKU")
          const txByVS = new Map<string, any>();
          for (const tx of transactions) {
             try {
@@ -68,8 +68,10 @@ export async function GET(req: NextRequest) {
             const match = txByVS.get(order.vs);
             if (match) {
                 await sanityClient.patch(order._id).set({ status: "Zaplacená" }).commit();
-                console.log(order._id)
-                if(order.barcode.length === 0 || order.barcode === null){
+                console.log("Objednavka č.",order._id, order.barcode)
+                console.log("Faktura URL:", order.invoice)
+                if(order.barcode === null){
+                    console.log("Vytvařím packetu")
                     const {firstName, lastName, email, phone,packetaId , total} = order
                     const  packeta = await createPacket({
                             name: firstName,
