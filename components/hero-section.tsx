@@ -111,7 +111,7 @@ export function HeroSection() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric-orange opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-electric-orange" />
                 </span>
-                <span className="text-sm font-medium text-electric-orange">{"Omezené zásoby"}</span>
+                <span className="text-sm font-medium text-electric-orange">{"Omezené zásoby - skladem"}</span>
               </div>
 
               <h2 className="text-xl font-bold text-foreground mb-1">ESP32 DevKit V1</h2>
