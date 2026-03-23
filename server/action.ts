@@ -11,7 +11,7 @@ import { UNIT_PRICE } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
-import { getAccessToken } from "@/lib/erste-tokens";
+
 const transporter = nodemailer.createTransport({
      host: "smtp.seznam.cz",
         port: 587,
@@ -46,6 +46,7 @@ export async function sendStatusMail(order: Order, subject: string, invoice: str
         const mailSend = await transporter.sendMail(mailOptions)
 
         if(!mailSend.accepted){
+            console.log(mailSend.response)
             return false
         }else {
             return true
@@ -325,6 +326,7 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
 }
 
 export async function getPacketStatus(packetId: string): Promise<{ok: boolean, statusCode: number | null, message?: string}>{
+    packetId = packetId.substring(2).replaceAll(" ", "")
     console.log(packetId)
     const rBody = {
         packetStatus: {
@@ -353,7 +355,7 @@ export async function getPacketStatus(packetId: string): Promise<{ok: boolean, s
             return {
                 ok: false,
                 statusCode: null,
-                message: `${JSON.parse(pResponse.response.status)}`
+                message: `${pResponse.response.status}`
             };
         }
         const packetStatus = Number(pResponse.response.result.statusCode)

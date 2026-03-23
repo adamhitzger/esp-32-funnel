@@ -50,7 +50,13 @@ export async function GET(req: NextRequest) {
             }
 
           // ✉️ email až po úspěchu
-          await sendStatusMail(o, getEmailText(statusCode.statusCode), null)
+          const email = await sendStatusMail(o, getEmailText(statusCode.statusCode), null)
+          if(!email){
+            console.log("Chyba v odeslání emailu na adresu ",o.email)
+            return
+          }else{
+            console.log("Email byl odeslán na adresu ",o.email)
+          }
         } catch (err) {
           console.error("[Cron] Order failed:", o._id, err)
         }
