@@ -304,6 +304,22 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
         }
         }
 
+       const TOKEN= process.env.BOT_TOKEN
+       const ID= process.env.CHAT_ID
+
+        const sendNotify = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                chat_id: ID,
+                text: "Nová objednávka: "+ data.email
+            })
+        })
+
+        console.log("Telegram notification:", sendNotify)
+
         return {
             submitted: true,
             success: true,
