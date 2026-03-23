@@ -32,7 +32,7 @@ keywords: [
     locale: "cs_CZ",
     url: "https://especko.cz",
     siteName: "especko.cz",
-    title: "ESP32 DevKit | Pohon vaše IoT projekty",
+    title: "ESP32 DevKit | Pohon pro vaše IoT projekty",
     description:
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
     images: [

@@ -15,7 +15,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://especko.cz"),
   title: {
-    default: "ESP32 DevKit | especko.cz - Pohon vaše IoT projekty",
+    default: "ESP32 DevKit | especko.cz - Pohon pro vaše IoT projekty",
     template: "%s | especko.cz",
   },
   description:
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     locale: "cs_CZ",
     url: "https://especko.cz",
     siteName: "especko.cz",
-    title: "ESP32 DevKit | Pohon vaše IoT projekty",
+    title: "ESP32 DevKit | Pohon pro vaše IoT projekty",
     description:
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
     images: [
