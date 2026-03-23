@@ -56,6 +56,7 @@ export const GET_PAID_ORDERS = groq`*[_type=="orders" && status != "Vrácená" &
     vs,
     packetaId,
     packetaAddress,
+    "invoice": invoice.asset->url,
     barcode,
     status
 }`
