@@ -304,6 +304,7 @@ export function OrderStatusEmail({ order, isInvoice }: OrderStatusEmailProps) {
               <Section>
                 <TableRow label="ID pobočky" value={String(order.packetaId)} mono />
                 {order.packetaAddress && <TableRow label="Adresa pobočky" value={order.packetaAddress} />}
+                {order.barcode && <TableRow label="Trasovací číslo" value={order.barcode} />}
               </Section>
             </Section>
           )}

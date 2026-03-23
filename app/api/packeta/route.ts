@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
             }
 
           // ✉️ email až po úspěchu
-          const email = await sendStatusMail(o, getEmailText(statusCode.statusCode), null)
+          const email = await sendStatusMail(o, getEmailText(statusCode.statusCode), o.invoice)
           if(!email){
             console.log("Chyba v odeslání emailu na adresu ",o.email)
             return
