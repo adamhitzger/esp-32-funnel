@@ -90,7 +90,7 @@ export function HeroSection() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/50 border border-border">
                 <Truck className="w-5 h-5 text-electric-cyan" />
-                <span className="text-xs text-muted-foreground text-center">{"Doprava zdarma"}</span>
+                <span className="text-xs text-muted-foreground text-center">{"Doprava Zásilkovnou za 89 Kč"}</span>
               </div>
               <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/50 border border-border">
                 <Shield className="w-5 h-5 text-electric-cyan" />
