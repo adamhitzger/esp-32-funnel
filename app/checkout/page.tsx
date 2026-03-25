@@ -191,7 +191,7 @@ function CheckoutContent() {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground">ESP-32 S3 USB-C</h3>
+                  <h3 className="font-semibold text-foreground">ESP32-S3 Devkit</h3>
                   <p className="text-sm text-muted-foreground mt-1">{"Vývojová deska s USB-C"}</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {"Množství:"} <span className="text-foreground font-medium">{quantity} ks</span>

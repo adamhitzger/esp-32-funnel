@@ -114,7 +114,7 @@ export function HeroSection() {
                 <span className="text-sm font-medium text-electric-orange">{"Omezené zásoby - skladem"}</span>
               </div>
 
-              <h2 className="text-xl font-bold text-foreground mb-1">ESP32 DevKit V1</h2>
+              <h2 className="text-xl font-bold text-foreground mb-1">ESP32-S3 DevKit </h2>
               <p className="text-muted-foreground text-sm mb-6">{"Kompletní vývojová deska s USB-C"}</p>
 
               {/* Features list */}
