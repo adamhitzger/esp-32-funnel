@@ -3,6 +3,8 @@ import { FeaturesSection } from "@/components/features-section"
 import { SpecsSection } from "@/components/specs-section"
 import { NewsletterSection } from "@/components/newsletter-section"
 import { BlogSection } from "@/components/blog-section"
+import { SocialFollowDialog } from "@/components/socials-dialog"
+import { AboutSection } from "@/components/about-us-section"
 
 const SITE_URL = "https://especko.cz"
 
@@ -33,7 +35,7 @@ const productJsonLd = {
       "@type": "OfferShippingDetails",
       shippingRate: {
         "@type": "MonetaryAmount",
-        value: "89",
+        value: "49",
         currency: "CZK",
       },
       shippingDestination: {
@@ -111,8 +113,9 @@ export default function Home() {
       <FeaturesSection />
       <SpecsSection />
       <BlogSection/>
+      <AboutSection/>
       <NewsletterSection />
-
+      <SocialFollowDialog/>
     </main>
       </>
   )

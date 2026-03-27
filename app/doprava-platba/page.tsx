@@ -5,7 +5,7 @@ import { ArrowLeft, Truck, CreditCard, Banknote } from "lucide-react"
 export const metadata: Metadata = {
   title: "Doprava a platba",
   description:
-    "Informace o způsobech dopravy a platby na especko.cz. Zásilkovna od 89 Kč, dobírka nebo bankovní převod.",
+    "Informace o způsobech dopravy a platby na especko.cz. Zásilkovna od 49 Kč, dobírka nebo bankovní převod.",
 keywords: [
     "ESP32",
     "ESP32 DevKit",
@@ -106,11 +106,11 @@ export default function DopravaPlatba() {
               <div>
                 <h3 className="font-medium text-foreground">Zásilkovna</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Doručení na výdejní místo Zásilkovny nebo na adresu.
+                  Doručení na výdejní místo Zásilkovny v Čechách i Slovensku.
                 </p>
               </div>
               <span className="text-electric-cyan font-semibold whitespace-nowrap ml-4">
-                od 89 Kč
+                 49 Kč
               </span>
             </div>
           </div>
@@ -152,7 +152,7 @@ export default function DopravaPlatba() {
         {/* Info */}
         <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
           <p className="text-sm text-muted-foreground">
-            Provozovatelé:{" "}
+            Provozovatel:{" "}
             <span className="text-foreground">
               Adam Hitzger, IČO: 19712049 
             </span>

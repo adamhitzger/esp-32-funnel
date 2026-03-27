@@ -211,7 +211,7 @@ export function OrderStatusEmail({ order, isInvoice }: OrderStatusEmailProps) {
               </Column>
               <Column align="right" style={{ padding: "12px 0" }}>
                 <Text style={{ margin: 0, fontSize: 14, color: order.del_price ? accent : textPrimary, fontWeight: 500 }}>
-                  {order.del_price ? "Zdarma" : "89 Kč"}
+                  {order.del_price ? "Zdarma" : "49 Kč"}
                 </Text>
               </Column>
             </Row>
@@ -283,6 +283,7 @@ export function OrderStatusEmail({ order, isInvoice }: OrderStatusEmailProps) {
                 <TableRow label="Ulice" value={`${order.address} ${order.adr_number}`} />
                 <TableRow label="Město" value={order.city} />
                 <TableRow label="PSČ" value={order.psc} />
+                <TableRow label="Země" value={order.country} />
               </Section>
             </Column>
           </Row>

@@ -1,7 +1,7 @@
 "use server"
 
 import { ActionRes, BarcodeSend, CreatePaymentResponse, GetProjects, Order, SanityFileAsset, SanityMetadata } from "@/types";
-import { CreateOrderType, newsletterSchema, NewsletterType, orderSchema } from "./schema";
+import { CreateOrderType, newsletterSchema, NewsletterType, orderSchema, reviewSchema, ReviewType } from "./schema";
 import { revalidatePath } from "next/cache";
 import { verifyCaptchaToken } from "./captcha";
 import { sanityClient, sanityFetch } from "@/sanity/lib/client";
@@ -135,6 +135,66 @@ export async function signOutNewsletter(prevState: ActionRes<NewsletterType>, fo
     
 }
 
+export async function saveReview(prevState: ActionRes<ReviewType>, formData: FormData): Promise<ActionRes<ReviewType>>{
+    let revalidate = false;
+    try{
+        const nonValidate:ReviewType = {
+            name: formData.get("name") as string,
+            surname: formData.get("surname") as string,
+            review: formData.get("review") as string,
+            rating: String(formData.get("rating"))
+        }
+
+        const validate = reviewSchema.safeParse(nonValidate)
+
+        if(!validate.success){
+            return {
+                submitted: true,
+                success: false,
+                message: "Nezadali jste platné údaje",
+                inputs: nonValidate
+            }
+        }
+        const data = validate.data;
+
+        const saveRev = await sanityClient.create({
+            _type: "reviews",
+            name: data.name,
+            surname: data.surname,
+            review: data.review,
+            rating: data.rating,
+        })
+
+        if(!saveRev._id){
+            return {
+                submitted: true,
+                success: false,
+                message: "Nepodařilo se uložit Vaše hodnocení, zkuste znovu",
+                inputs: nonValidate
+            }
+        }
+
+        return {
+                submitted: true,
+                success: true,
+                message: "Uložili jsme Vaše hodnocení. Moc děkujeme!",
+                inputs: data
+        }
+
+    }catch(error){
+        console.log("Error v akci saveReview: ", error)
+        return {
+            submitted: true,
+            success: false,
+            message: "Error na naší straně, vše dáváme do pořádku, vyčkejte prosím."
+        }
+    }finally{
+        if(revalidate){
+            revalidatePath("/hodnoceni")
+        }
+    }
+}
+
 export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formData: FormData, token: string | null): Promise<ActionRes<NewsletterType>>{
     let revalidate = false;
     try{    
@@ -237,6 +297,7 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
                 city: formData.get("city") as string,
                 adressNumber: formData.get("addressNumber") as string,
                 zip: formData.get("zip") as string,
+                country: formData.get("country") as string,
                 packetaId: Number(formData.get("packetaId")),
                 deliveryPrice: Number((formData.get("deliveryPrice"))),
                 quantity: Number(formData.get("quantity")), 
@@ -279,6 +340,7 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             adr_number: data.adressNumber,
             city: data.city,
             psc: data.zip,
+            country: data.country,
             total: String(totalPrice.toFixed(2)),
             couponValue:String(data.sale.toFixed(2)),
             quantity: Number(data.quantity),

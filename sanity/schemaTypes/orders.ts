@@ -47,6 +47,11 @@ export const orders = defineType({
             title: "PSČ",
             name: "psc"
         }),
+        defineField({
+            type: "string",
+            title: "Země",
+            name: "country"
+        }),
          defineField({
             type: "number",
             title:"Množství esPÉČEK",

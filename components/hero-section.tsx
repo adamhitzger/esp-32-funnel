@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Check, Minus, Plus, ShoppingCart, Shield, Truck, RotateCcw, QrCode } from "lucide-react"
+import { Check, Minus, Plus, ShoppingCart, Shield, Truck, RotateCcw, QrCode, X, ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -18,8 +18,34 @@ const features = [
   "34 GPIO pinů",
 ]
 
+const galleryImages = [
+  { src: "/images/esp1.png", alt: "ESP32 DevKit - boční pohled" },
+  { src: "/images/esp2.png", alt: "ESP32 DevKit - detailní záběr" },
+  { src: "/images/esp3.png", alt: "ESP32 DevKit - zadní strana PCB" },
+  { src: "/images/esp4.png", alt: "ESP32 DevKit - pohled shora" },
+]
+
 export function HeroSection() {
   const [quantity, setQuantity] = useState(1)
+  const [selectedImage, setSelectedImage] = useState(0)
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+
+  const openLightbox = (index: number) => {
+    setSelectedImage(index)
+    setIsLightboxOpen(true)
+  }
+
+  const closeLightbox = () => {
+    setIsLightboxOpen(false)
+  }
+
+  const nextImage = () => {
+    setSelectedImage((prev) => (prev + 1) % galleryImages.length)
+  }
+
+  const prevImage = () => {
+    setSelectedImage((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)
+  }
 
   const decreaseQuantity = () => {
     if (quantity > 1) setQuantity(quantity - 1)
@@ -64,25 +90,78 @@ export function HeroSection() {
       <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-electric-orange/20 rounded-full blur-[96px]" />
 
       <div className="container mx-auto px-4 relative z-10">
+        <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-12 lg:mb-16">
+          <span className="relative inline-block">
+            <span className="relative z-10 text-electric-cyan">Nakupte</span>
+            <span 
+              className="absolute -bottom-1 left-0 w-full h-3 bg-electric-cyan/20 -skew-x-6"
+              aria-hidden="true"
+            />
+          </span>
+          {" "}svoje ESP32 ještě{" "}
+          <span className="relative inline-block">
+            <span className="relative z-10 text-electric-orange">dnes!</span>
+            <svg 
+              className="absolute -bottom-2 left-0 w-full" 
+              viewBox="0 0 100 12" 
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path 
+                d="M0,6 Q10,2 20,6 T40,6 T60,6 T80,6 T100,6" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="3"
+                className="text-electric-orange"
+              />
+            </svg>
+          </span>
+        </h1>
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left - Product Image */}
           <div className="order-2 lg:order-1">
             <div className="relative">
               <div className="absolute -top-12 -left-12 w-64 h-64 bg-electric-cyan/30 rounded-full blur-[100px]" />
               <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-electric-orange/25 rounded-full blur-[80px]" />
-              <div className="relative rounded-3xl overflow-hidden border-2 border-electric-cyan/30 bg-linear-to-br from-card/80 to-secondary/50 backdrop-blur-sm p-6 md:p-10 shadow-[0_0_80px_rgba(0,200,255,0.25)]">
+              <button
+                onClick={() => openLightbox(selectedImage)}
+                className="relative rounded-3xl overflow-hidden border-2 border-electric-cyan/30 bg-gradient-to-br from-card/80 to-secondary/50 backdrop-blur-sm p-6 md:p-10 shadow-[0_0_80px_rgba(0,200,255,0.25)] cursor-zoom-in group w-full"
+              >
                 <Image
-                  src="/images/esp32.png"
-                  alt="ESP32 DevKit mikrokontrolér"
+                  src={galleryImages[selectedImage].src}
+                  alt={galleryImages[selectedImage].alt}
                   width={600}
                   height={450}
-                  className="w-full h-auto rounded-2xl shadow-xl"
+                  className="w-full h-auto rounded-2xl shadow-xl group-hover:scale-[1.02] transition-transform duration-300"
                   priority
                 />
                 <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-electric-cyan/60" />
                 <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-electric-cyan/60" />
                 <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-electric-cyan/60" />
                 <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-electric-cyan/60" />
+                <div className="absolute inset-0 bg-electric-cyan/0 group-hover:bg-electric-cyan/5 transition-colors rounded-3xl" />
+              </button>
+
+              {/* Thumbnail gallery */}
+              <div className="flex gap-2 mt-4">
+                {galleryImages.map((image, index) => (
+                  <button
+                    key={image.src}
+                    onClick={() => setSelectedImage(index)}
+                    className={`relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                      selectedImage === index
+                        ? "border-electric-cyan shadow-[0_0_15px_rgba(0,200,255,0.4)]"
+                        : "border-border hover:border-electric-cyan/50"
+                    }`}
+                  >
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      className="object-cover"
+                    />
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -90,7 +169,7 @@ export function HeroSection() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/50 border border-border">
                 <Truck className="w-5 h-5 text-electric-cyan" />
-                <span className="text-xs text-muted-foreground text-center">{"Doprava Zásilkovnou za 89 Kč"}</span>
+                <span className="text-xs text-muted-foreground text-center">{"Doprava Zásilkovnou za 49 Kč"}</span>
               </div>
               <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/50 border border-border">
                 <Shield className="w-5 h-5 text-electric-cyan" />
@@ -114,7 +193,7 @@ export function HeroSection() {
                 <span className="text-sm font-medium text-electric-orange">{"Omezené zásoby - skladem"}</span>
               </div>
 
-              <h2 className="text-xl font-bold text-foreground mb-1">ESP32-S3 DevKit </h2>
+              <h2 className="text-xl font-bold text-foreground mb-1">ESP32-S3 DevKit - balení po 3 ks</h2>
               <p className="text-muted-foreground text-sm mb-6">{"Kompletní vývojová deska s USB-C"}</p>
 
               {/* Features list */}
@@ -131,7 +210,7 @@ export function HeroSection() {
               <div className="mb-6 pb-6 border-b border-border">
                 <div className="flex items-baseline gap-2">
                   <span className="text-4xl font-bold text-foreground">{UNIT_PRICE} Kč</span>
-                  <span className="text-muted-foreground">{"za kus"}</span>
+                  <span className="text-muted-foreground">{"za balení po 3 ks"}</span>
                 </div>
               </div>
 
@@ -217,6 +296,75 @@ export function HeroSection() {
           </div>
         </div>
       </div>
+      {/* Lightbox */}
+      {isLightboxOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-md">
+          {/* Close button */}
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-secondary/80 text-foreground hover:bg-secondary transition-colors"
+            aria-label="Zavřít galerii"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          {/* Navigation - Previous */}
+          <button
+            onClick={prevImage}
+            className="absolute left-4 z-10 p-3 rounded-full bg-secondary/80 text-foreground hover:bg-secondary transition-colors"
+            aria-label="Předchozí obrázek"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+
+          {/* Main image */}
+          <div className="relative max-w-4xl max-h-[80vh] mx-16">
+            <Image
+              src={galleryImages[selectedImage].src}
+              alt={galleryImages[selectedImage].alt}
+              width={1200}
+              height={900}
+              className="max-h-[80vh] w-auto object-contain rounded-2xl"
+            />
+          </div>
+
+          {/* Navigation - Next */}
+          <button
+            onClick={nextImage}
+            className="absolute right-4 z-10 p-3 rounded-full bg-secondary/80 text-foreground hover:bg-secondary transition-colors"
+            aria-label="Další obrázek"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+
+          {/* Thumbnails */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+            {galleryImages.map((image, index) => (
+              <button
+                key={image.src}
+                onClick={() => setSelectedImage(index)}
+                className={`relative w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
+                  selectedImage === index
+                    ? "border-electric-cyan shadow-[0_0_15px_rgba(0,200,255,0.4)]"
+                    : "border-border/50 hover:border-electric-cyan/50 opacity-60 hover:opacity-100"
+                }`}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  className="object-cover"
+                />
+              </button>
+            ))}
+          </div>
+
+          {/* Image counter */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-secondary/80 text-sm text-foreground">
+            {selectedImage + 1} / {galleryImages.length}
+          </div>
+        </div>
+      )}
     </section>
   )
 }

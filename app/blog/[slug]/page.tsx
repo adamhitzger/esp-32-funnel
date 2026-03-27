@@ -10,6 +10,7 @@ import type { Article } from "@/types";
 import type { Metadata } from "next";
 import { sanityFetch } from "@/sanity/lib/client";
 import { GET_ARTCILE_BY_SLUG } from "@/sanity/lib/queries";
+import { HeroSection } from "@/components/hero-section";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -148,9 +149,11 @@ export default async function ArticlePage({ params }: PageProps) {
           </article>
         </div>
       </section>
+     
+        <HeroSection/>
 
       {/* Back to blog */}
-      <section className="pb-20">
+      <section className="py-20">
         <div className="container mx-auto px-4 text-center">
           <Button asChild variant="outline" size="lg" className="border-electric-cyan/30 hover:bg-electric-cyan/10 hover:border-electric-cyan/50">
             <Link href="/blog" className="gap-2">

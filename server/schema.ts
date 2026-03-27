@@ -20,6 +20,7 @@ export const orderSchema = z.object({
     zip: z.string().regex(pscRegex, {
         message: "Zadali jste PSČ v nesprávném formátu"
     }).min(5,{message: "PSČ je povinné"}).trim(),
+    country: z.string().min(1, { message: "Země je povinná" }).trim(),
     packetaId: z.number(),
     deliveryPrice: z.number(),
     quantity: z.number(), 
@@ -27,5 +28,13 @@ export const orderSchema = z.object({
     packetaAddress: z.string()
 });
 
+export const reviewSchema = z.object({
+    name: z.string().min(1, {message: "Jméno je povinné"}).trim(),
+    surname: z.string().min(1, {message: "Přijmení je povinné"}).trim(),
+    review: z.string().min(1, {message: "Zpráva je povinná"}).trim(),
+    rating: z.string().min(1, {message: "Hodnocení je povinné"}).trim()
+})
+
+export type ReviewType = z.infer<typeof reviewSchema>
 export type CreateOrderType = z.infer<typeof orderSchema>
 export type NewsletterType = z.infer<typeof newsletterSchema>

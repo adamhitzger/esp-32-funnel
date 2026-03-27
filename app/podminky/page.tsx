@@ -105,7 +105,7 @@ export default function Podminky() {
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>
                 Tyto obchodní podmínky (dále jen &quot;obchodní podmínky&quot;)
-                podnikatelé {COMPANY}, se sídlem {ADDRESS}, identifikační
+                podnikatel {COMPANY}, se sídlem {ADDRESS}, identifikační
                 číslo: {ICO}  (dále jen &quot;prodávající&quot;) upravují v
                 souladu s ustanovením § 1751 odst. 1 zákona č. 89/2012 Sb.,
                 občanský zákoník, ve znění pozdějších předpisů (dále jen
@@ -198,7 +198,7 @@ export default function Podminky() {
                   </li>
                   <li>
                     bezhotovostně převodem na účet prodávajícího č. {ACCOUNT},
-                    vedený u společnosti Fio Banka, a.s.
+                    vedený u společnosti Česká spořitelna, a.s.
                   </li>
                 </ul>
               </li>

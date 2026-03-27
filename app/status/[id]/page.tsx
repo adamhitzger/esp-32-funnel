@@ -190,7 +190,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">{"Doprava"}</span>
                 <span className={`font-medium ${order.del_price ? "text-electric-cyan" : "text-foreground"}`}>
-                  {order.del_price  ? "Zdarma" : `89 Kč`}
+                  {order.del_price  ? "Zdarma" : `49 Kč`}
                 </span>
               </div>
               <div className="border-t border-border pt-3 flex items-center justify-between">
@@ -244,6 +244,10 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">{"PSČ"}</span>
                   <span className="text-foreground font-medium">{order.psc}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">{"Země"}</span>
+                  <span className="text-foreground font-medium">{order.country}</span>
                 </div>
               </div>
             </div>

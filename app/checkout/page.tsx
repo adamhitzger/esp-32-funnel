@@ -1,11 +1,11 @@
 "use client"
 
 import { FormEvent, useActionState, useState, useTransition } from "react"
-import { redirect, useSearchParams } from "next/navigation"
+import { redirect, useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Lock, CreditCard, ShieldCheck, MapPin, Loader2, Tag, X, Banknote, QrCode } from "lucide-react"
+import { ArrowLeft, Lock, ShieldCheck, MapPin, Loader2, Tag, X, Banknote, QrCode, Minus, Plus } from "lucide-react"
 import { Suspense, useEffect } from "react"
 import { SITE_URL, UNIT_PRICE } from "@/lib/utils"
 import { createOrder, getCoupon } from "@/server/action"
@@ -38,10 +38,15 @@ function CheckoutContent() {
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
   const [couponLoading, setCouponLoading] = useState(false)
   const [couponCode, setCouponCode] = useState("")
-  const [deliveryPrice,setDeliveryPrice] = useState<number>(89)
+  const [deliveryPrice,setDeliveryPrice] = useState<number>(49)
   const [state, action, isPendingCheckout] = useActionState(createOrder, actionState) 
   const finalPrice = (UNIT_PRICE * quantity - (appliedCoupon ? appliedCoupon.discount : 0) + deliveryPrice).toFixed(2)
-  
+  const router = useRouter()
+  const updateQuantity = (newQuantity: number) => {
+    const clampedQuantity = Math.max(1, Math.min(99, newQuantity))
+    router.replace(`/checkout?quantity=${clampedQuantity}`, { scroll: false })
+  }
+
   const handleApplyCoupon = (e: FormEvent) => {
     e.preventDefault()
     const code = couponCode.trim()
@@ -85,7 +90,7 @@ function CheckoutContent() {
 
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null)
-    setDeliveryPrice(89)
+    setDeliveryPrice(49)
     setCouponCode("")
   }
 
@@ -140,6 +145,9 @@ function CheckoutContent() {
         vendors: [
           {
              country: "cz"
+          },
+          {
+             country: "sk"
           }
         ],
         valueFormat: "id,city,street,zip",
@@ -191,11 +199,32 @@ function CheckoutContent() {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground">ESP32-S3 Devkit</h3>
+                  <h3 className="font-semibold text-foreground">ESP32-S3 Devkit - balení 3 ks</h3>
                   <p className="text-sm text-muted-foreground mt-1">{"Vývojová deska s USB-C"}</p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {"Množství:"} <span className="text-foreground font-medium">{quantity} ks</span>
+                    {"Množství:"} <span className="text-foreground font-medium">{quantity} balení / {quantity*3} ks</span>
                   </p>
+                  <div className="flex items-center gap-1 mt-2">
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(quantity - 1)}
+                        disabled={quantity <= 1}
+                        className="w-8 h-8 rounded-lg bg-secondary/50 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-electric-cyan/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Snížit množství"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+                      <span className="w-10 text-center font-medium text-foreground">{quantity}</span>
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(quantity + 1)}
+                        disabled={quantity >= 99}
+                        className="w-8 h-8 rounded-lg bg-secondary/50 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-electric-cyan/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Zvýšit množství"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </button>
+                    </div>
                 </div>
               </div>
 
@@ -366,7 +395,7 @@ function CheckoutContent() {
 
               {/* Shipping address */}
               <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
-                <h2 className="text-lg font-semibold text-foreground mb-4">{"Dodací adresa"}</h2>
+                <h2 className="text-lg font-semibold text-foreground mb-4">{"Fakturační adresa"}</h2>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -437,6 +466,24 @@ function CheckoutContent() {
                       />
                       {state.errors?.zip ? 
                     <span className="text-electric-orange">{state.errors?.zip}</span>
+                    : null}
+                    </div>
+                    <div>
+                      <label htmlFor="country" className="block text-sm text-muted-foreground mb-1.5">
+                        {"Země"}
+                      </label>
+                      <select
+                        id="country"
+                        name="country"
+                        defaultValue={state.inputs?.country}
+                        required
+                        className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
+                      >
+                        <option value={"Česká republika"}>Česká republika</option>
+                        <option value={"Slovenská republika"}>Slovenská republika</option>
+                        </select>
+                      {state.errors?.country ? 
+                    <span className="text-electric-orange">{state.errors?.country}</span>
                     : null}
                     </div>
                   </div>

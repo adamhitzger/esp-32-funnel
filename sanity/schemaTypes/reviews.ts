@@ -9,11 +9,21 @@ export const review = defineType({
     fields: [
         defineField({
             type: "string",
+            title:"Jméno",
+            name: "name", 
+        }),
+        defineField({
+            type: "string",
+            title:"Přijmení",
+            name: "surname", 
+        }),
+        defineField({
+            type: "string",
             title:"Hodnocení",
             name: "review", 
         }),
         defineField({
-            type: "number",
+            type: "string",
             title:"Počet hvězd",
             name: "rating", 
         }),
