@@ -38,6 +38,15 @@ export const GET_ORDER_BY_ID = groq`*[_type=="orders" && _id == $id][0]{
     "invoice":invoice.asset->url
 }`
 
+export const GET_REVIEWS = groq`*[_type=="reviews"] | order(_createdAt desc)[0...10]{
+  _id,
+  name,
+  surname,
+  review,
+  rating,
+  _createdAt
+}`
+
 export const GET_PAID_ORDERS = groq`*[_type=="orders" && status != "Vrácená" && status != "Zrušená" && status != "Vyzvednutá" && status != "Přijatá"]{
     _id,
     _rev,

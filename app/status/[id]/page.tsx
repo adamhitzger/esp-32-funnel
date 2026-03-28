@@ -164,7 +164,8 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
                 <h3 className="font-semibold text-foreground">{"ESP32-S3 DevKit"}</h3>
                 <p className="text-sm text-muted-foreground">{"Vývojová deska s USB-C"}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {"Množství:"} <span className="text-foreground font-medium">{order.quantity} ks</span>
+                  {"Množství:"} <span className="text-foreground font-medium">{order.quantity} balení / {order.quantity*3} ks</span>
+                 
                 </p>
               </div>
             </div>
@@ -176,7 +177,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">{"Počet"}</span>
-                <span className="text-foreground">{order.quantity} ks</span>
+                <span className="text-foreground">{order.quantity} balení</span>
               </div>
               {order.couponValue && Number(order.couponValue) > 0 && (
                 <div className="flex items-center justify-between text-sm">

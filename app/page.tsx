@@ -5,6 +5,10 @@ import { NewsletterSection } from "@/components/newsletter-section"
 import { BlogSection } from "@/components/blog-section"
 import { SocialFollowDialog } from "@/components/socials-dialog"
 import { AboutSection } from "@/components/about-us-section"
+import { sanityFetch } from "@/sanity/lib/client"
+import { ReviewType } from "@/server/schema"
+import { GET_REVIEWS } from "@/sanity/lib/queries"
+import { ReviewsSection } from "@/components/reviews-section"
 
 const SITE_URL = "https://especko.cz"
 
@@ -91,8 +95,9 @@ const websiteJsonLd = {
   url: SITE_URL,
 }
 
-export default function Home() {
- 
+export default async function Home() {
+  const reviews = await sanityFetch<ReviewType[]>({query: GET_REVIEWS})
+  console.log(reviews)
   return (
     <>
        <script
@@ -114,6 +119,7 @@ export default function Home() {
       <SpecsSection />
       <BlogSection/>
       <AboutSection/>
+      <ReviewsSection reviews={reviews}/>
       <NewsletterSection />
       <SocialFollowDialog/>
     </main>
