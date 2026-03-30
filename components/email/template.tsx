@@ -99,7 +99,7 @@ export function OrderStatusEmail({ order, isInvoice }: OrderStatusEmailProps) {
         />
       </Head>
       <Preview>
-        Objednávka {order._id} – {status.label}
+        Objednávka {String(order._id)} – {status.label}
       </Preview>
       <Body style={{ margin: 0, padding: 0, backgroundColor: bg, fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
         <Container style={{ maxWidth: 600, margin: "0 auto", padding: "32px 16px" }}>
@@ -145,11 +145,13 @@ export function OrderStatusEmail({ order, isInvoice }: OrderStatusEmailProps) {
               ID: {order._id}
             </Text>
             <Text style={{ margin: "6px 0 0", fontSize: 13, color: textMuted, fontFamily: "monospace" }}>
-              Variabilní symbol: {order.vs}
+              Vystaveno: {new Date().toLocaleDateString("cs-CZ", {
+                day: "numeric",
+                month: "numeric", 
+                year: "numeric"
+              })}
             </Text>
-            <Text style={{ margin: "6px 0 0", fontSize: 13, color: textMuted, fontFamily: "monospace" }}>
-              Konstantní symbol: {order.ks}
-            </Text>
+            
           </Section>
 
           {/* Products table */}

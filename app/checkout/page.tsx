@@ -5,7 +5,7 @@ import { redirect, useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Lock, ShieldCheck, MapPin, Loader2, Tag, X, Banknote, QrCode, Minus, Plus } from "lucide-react"
+import { ArrowLeft, Lock, ShieldCheck, MapPin, Loader2, Tag, X, Banknote, QrCode, Minus, Plus, Truck } from "lucide-react"
 import { Suspense, useEffect } from "react"
 import { SITE_URL, UNIT_PRICE } from "@/lib/utils"
 import { createOrder, getCoupon } from "@/server/action"
@@ -301,7 +301,7 @@ function CheckoutContent() {
               <div className="mt-6 pt-4 border-t border-border space-y-3">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <ShieldCheck className="w-4 h-4 text-electric-cyan shrink-0" />
-                  <span>{"Bezpečná platba QR kódem prostřednictvím České spořitelny"}</span>
+                  <span>{"Bezpečná platba na dobírku"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Lock className="w-4 h-4 text-electric-cyan shrink-0" />
@@ -490,7 +490,7 @@ function CheckoutContent() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-electric-cyan/20 bg-card/80 backdrop-blur-sm p-6">
+                            <div className="rounded-2xl border border-electric-cyan/20 bg-card/80 backdrop-blur-sm p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Banknote className="w-5 h-5 text-electric-cyan" />
                   <h2 className="text-lg font-semibold text-foreground">{"Platba"}</h2>
@@ -499,12 +499,12 @@ function CheckoutContent() {
                 <div className="rounded-xl bg-secondary/50 border border-electric-cyan/30 p-4">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-lg bg-electric-cyan/10 flex items-center justify-center shrink-0">
-                      <QrCode className="w-6 h-6 text-electric-cyan" />
+                      <Truck className="w-6 h-6 text-electric-cyan" />
                     </div>
                     <div>
-                      <h3 className="font-medium text-foreground">{"Platba QR kódem"}</h3>
+                      <h3 className="font-medium text-foreground">{"Dobírka"}</h3>
                       <p className="text-sm text-muted-foreground">
-                        {"Po odeslání objednávky se QR kód zobrazí."}
+                        {"Platba v hotovosti při převzetí zásilky na pobočce Zásilkovny."}
                       </p>
                     </div>
                   </div>
@@ -513,15 +513,11 @@ function CheckoutContent() {
                     <div className="flex items-start gap-2 text-xs text-muted-foreground">
                       <ShieldCheck className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5" />
                       <span>
-                        {"QR kód naskenujete v mobilní aplikaci vaší banky. Platba je rychlá a bezpečná."}
+                        {"Zaplatíte až při vyzvednutí balíčku. Žádné platby předem."}
                       </span>
                     </div>
                   </div>
                 </div>
-
-                <p className="text-xs text-muted-foreground mt-3">
-                  {"Bankovní účet: 4259630093/0800 (České spořitelna)"}
-                </p>
               </div>
 
 
@@ -619,7 +615,7 @@ function CheckoutContent() {
                 disabled={isPendingCheckout}
                 className="w-full h-14 text-lg font-semibold bg-electric-cyan hover:bg-electric-cyan/90 text-background shadow-[0_0_30px_rgba(0,200,255,0.4)] hover:shadow-[0_0_50px_rgba(0,200,255,0.6)] transition-all disabled:opacity-50"
               >
-                <Lock className="w-5 h-5 mr-2" />
+                <Banknote className="w-5 h-5 mr-2" />
                 {isPendingCheckout ? "Zpracovávám..." : `Zaplatit ${finalPrice} Kč`}
               </Button>
 

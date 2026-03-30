@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
           if (o.status === newStatus) return
 
           const updated = await sanityClient
-            .patch(o._id)
+            .patch(String(o._id))
             .set({ status: newStatus })
             .commit()
 
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
             }
 
           // ✉️ email až po úspěchu
-          const email = await sendStatusMail(o, getEmailText(statusCode.statusCode), o.invoice)
+          const email = await sendStatusMail(o, getEmailText(statusCode.statusCode), String(o.invoice))
           if(!email){
             console.log("Chyba v odeslání emailu na adresu ",o.email)
             return

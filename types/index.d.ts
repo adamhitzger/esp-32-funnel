@@ -90,7 +90,6 @@ export interface BarcodeSend {
     phone: string;
     packetaId: number;
     total: number;
-    uid: string;
 }
 
 export interface EnVars {
@@ -98,8 +97,9 @@ export interface EnVars {
 }
 
 export interface Order {
-  _rev: string;
-  _id: string;
+  _type?: string;
+  _rev?: string;
+  _id?: string;
   firstName: string
   lastName: string
   email: string
@@ -113,11 +113,9 @@ export interface Order {
   barcode: string
   couponValue: string | null
   del_price: boolean
-  ks: string
-  vs: string
   country: string
   packetaId: string | null
   packetaAddress: string | null
   status: string;
-  invoice: string | null
+  invoice?: string | null
 }

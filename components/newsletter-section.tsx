@@ -4,11 +4,11 @@ import { useTransition } from "react"
 import { Mail, ArrowRight, CheckCircle2 } from "lucide-react"
 import { ActionRes } from "@/types"
 import { NewsletterType } from "@/server/schema"
-import { saveNewsletter } from "@/server/action"
+import { authorizeNewsletter } from "@/server/action"
 import { toast } from "sonner"
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3"
 import { sendGTMEvent } from '@next/third-parties/google';
 import { fbEvent } from "@rivercode/facebook-conversion-api-nextjs"
+
 const actionState: ActionRes<NewsletterType> = {
   submitted: false,
   success: false,
@@ -18,18 +18,9 @@ const actionState: ActionRes<NewsletterType> = {
 export function NewsletterSection() {
   const [isPending, startTransition] = useTransition()
 
-  const {executeRecaptcha} = useGoogleReCaptcha()
-
   const handleSendMail = (formData: FormData) => {
       startTransition(async () => {
-        if(!executeRecaptcha){
-          toast.error("reCAPTCHA není připravena, zkuste to znovu.")
-          return;
-        }
-         const token = await executeRecaptcha();
-         const loadingToast = toast.loading("Probíhá ověření");
-         const send = await saveNewsletter(actionState, formData, token);
-         toast.dismiss(loadingToast);
+         const send = await authorizeNewsletter(actionState, formData);
          if(send.submitted){
             if(!send.success){
               toast.error(send.message)

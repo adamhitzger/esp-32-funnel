@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Check, Minus, Plus, ShoppingCart, Shield, Truck, RotateCcw, QrCode, X, ChevronLeft, ChevronRight } from "lucide-react"
+import { Check, Minus, Plus, ShoppingCart, Shield, Truck, RotateCcw, QrCode, X, ChevronLeft, ChevronRight, Banknote } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -172,8 +172,8 @@ export function HeroSection() {
                 <span className="text-xs text-muted-foreground text-center">{"Doprava Zásilkovnou za 49 Kč"}</span>
               </div>
               <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/50 border border-border">
-                <Shield className="w-5 h-5 text-electric-cyan" />
-                <span className="text-xs text-muted-foreground text-center">{"Bezpečná platba"}</span>
+                <Banknote className="w-5 h-5 text-electric-cyan" />
+                <span className="text-xs text-muted-foreground text-center">{"Platba dobírkou"}</span>
               </div>
               <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/50 border border-border">
                 <RotateCcw className="w-5 h-5 text-electric-cyan" />
@@ -290,8 +290,7 @@ export function HeroSection() {
               </Button>
 
               <div className="flex flex-row justify-center text-center text-sm  text-muted-foreground mt-4 space-x-2">
-                <p>Bezpečná platba</p> <QrCode/> <p>QR kódem na účet od České spořitelny</p>
-              </div>
+                <p>Bezpečná platba při převzetí zásilky</p>               </div>
             </div>
           </div>
         </div>

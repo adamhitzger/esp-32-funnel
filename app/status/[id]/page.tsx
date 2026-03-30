@@ -101,12 +101,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
             <p className="text-sm text-muted-foreground mt-1">
               {"ID:"} <span className="font-mono text-foreground/70">{id}</span>
                </p>
-            <p className="text-sm text-muted-foreground mt-1">
-               {"Variabilní symbol:"} <span className="font-mono text-foreground/70">{order.vs}</span>
-            </p>
-            <p className="text-sm text-muted-foreground mt-1">
-             {"Konstantní symbol:"} <span className="font-mono text-foreground/70">{order.ks}</span>
-             </p>
+            
           </div>
           <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium ${status.color}`}>
             {status.icon}
@@ -117,21 +112,8 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Product */}
           <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
-            {order.status === "Přijatá" && order.invoice === null ? 
-            <>
-            <div className="flex items-center gap-2 mb-6">
-              <QrCode className="w-5 h-5 text-electric-cyan" />
-              <h2 className="text-lg font-semibold text-foreground">{"QR kód"}</h2>
-            </div>
-            
-            <Image
-              src={`https://api.paylibo.com/paylibo/generator/czech/image?accountNumber=4259630093&bankCode=0800&amount=${order.total}&currency=CZK&vs=${order.vs}&ks=${order.ks}&message=${order.quantity}xESP32-S3`}
-              alt="QR platba"
-              width={200}
-              height={200}
-              />
+            {order.invoice !== null && 
              
-              </>: 
                <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
               <div className="flex items-center gap-2 mb-4">
                 <IconInvoice className="w-5 h-5 text-electric-cyan" />

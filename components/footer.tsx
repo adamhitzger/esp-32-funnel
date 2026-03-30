@@ -55,9 +55,9 @@ export function Footer() {
                 </a>
               </div>
 </div>
-            <Link href="https://www.csas.cz/cs/osobni-finance" target="_blank" rel="noopener" >
+            {/**<Link href="https://www.csas.cz/cs/osobni-finance" target="_blank" rel="noopener" >
             <Image alt="Erste logo" width={150} height={96} src="/erste.png" />
-          </Link>
+          </Link> */}
 
             <nav className="flex items-center gap-6 text-sm">
               <Link href="/" className="text-muted-foreground hover:text-electric-cyan transition-colors">

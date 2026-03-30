@@ -135,13 +135,10 @@ export default function DopravaPlatba() {
                 <CreditCard className="w-5 h-5 text-muted-foreground shrink-0" />
                 <div>
                   <h3 className="font-medium text-foreground">
-                    QR kódem
+                    Dobírka
                   </h3>
                    <p className="text-sm text-muted-foreground mt-1">
-                    Na účet 4259630093/0800
-                    <span className="text-foreground font-medium pl-2">
-                      od České spořitelny
-                    </span>{" "}
+                   Platba v hotovosti při převzetí zásilky na pobočce Zásilkovny.
                   </p>
                 </div>
               </div>

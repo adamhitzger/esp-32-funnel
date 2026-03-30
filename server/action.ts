@@ -3,7 +3,6 @@
 import { ActionRes, BarcodeSend, CreatePaymentResponse, GetProjects, Order, SanityFileAsset, SanityMetadata } from "@/types";
 import { CreateOrderType, newsletterSchema, NewsletterType, orderSchema, reviewSchema, ReviewType } from "./schema";
 import { revalidatePath } from "next/cache";
-import { verifyCaptchaToken } from "./captcha";
 import { sanityClient, sanityFetch } from "@/sanity/lib/client";
 import { GET_COUPON, GET_CUR_USER, GET_ORDER_BY_ID } from "@/sanity/lib/queries";
 import { Coupon } from "@/types";
@@ -11,6 +10,7 @@ import { UNIT_PRICE } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
+import { renderNewsletterVerifyEmail } from "@/components/email/email-verify";
 
 const transporter = nodemailer.createTransport({
      host: "smtp.seznam.cz",
@@ -19,10 +19,7 @@ const transporter = nodemailer.createTransport({
         auth: {
          user: process.env.FROM_EMAIL!,
          pass: process.env.FROM_EMAIL_PASSWORD!,
-        },
-        tls: {
-         ciphers: "SSLv3"
-        } 
+        }
 });
 
 export async function sendStatusMail(order: Order, subject: string, invoice: string | null): Promise<boolean>{
@@ -195,27 +192,9 @@ export async function saveReview(prevState: ActionRes<ReviewType>, formData: For
     }
 }
 
-export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formData: FormData, token: string | null): Promise<ActionRes<NewsletterType>>{
+export async function authorizeNewsletter(prevState: ActionRes<NewsletterType>, formData: FormData): Promise<ActionRes<NewsletterType>>{
     let revalidate = false;
-    try{    
-        if(!token){
-            return{
-                submitted: true,
-                success: false,
-                message: "Token k ověření nebyl nalezen",
-            }
-        }
-        
-        const captchaData = await verifyCaptchaToken(token);
-
-        if (!captchaData || !captchaData.success || captchaData.score < 0.4) {
-            
-            return {
-                submitted: true,
-                success: false,
-                message: "Ověření Google Captcha selhalo",  
-            };
-        } 
+    try{
         const nonValidate: NewsletterType = {
             email: formData.get("email") as string
         }
@@ -237,13 +216,120 @@ export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formD
             params: {email: data.email}
         });
 
+        console.log("[authorizeNewsletter] User: ", getUser);
+        
+        if (getUser && getUser.email === data.email) {
+            return {
+                submitted: true,
+                success: true,
+                message: "Váš e-mail máme uložený. Vyčkejte na newsletter!",
+                inputs: data,
+            }
+        }
+
+        const verifyUrl = `https://especko.cz/saveNewsletter?email=${encodeURIComponent(data.email)}`
+
+    const emailHtml = await renderNewsletterVerifyEmail({
+      email: data.email,
+      verifyUrl,
+    })
+
+    const sendMail = await transporter.sendMail({
+      from: `"Especko.cz" <${process.env.FROM_EMAIL}>`,
+      to: data.email,
+      subject: "Potvrďte odběr newsletteru - Especko.cz",
+      html: emailHtml,
+    })
+
+    if(!sendMail.accepted){
+        return{
+                submitted: true,
+                success: false,
+                message: "Nepodařilo se odeslat e-mail. Zkuste znovu.",
+        }
+    }
+
+    console.log("[authorizeNewsletter] Verification email sent to:", data.email)
+
+        return{
+                submitted: true,
+                success: true,
+                message: "Poslali jsme Vám e-mail pro ověření.",
+            }
+    }catch(error){
+        console.error("[authorizeNewsletter] Error: ", error)
+        return{
+                submitted: true,
+                success: false,
+                message: "Nezdařilo se ověřit Váš e-mail. Kontaktujte podporu",            
+        }
+    }finally{
+        if(revalidate){
+            revalidatePath("/")
+        }
+    }
+}
+
+function generateEmailId(email: string): string {
+  // Simple hash - convert email to a stable ID
+  const normalized = email.toLowerCase().trim()
+  let hash = 0
+  for (let i = 0; i < normalized.length; i++) {
+    const char = normalized.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash // Convert to 32bit integer
+  }
+  return `newsletter-${Math.abs(hash).toString(36)}-${normalized.replace(/[^a-z0-9]/g, "-")}`
+}
+
+export async function saveNewsletter(email: string): Promise<ActionRes<NewsletterType>>{
+    let revalidate = false;
+    try{    
+        const nonValidate: NewsletterType = {
+            email: email
+        }
+
+        const validate = newsletterSchema.safeParse(nonValidate)
+
+        if(!validate.success){
+            return {
+                submitted: true,
+                success: false,
+                message: "Nezadali jste platný e-mail",
+                inputs: nonValidate
+            }
+        }
+        const data = validate.data;
+        console.log(data.email)
+
+        const getUser = await sanityFetch<NewsletterType>({
+            query: GET_CUR_USER,
+            params: {email: data.email},
+        });
+
         console.log("[saveNewsletter] User: ", getUser);
         
-        if(!getUser){
-            const saveMail = await sanityClient.create({
-            _type: "newsletter",
-            email: data.email
-        })  
+        if (getUser && getUser.email === data.email) {
+            return {
+                submitted: true,
+                success: true,
+                message: "Váš e-mail máme uložený. Vyčkejte na newsletter!",
+                inputs: data,
+            }
+        }
+        
+        const writeClient = sanityClient.withConfig({
+      token: process.env.SANITY_TOKEN,
+    })
+
+    // Use createIfNotExists with deterministic _id to prevent race condition duplicates
+    const documentId = generateEmailId(data.email)
+    
+    const saveMail = await writeClient.createIfNotExists({
+      _id: documentId,
+      _type: "newsletter",
+      email: data.email,
+    })
         console.log("[saveNewsletter] Saved user: ", saveMail)
 
         if(!saveMail._id){
@@ -251,14 +337,6 @@ export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formD
                 submitted: true,
                 success: false,
                 message: "Nezdařilo se uložit e-mail do databáze. Zkuste znovu později.",
-                inputs: nonValidate
-            }
-        }
-        }else if(getUser.email === data.email){
-            return{
-                submitted: true,
-                success: true,
-                message: "Váš e-mail máme uložený. Vyčkejte na newsletter!",
                 inputs: data
             }
         }
@@ -269,7 +347,6 @@ export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formD
                 submitted: true,
                 success: true,
                 message: "Uložili jsme Váš e-mail! Brzy Vás kontaktujeme s novinkami!",
-                inputs: data
         }
     }catch(error){
         console.log("Error v akci saveNewsletter: ", error)
@@ -278,8 +355,6 @@ export async function saveNewsletter(prevState: ActionRes<NewsletterType>, formD
             success: false,
             message: "Error na naší straně, vše dáváme do pořádku, vyčkejte prosím."
         }
-    }finally{
-        if(revalidate) revalidatePath("/")
     }   
 }
 
@@ -325,11 +400,16 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
         
         console.log(data, totalPrice, itemPrice)
 
-        const vs = String(Math.floor(Math.random() * 100000))
-        const ks = String(Math.floor(Math.random() * 10000))
-
+        const  packeta = await createPacket({
+                            name: data.firstName,
+                            surname: data.lastName,
+                            email: data.email,
+                            phone: data.phone,
+                            packetaId: Number(data.packetaId),
+                            total: totalPrice,
+        })
+        console.log("Packeta:",packeta)
     
-
         const orderCreate = await sanityClient.create({
             _type: "orders",
             firstName: data.firstName,
@@ -345,25 +425,27 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             couponValue:String(data.sale.toFixed(2)),
             quantity: Number(data.quantity),
             del_price: Number(data.deliveryPrice) === 0 ? true : false,
-            ks: ks,
-            vs: vs,
             packetaId: data.packetaId,
             status: "Přijatá",
+            barcode: packeta,
             packetaAddress: data.packetaAddress,
         })
 
         const orderId: string = orderCreate._id
-        console.log("Objednavka vytvořena:",orderCreate)     
-       const sendMail = await sendStatusMail(orderCreate as unknown as Order, "Objednávka byla přijata.", null)
+        console.log("Objednavka vytvořena:",orderCreate)   
+        const invoice = await ensureInvoicePdf(orderCreate as unknown as Order);
+        console.log(invoice)
+
+        const sendMail = await sendStatusMail(orderCreate as unknown as Order, "Objednávka byla přijata.", invoice.url)
         
         if(!sendMail){
-              return {
-            submitted: true,
-            success:false,
-            inputs: data,
-            message: "Nepodařilo se odeslat email",
-            transaction_id: orderId
-        }
+            return {
+                submitted: true,
+                success:false,
+                inputs: data,
+                message: "Nepodařilo se odeslat email",
+                transaction_id: orderId
+            }
         }
 
        const TOKEN= process.env.BOT_TOKEN
@@ -453,22 +535,23 @@ export async function getPacketStatus(packetId: string): Promise<{ok: boolean, s
     }
 }
 
-export async function createPacket({name, surname, email, phone,packetaId, total, uid}: BarcodeSend){
+export async function createPacket({name, surname, email, phone,packetaId, total}: BarcodeSend){
 let packetaCode: string = "";
 
         const rBody = {
           createPacket: {
             apiPassword: process.env.PACKETA_API_PASSWORD,
             packetAttributes: {
-                number: String(`${packetaId}-${total}-${uid}`).substring(0,35),
+                number: String(`${packetaId}-${total}`).substring(0,35),
                 name: name,
                 surname: surname,
                 email: email,
                 phone: String(phone),
                 addressId: packetaId,
+                cod: total,
                 value: total,
                 weight: 1,
-                eshop: "especko.cz",
+                eshop: "especko",
             }
           }
         }
@@ -484,12 +567,6 @@ let packetaCode: string = "";
             }
         packetaCode = pResponse.response.result.barcodeText;
         if(!packetaCode) console.error("Problém s vytvořením štítku.");
-        const updateOrderStatus = await sanityClient
-              .patch(uid) 
-              .set({ 
-                barcode: packetaCode,
-              }).commit()
-            console.log("[createPacket] Order status:", updateOrderStatus)
         }catch(error){
             console.error("Error při vytváření packety: ", error)
         }
@@ -597,8 +674,7 @@ const asset = await sanityClient.assets.upload("file", buffer, {
                     },
                   }
                 }).commit()
-    console.log("[ThePay uploadPdf] Pdf created status:", updateOrderStatus)
-
+    console.log("Upload pdf to sanity: ", uploadPdfToSanity)
     return {
         created: true, 
         id: asset._id,
@@ -610,13 +686,6 @@ const asset = await sanityClient.assets.upload("file", buffer, {
 }
 
 export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, asset_id?: string, url: string}> {
-  // už existuje → negeneruj
-  if (order?.invoice !== null) {
-    return {
-        created: false,
-        url: order.invoice
-    }
-  }
 
   order.status = "Zaplacená"
 
@@ -630,7 +699,7 @@ export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, 
   const assetId = await uploadPdfToSanity(
     pdfBuffer,
     `invoice-${order._id}.pdf`,
-    order._id
+    String(order._id)
   );
 
   return {
