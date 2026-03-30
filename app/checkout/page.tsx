@@ -38,7 +38,7 @@ function CheckoutContent() {
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
   const [couponLoading, setCouponLoading] = useState(false)
   const [couponCode, setCouponCode] = useState("")
-  const [deliveryPrice,setDeliveryPrice] = useState<number>(49)
+  const [deliveryPrice,setDeliveryPrice] = useState<number>(69)
   const [state, action, isPendingCheckout] = useActionState(createOrder, actionState) 
   const finalPrice = (UNIT_PRICE * quantity - (appliedCoupon ? appliedCoupon.discount : 0) + deliveryPrice).toFixed(2)
   const router = useRouter()
@@ -90,7 +90,7 @@ function CheckoutContent() {
 
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null)
-    setDeliveryPrice(49)
+    setDeliveryPrice(69)
     setCouponCode("")
   }
 
@@ -616,7 +616,7 @@ function CheckoutContent() {
                 className="w-full h-14 text-lg font-semibold bg-electric-cyan hover:bg-electric-cyan/90 text-background shadow-[0_0_30px_rgba(0,200,255,0.4)] hover:shadow-[0_0_50px_rgba(0,200,255,0.6)] transition-all disabled:opacity-50"
               >
                 <Banknote className="w-5 h-5 mr-2" />
-                {isPendingCheckout ? "Zpracovávám..." : `Zaplatit ${finalPrice} Kč`}
+                {isPendingCheckout ? "Zpracovávám..." : `Objednat ${finalPrice} Kč`}
               </Button>
 
               <p className="text-center text-xs text-muted-foreground">

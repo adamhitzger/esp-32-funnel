@@ -34,6 +34,7 @@ const COMPANY = {
   city: "Havlíčkův Brod",
   psc: "580 01",
   ico: "19712049",
+  phone: "+420 605 859 361",
   email: "info@especko.cz",
 }
 
@@ -77,11 +78,11 @@ function TableRow({
   )
 }
 
-interface OrderStatusEmailProps {
+interface InvoiceProps {
   order: Order
 }
 
-export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
+export function Invoice({ order}: InvoiceProps) {
   const status = STATUS_MAP[order.status] ?? STATUS_MAP["Přijatá"]
   const unitPrice = UNIT_PRICE
   const subtotal = unitPrice * order.quantity
@@ -115,26 +116,7 @@ export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
               IČO: {COMPANY.ico} 
             </Text>
           </Section>
-     {/* Status badge */}
-          
-            <Section style={{ textAlign: "center" as const, paddingBottom: 24 }}>
-              <Text
-                style={{
-                  display: "inline-block",
-                  padding: "10px 24px",
-                  borderRadius: 999,
-                  backgroundColor: status.bg,
-                  border: `1px solid ${status.border}`,
-                  color: status.color,
-                  fontSize: 14,
-                  fontWeight: 600,
-                  margin: 0,
-                }}
-              >
-                {status.label}
-              </Text>
-            </Section>
-         
+     
           {/* Title */}
           <Section style={{ textAlign: "center" as const, paddingBottom: 8 }}>
             <Heading as="h2" style={{ margin: 0, fontSize: 20, fontWeight: 700, color: textPrimary }}>
@@ -143,7 +125,13 @@ export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
             <Text style={{ margin: "6px 0 0", fontSize: 13, color: textMuted, fontFamily: "monospace" }}>
               ID: {order._id}
             </Text>
-            
+            <Text style={{ margin: "6px 0 0", fontSize: 13, color: textMuted, fontFamily: "monospace" }}>
+              Vystaveno: {new Date().toLocaleDateString("cs-CZ", {
+                day: "numeric",
+                month: "numeric", 
+                year: "numeric"
+              })}
+            </Text>
             
           </Section>
 
@@ -248,12 +236,14 @@ export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
               }}
             >
               <Heading as="h3" style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 600, color: accent }}>
-                Kontaktní údaje
+                Prodávající
               </Heading>
               <Section>
-                <TableRow label="Jméno" value={`${order.firstName} ${order.lastName}`} />
-                <TableRow label="E-mail" value={order.email} />
-                {order.phone && <TableRow label="Telefon" value={order.phone} />}
+                <TableRow label="Jméno a přijmení" value={`${COMPANY.name}`} />
+                <TableRow label="E-mail" value={COMPANY.email} />
+                <TableRow label="Telefon" value={COMPANY.phone} />
+                <TableRow label="IČO" value={COMPANY.ico} />
+                <TableRow label="Adresa" value={COMPANY.street+" "+COMPANY.city+" "+", "+ COMPANY.psc} />
               </Section>
             </Column>
 
@@ -272,59 +262,21 @@ export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
               }}
             >
               <Heading as="h3" style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 600, color: accent }}>
-                Dodací adresa
+                Kupující
               </Heading>
               <Section>
-                <TableRow label="Ulice" value={`${order.address} ${order.adr_number}`} />
-                <TableRow label="Město" value={order.city} />
-                <TableRow label="PSČ" value={order.psc} />
+                <TableRow label="Jméno" value={`${order.firstName} ${order.lastName}`} />
+                <TableRow label="E-mail" value={order.email} />
+                {order.phone && <TableRow label="Telefon" value={order.phone} />}
+                <TableRow label="Adresa" value={`${order.address} ${order.adr_number}, ${order.city}, ${order.psc} `} />
                 <TableRow label="Země" value={order.country} />
               </Section>
             </Column>
           </Row>
 
-          {/* Zásilkovna */}
-          {order.packetaId && (
-            <Section
-              style={{
-                backgroundColor: card,
-                border: `1px solid ${borderColor}`,
-                borderRadius: 16,
-                padding: 24,
-                marginTop: 16,
-              }}
-            >
-              <Heading as="h3" style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 600, color: accent }}>
-                Zásilkovna
-              </Heading>
-              <Section>
-                <TableRow label="ID pobočky" value={String(order.packetaId)} mono />
-                {order.packetaAddress && <TableRow label="Adresa pobočky" value={order.packetaAddress} />}
-                {order.barcode && <TableRow label="Trasovací číslo" value={order.barcode} />}
-              </Section>
-            </Section>
-          )}
 
           {/* CTA Button */}
-         
-          <Section style={{ textAlign: "center" as const, padding: "24px 0" }}>
-            <Button
-              href={`${baseUrl}/status/${order._id}`}
-              style={{
-                display: "inline-block",
-                padding: "14px 32px",
-                backgroundColor: accent,
-                color: bg,
-                fontSize: 14,
-                fontWeight: 700,
-                textDecoration: "none",
-                borderRadius: 12,
-              }}
-            >
-              Zobrazit objednávku online
-            </Button>
-          </Section>
-      
+          
           {/* Footer */}
           <Hr style={{ borderColor: borderColor, margin: "8px 0 24px" }} />
 
@@ -351,6 +303,6 @@ export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
   )
 }
 
-export async function renderOrderStatusEmail(order: Order): Promise<string> {
-  return render(<OrderStatusEmail order={order}/>)
+export async function renderInvoicePDF(order: Order): Promise<string> {
+  return render(<Invoice order={order} />)
 }

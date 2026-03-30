@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Check, Minus, Plus, ShoppingCart, Shield, Truck, RotateCcw, QrCode, X, ChevronLeft, ChevronRight, Banknote } from "lucide-react"
+import { Check, Minus, Plus, ShoppingCart, Truck, RotateCcw, X, ChevronLeft, ChevronRight, Banknote } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -169,7 +169,7 @@ export function HeroSection() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/50 border border-border">
                 <Truck className="w-5 h-5 text-electric-cyan" />
-                <span className="text-xs text-muted-foreground text-center">{"Doprava Zásilkovnou za 49 Kč"}</span>
+                <span className="text-xs text-muted-foreground text-center">{"Doprava Zásilkovnou za 69 Kč"}</span>
               </div>
               <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/50 border border-border">
                 <Banknote className="w-5 h-5 text-electric-cyan" />
@@ -193,7 +193,7 @@ export function HeroSection() {
                 <span className="text-sm font-medium text-electric-orange">{"Omezené zásoby - skladem"}</span>
               </div>
 
-              <h2 className="text-xl font-bold text-foreground mb-1">ESP32-S3 DevKit - balení po 3 ks</h2>
+              <h2 className="text-xl font-bold text-foreground mb-1">ESP32-S3 DevKit USB-C - balení po 3 ks</h2>
               <p className="text-muted-foreground text-sm mb-6">{"Kompletní vývojová deska s USB-C"}</p>
 
               {/* Features list */}

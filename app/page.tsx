@@ -39,7 +39,7 @@ const productJsonLd = {
       "@type": "OfferShippingDetails",
       shippingRate: {
         "@type": "MonetaryAmount",
-        value: "49",
+        value: "69",
         currency: "CZK",
       },
       shippingDestination: {

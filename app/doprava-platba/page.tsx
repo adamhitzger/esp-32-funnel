@@ -5,7 +5,7 @@ import { ArrowLeft, Truck, CreditCard, Banknote } from "lucide-react"
 export const metadata: Metadata = {
   title: "Doprava a platba",
   description:
-    "Informace o způsobech dopravy a platby na especko.cz. Zásilkovna od 49 Kč, dobírka nebo bankovní převod.",
+    "Informace o způsobech dopravy a platby na especko.cz. Zásilkovna od 69 Kč, na dobírku ",
 keywords: [
     "ESP32",
     "ESP32 DevKit",
@@ -110,7 +110,7 @@ export default function DopravaPlatba() {
                 </p>
               </div>
               <span className="text-electric-cyan font-semibold whitespace-nowrap ml-4">
-                 49 Kč
+                 69 Kč
               </span>
             </div>
           </div>

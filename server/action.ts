@@ -11,6 +11,7 @@ import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
 import { renderNewsletterVerifyEmail } from "@/components/email/email-verify";
+import { renderInvoicePDF } from "@/components/email/invoice";
 
 const transporter = nodemailer.createTransport({
      host: "smtp.seznam.cz",
@@ -36,7 +37,7 @@ export async function sendStatusMail(order: Order, subject: string, invoice: str
             from: process.env.FROM_EMAIL,
             to: order.email,
             subject: subject,
-            html: await renderOrderStatusEmail(order, false),
+            html: await renderOrderStatusEmail(order),
             attachments,
         }
 
@@ -686,11 +687,8 @@ const asset = await sanityClient.assets.upload("file", buffer, {
 }
 
 export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, asset_id?: string, url: string}> {
-
-  order.status = "Zaplacená"
-
   // 1️⃣ render email
-  const html = await renderOrderStatusEmail(order, true);
+  const html = await renderInvoicePDF(order);
 
   // 2️⃣ generate pdf
   const pdfBuffer = await generatePdf(html);
@@ -706,5 +704,5 @@ export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, 
         created: assetId.created,
         url: assetId.url,
         asset_id: assetId.id
-    };
+  };
 }

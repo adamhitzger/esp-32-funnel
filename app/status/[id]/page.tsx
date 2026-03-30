@@ -15,10 +15,7 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
-  Loader2,
   Check,
-  QrCode,
-  Download,
 } from "lucide-react"
 import { Order } from "@/types"
 import { IconInvoice } from "@tabler/icons-react"
@@ -173,7 +170,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">{"Doprava"}</span>
                 <span className={`font-medium ${order.del_price ? "text-electric-cyan" : "text-foreground"}`}>
-                  {order.del_price  ? "Zdarma" : `49 Kč`}
+                  {order.del_price  ? "Zdarma" : `69 Kč`}
                 </span>
               </div>
               <div className="border-t border-border pt-3 flex items-center justify-between">
@@ -271,7 +268,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">{"Stav"}</span>
-                <span className={`font-medium ${status.color.split(" ")[0]}`}>{status.label === "Přijatá" ? <span className="text-red-400">Nezaplacená</span> : <span className="text-green-400">Zaplacená</span>}</span>
+                <span className={`font-medium ${status.color.split(" ")[0]}`}>{status.label !== "Vyzvednutá" ? <span className="text-red-400">Nezaplacená</span> : <span className="text-green-400">Zaplacená</span>}</span>
               </div>
             </div>
 
