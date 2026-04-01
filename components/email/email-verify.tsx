@@ -24,12 +24,12 @@ export function NewsletterVerifyEmail({ email, verifyUrl }: NewsletterVerifyEmai
   return (
     <Html>
       <Head />
-      <Preview>Potvrďte odběr newsletteru ElectroCore</Preview>
+      <Preview>Potvrďte odběr newsletteru Especko.cz</Preview>
       <Body style={main}>
         <Container style={container}>
           {/* Header */}
           <Section style={header}>
-            <Text style={logo}>ElectroCore</Text>
+            <Text style={logo}>Especko.cz</Text>
           </Section>
 
           {/* Content */}

@@ -125,7 +125,7 @@ export function HeroSection() {
               <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-electric-orange/25 rounded-full blur-[80px]" />
               <button
                 onClick={() => openLightbox(selectedImage)}
-                className="relative rounded-3xl overflow-hidden border-2 border-electric-cyan/30 bg-gradient-to-br from-card/80 to-secondary/50 backdrop-blur-sm p-6 md:p-10 shadow-[0_0_80px_rgba(0,200,255,0.25)] cursor-zoom-in group w-full"
+                className="relative rounded-3xl overflow-hidden border-2 border-electric-cyan/30 bg-linear-to-br from-card/80 to-secondary/50 backdrop-blur-sm p-6 md:p-10 shadow-[0_0_80px_rgba(0,200,255,0.25)] cursor-zoom-in group w-full"
               >
                 <Image
                   src={galleryImages[selectedImage].src}

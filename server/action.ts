@@ -35,7 +35,7 @@ export async function sendStatusMail(order: Order, subject: string, invoice: str
             })
         }
          const mailOptions = {
-            from: process.env.FROM_EMAIL,
+            from: `"Especko.cz" <${process.env.FROM_EMAIL}>`,
             to: order.email,
             subject: subject,
             html: await renderOrderStatusEmail(order),
@@ -124,14 +124,22 @@ export async function findOrderAndSendBarcode(prevState: ActionRes<RefundInputs>
       orderId: order._id,
     })
 
-    await transporter.sendMail({
+    const emailSend = await transporter.sendMail({
       from: `"Especko.cz" <${process.env.FROM_EMAIL}>`,
       to: order.email,
       subject: "Štítek pro vrácení zásilky - Especko.cz",
       html: emailHtml,
     })
+    
+    if(!emailSend.accepted){
+        return {
+      submitted: true,
+      success: false,
+      message: `Vyskytla se chyba při odeslání emailu. Kontaktujte podporu.`,
+      inputs: data,
+        }
+    }
     revalidate=true;
-
     return {
       submitted: true,
       success: true,

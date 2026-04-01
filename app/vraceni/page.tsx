@@ -166,7 +166,7 @@ export default function RefundPage() {
             </ul>
             <p className="text-xs text-muted-foreground mt-4">
               Máte dotazy?{" "}
-              <a href="mailto:podpora@electrocore.cz" className="text-electric-cyan hover:underline">
+              <a href="mailto:info@especko.cz" className="text-electric-cyan hover:underline">
                 Kontaktujte nás
               </a>
             </p>

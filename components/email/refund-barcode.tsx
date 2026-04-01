@@ -72,7 +72,7 @@ export function RefundBarcodeEmail({
                 margin: 0,
               }}
             >
-              ElectroCore
+              Especko.cz
             </Heading>
             <Text
               style={{
@@ -264,10 +264,10 @@ export function RefundBarcodeEmail({
             >
               Máte dotazy? Kontaktujte nás na{" "}
               <Link
-                href="mailto:podpora@electrocore.cz"
+                href="mailto:info@especko.cz"
                 style={{ color: "#00c8ff" }}
               >
-                podpora@electrocore.cz
+                info@especko.cz
               </Link>
             </Text>
             <Text
