@@ -7,7 +7,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Lock, ShieldCheck, MapPin, Loader2, Tag, X, Banknote, QrCode, Minus, Plus, Truck } from "lucide-react"
 import { Suspense, useEffect } from "react"
-import { SITE_URL, UNIT_PRICE } from "@/lib/utils"
+import { SITE_URL, UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
 import { createOrder, getCoupon } from "@/server/action"
 import { toast } from "sonner"
 import { ActionRes, CreatePaymentResponse } from "@/types"
@@ -38,7 +38,7 @@ function CheckoutContent() {
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
   const [couponLoading, setCouponLoading] = useState(false)
   const [couponCode, setCouponCode] = useState("")
-  const [deliveryPrice,setDeliveryPrice] = useState<number>(69)
+  const [deliveryPrice,setDeliveryPrice] = useState<number>(ZASILKOVNA_PRICE)
   const [state, action, isPendingCheckout] = useActionState(createOrder, actionState) 
   const finalPrice = (UNIT_PRICE * quantity - (appliedCoupon ? appliedCoupon.discount : 0) + deliveryPrice).toFixed(2)
   const router = useRouter()
@@ -90,7 +90,7 @@ function CheckoutContent() {
 
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null)
-    setDeliveryPrice(69)
+    setDeliveryPrice(ZASILKOVNA_PRICE)
     setCouponCode("")
   }
 
@@ -140,7 +140,6 @@ function CheckoutContent() {
       const packetaApiKey = process.env.NEXT_PUBLIC_PACKETA_API_KEY
       const packetaOptions = {
         packetConsignment: "true",
-        livePickupPoint: "true",
         language: "cs",
         vendors: [
           {
@@ -148,7 +147,9 @@ function CheckoutContent() {
           },
           {
              country: "sk"
-          }
+          },
+          { country: "cz", group: "zbox" }, // ← přidej toto
+    { country: "sk", group: "zbox" },
         ],
         valueFormat: "id,city,street,zip",
         view: "modal",

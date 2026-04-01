@@ -15,7 +15,7 @@ import {
   Font,
   render,
 } from "@react-email/components"
-import { UNIT_PRICE } from "@/lib/utils"
+import { UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
 import { Order } from "@/types";
 
 
@@ -194,7 +194,7 @@ export function Invoice({ order}: InvoiceProps) {
               </Column>
               <Column align="right" style={{ padding: "12px 0" }}>
                 <Text style={{ margin: 0, fontSize: 14, color: order.del_price ? accent : textPrimary, fontWeight: 500 }}>
-                  {order.del_price ? "Zdarma" : "69 Kč"}
+                  {order.del_price ? "Zdarma" : `${ZASILKOVNA_PRICE} Kč`}
                 </Text>
               </Column>
             </Row>

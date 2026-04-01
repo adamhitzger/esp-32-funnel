@@ -2,7 +2,7 @@ import { sanityClient } from "@/sanity/lib/client"
 import { GET_ORDER_BY_ID } from "@/sanity/lib/queries"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { UNIT_PRICE } from "@/lib/utils"
+import { UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
 import Image from "next/image"
 import {
   ArrowLeft,
@@ -170,7 +170,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">{"Doprava"}</span>
                 <span className={`font-medium ${order.del_price ? "text-electric-cyan" : "text-foreground"}`}>
-                  {order.del_price  ? "Zdarma" : `69 Kč`}
+                  {order.del_price  ? "Zdarma" : `${ZASILKOVNA_PRICE} Kč`}
                 </span>
               </div>
               <div className="border-t border-border pt-3 flex items-center justify-between">

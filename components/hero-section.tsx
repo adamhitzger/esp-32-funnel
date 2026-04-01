@@ -5,7 +5,7 @@ import { Check, Minus, Plus, ShoppingCart, Truck, RotateCcw, X, ChevronLeft, Che
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import { UNIT_PRICE } from "@/lib/utils"
+import { UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
 import { sendGTMEvent } from '@next/third-parties/google';
 import { fbEvent } from "@rivercode/facebook-conversion-api-nextjs"
 
@@ -169,7 +169,7 @@ export function HeroSection() {
             <div className="grid grid-cols-3 gap-3 mt-6">
               <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/50 border border-border">
                 <Truck className="w-5 h-5 text-electric-cyan" />
-                <span className="text-xs text-muted-foreground text-center">{"Doprava Zásilkovnou za 69 Kč"}</span>
+                <span className="text-xs text-muted-foreground text-center">{`Doprava Zásilkovnou za ${ZASILKOVNA_PRICE} Kč`}</span>
               </div>
               <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/50 border border-border">
                 <Banknote className="w-5 h-5 text-electric-cyan" />

@@ -6,6 +6,7 @@ export const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61582227774
 export const INSTAGRAM_URL = "https://www.instagram.com/especko_cz?igsh=MTgwcGpndzJkbTR1Yw%3D%3D&utm_source=qr"
 export const TIKTOK_URL="https://www.tiktok.com/@especko.cz"
 export const UNIT_PRICE: number = 489
+export const ZASILKOVNA_PRICE: number = 79
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

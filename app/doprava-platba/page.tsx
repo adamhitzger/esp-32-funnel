@@ -1,11 +1,12 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, Truck, CreditCard, Banknote } from "lucide-react"
+import { ZASILKOVNA_PRICE } from "@/lib/utils"
 
 export const metadata: Metadata = {
   title: "Doprava a platba",
   description:
-    "Informace o způsobech dopravy a platby na especko.cz. Zásilkovna od 69 Kč, na dobírku ",
+    `Informace o způsobech dopravy a platby na especko.cz. Zásilkovna od ${ZASILKOVNA_PRICE} Kč, na dobírku `,
 keywords: [
     "ESP32",
     "ESP32 DevKit",
@@ -110,7 +111,7 @@ export default function DopravaPlatba() {
                 </p>
               </div>
               <span className="text-electric-cyan font-semibold whitespace-nowrap ml-4">
-                 69 Kč
+                 {ZASILKOVNA_PRICE} Kč
               </span>
             </div>
           </div>

@@ -9,6 +9,7 @@ import { sanityFetch } from "@/sanity/lib/client"
 import { ReviewType } from "@/server/schema"
 import { GET_REVIEWS } from "@/sanity/lib/queries"
 import { ReviewsSection } from "@/components/reviews-section"
+import { ZASILKOVNA_PRICE } from "@/lib/utils"
 
 const SITE_URL = "https://especko.cz"
 
@@ -39,7 +40,7 @@ const productJsonLd = {
       "@type": "OfferShippingDetails",
       shippingRate: {
         "@type": "MonetaryAmount",
-        value: "69",
+        value: ZASILKOVNA_PRICE,
         currency: "CZK",
       },
       shippingDestination: {
