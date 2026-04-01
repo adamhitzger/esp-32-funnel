@@ -56,8 +56,8 @@ const productJsonLd = {
         },
         transitTime: {
           "@type": "QuantitativeValue",
-          minValue: 1,
-          maxValue: 3,
+          minValue: 3,
+          maxValue: 5,
           unitCode: "DAY",
         },
       },

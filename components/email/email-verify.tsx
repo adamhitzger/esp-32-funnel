@@ -69,10 +69,10 @@ export function NewsletterVerifyEmail({ email, verifyUrl }: NewsletterVerifyEmai
           {/* Footer */}
           <Section style={footerSection}>
             <Text style={footerText}>
-              ElectroCore | David Havel, IČO: 19203144
+              Especko.cz | Adam Hitzger, IČO: 19712049
             </Text>
             <Text style={footerText}>
-              Brixenská 3711, 580 01 Havlíčkův Brod
+              Ledečská 2984, 580 01 Havlíčkův Brod
             </Text>
             <Link href={SITE_URL} style={footerLink}>
               {SITE_URL}

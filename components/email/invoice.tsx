@@ -241,9 +241,9 @@ export function Invoice({ order}: InvoiceProps) {
               <Section>
                 <TableRow label="Jméno a přijmení" value={`${COMPANY.name}`} />
                 <TableRow label="E-mail" value={COMPANY.email} />
-                <TableRow label="Telefon" value={COMPANY.phone} />
                 <TableRow label="IČO" value={COMPANY.ico} />
                 <TableRow label="Adresa" value={COMPANY.street+" "+COMPANY.city+" "+", "+ COMPANY.psc} />
+                <TableRow label="Země" value={"Česká republika"} />
               </Section>
             </Column>
 

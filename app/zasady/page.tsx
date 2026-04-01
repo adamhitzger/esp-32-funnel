@@ -5,7 +5,7 @@ import { ArrowLeft, Shield } from "lucide-react"
 export const metadata: Metadata = {
   title: "Zásady zpracování osobních údajů",
   description:
-    "Zásady zpracování osobních údajů e-shopu especko.cz provozovaného Adamem Hitzgerem, IČO: 19203144.",
+    "Zásady zpracování osobních údajů e-shopu especko.cz provozovaného Adamem Hitzgerem, IČO: 19712049.",
   authors: [{ name: "especko.cz", url: "https://especko.cz" }],
   creator: "especko.cz",
   publisher: "especko.cz",

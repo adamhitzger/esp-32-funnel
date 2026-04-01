@@ -13,6 +13,17 @@ export const GET_COUPON = groq`*[_type=="coupons" && name == $name][0]{
     min_order_value
 }`
 
+export const GET_ORDER_BY_EMAIL_OR_PHONE = groq`*[_type=="orders" && (email == $search || phone == $search)] | order(_createdAt desc)[0]{
+  _id,
+  firstName,
+  lastName,
+  email,
+  phone,
+  barcode,
+  status,
+  _createdAt
+}`
+
 export const GET_ORDER_BY_ID = groq`*[_type=="orders" && _id == $id][0]{
     _id,
     _rev,

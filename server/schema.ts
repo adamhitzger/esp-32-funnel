@@ -35,6 +35,11 @@ export const reviewSchema = z.object({
     rating: z.string().min(1, {message: "Hodnocení je povinné"}).trim()
 })
 
+export const refundSchema = z.object({
+  search: z.string().min(1, { message: "Zadejte e-mail nebo telefonní číslo" }).trim(),
+})
+
+export type RefundInputs = z.infer<typeof refundSchema>
 export type ReviewType = z.infer<typeof reviewSchema>
 export type CreateOrderType = z.infer<typeof orderSchema>
 export type NewsletterType = z.infer<typeof newsletterSchema>

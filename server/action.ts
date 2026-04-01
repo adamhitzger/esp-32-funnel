@@ -1,10 +1,10 @@
 "use server"
 
 import { ActionRes, BarcodeSend, CreatePaymentResponse, GetProjects, Order, SanityFileAsset, SanityMetadata } from "@/types";
-import { CreateOrderType, newsletterSchema, NewsletterType, orderSchema, reviewSchema, ReviewType } from "./schema";
+import { CreateOrderType, newsletterSchema, NewsletterType, orderSchema, RefundInputs, refundSchema, reviewSchema, ReviewType } from "./schema";
 import { revalidatePath } from "next/cache";
 import { sanityClient, sanityFetch } from "@/sanity/lib/client";
-import { GET_COUPON, GET_CUR_USER, GET_ORDER_BY_ID } from "@/sanity/lib/queries";
+import { GET_COUPON, GET_CUR_USER, GET_ORDER_BY_EMAIL_OR_PHONE } from "@/sanity/lib/queries";
 import { Coupon } from "@/types";
 import { UNIT_PRICE } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
@@ -12,6 +12,7 @@ import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
 import { renderNewsletterVerifyEmail } from "@/components/email/email-verify";
 import { renderInvoicePDF } from "@/components/email/invoice";
+import { renderRefundBarcodeEmail } from "@/components/email/refund-barcode";
 
 const transporter = nodemailer.createTransport({
      host: "smtp.seznam.cz",
@@ -72,6 +73,81 @@ export async function getCoupon(coupon: string): Promise<Coupon | null>{
             free_del: isValid.free_del,
         }
     }
+}
+
+export async function findOrderAndSendBarcode(prevState: ActionRes<RefundInputs>, formData: FormData): Promise<ActionRes<RefundInputs>>{
+    let revalidate = false;
+    try{
+        const nonValidate: RefundInputs = {
+      search: formData.get("search") as string,
+    }
+
+    const validate = refundSchema.safeParse(nonValidate)
+
+    if (!validate.success) {
+      return {
+        submitted: true,
+        success: false,
+        message: "Zadejte platný e-mail nebo telefonní číslo",
+        inputs: nonValidate,
+      }
+    }
+
+    const data = validate.data
+
+     const order = await sanityClient.fetch<Order | null>(GET_ORDER_BY_EMAIL_OR_PHONE, {
+      search: data.search,
+    })
+
+    if (!order || !order._id) {
+      return {
+        submitted: true,
+        success: false,
+        message: "Objednávka s tímto e-mailem nebo telefonním číslem nebyla nalezena.",
+        inputs: data,
+      }
+    }
+
+    if (!order.barcode) {
+      return {
+        submitted: true,
+        success: false,
+        message: "K této objednávce zatím nebyl přiřazen štítek. Kontaktujte prosím podporu.",
+        inputs: data,
+      }
+    }
+
+    const emailHtml = await renderRefundBarcodeEmail({
+      firstName: order.firstName,
+      lastName: order.lastName,
+      barcode: order.barcode,
+      orderId: order._id,
+    })
+
+    await transporter.sendMail({
+      from: `"Especko.cz" <${process.env.FROM_EMAIL}>`,
+      to: order.email,
+      subject: "Štítek pro vrácení zásilky - Especko.cz",
+      html: emailHtml,
+    })
+    revalidate=true;
+
+    return {
+      submitted: true,
+      success: true,
+      message: `Štítek byl odeslán na e-mail ${order.email}.`,
+      inputs: data,
+    }
+    }catch (error) {
+    console.error("[findOrderAndSendBarcode] Error:", error)
+    return {
+      submitted: true,
+      success: false,
+      message: "Nastala chyba při zpracování požadavku. Zkuste to prosím později.",
+    }
+  }finally{
+    if(revalidate) revalidatePath("/vraceni");
+  }
 }
 
 export async function signOutNewsletter(prevState: ActionRes<NewsletterType>, formData: FormData): Promise<ActionRes<NewsletterType>>{
