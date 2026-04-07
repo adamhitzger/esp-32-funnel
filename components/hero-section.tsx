@@ -5,7 +5,7 @@ import { Check, Minus, Plus, ShoppingCart, Truck, RotateCcw, X, ChevronLeft, Che
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import { UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
+import { getTotalPrice, getUnitPrice, PRICING_TIERS, ZASILKOVNA_PRICE } from "@/lib/utils"
 import { sendGTMEvent } from '@next/third-parties/google';
 import { fbEvent } from "@rivercode/facebook-conversion-api-nextjs"
 
@@ -15,7 +15,7 @@ const features = [
   "Bluetooth 4.2 + BLE",
   "4MB Flash paměť",
   "520KB SRAM",
-  "34 GPIO pinů",
+  "38 GPIO pinů",
 ]
 
 const galleryImages = [
@@ -55,7 +55,8 @@ export function HeroSection() {
     if (quantity < 99) setQuantity(quantity + 1)
   }
 
-  const totalPrice = (UNIT_PRICE * quantity).toFixed(2)
+  const unitPrice = getUnitPrice(quantity)
+  const totalPrice = getTotalPrice(quantity)
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-12 lg:py-0">
@@ -193,7 +194,7 @@ export function HeroSection() {
                 <span className="text-sm font-medium text-electric-orange">{"Omezené zásoby - skladem"}</span>
               </div>
 
-              <h2 className="text-xl font-bold text-foreground mb-1">ESP32-S3 DevKit USB-C - balení po 3 ks</h2>
+              <h2 className="text-xl font-bold text-foreground mb-1">ESP32-S3 DevKit USB-C</h2>
               <p className="text-muted-foreground text-sm mb-6">{"Kompletní vývojová deska s USB-C"}</p>
 
               {/* Features list */}
@@ -207,10 +208,39 @@ export function HeroSection() {
               </div>
 
               {/* Price */}
-              <div className="mb-6 pb-6 border-b border-border">
+             <div className="mb-6 pb-6 border-b border-border">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-bold text-foreground">{UNIT_PRICE} Kč</span>
-                  <span className="text-muted-foreground">{"za balení po 3 ks"}</span>
+                  <span className="text-4xl font-bold text-foreground">{unitPrice} Kč</span>
+                  <span className="text-muted-foreground">{"za kus"}</span>
+                </div>
+                {quantity >= 2 && (
+                  <p className="text-sm text-electric-cyan mt-1">
+                    {"Množstevní sleva aktivní!"}
+                  </p>
+                )}
+              </div>
+
+              {/* Pricing table */}
+              <div className="mb-6 pb-6 border-b border-border">
+                <p className="text-sm text-muted-foreground mb-3">{"Množstevní slevy:"}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {PRICING_TIERS.map((tier) => {
+                    const isActive = quantity >= tier.min && quantity <= tier.max
+                    return (
+                      <button
+                        onClick={()=> setQuantity(tier.min)}
+                        key={tier.label}
+                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all ${
+                          isActive
+                            ? "bg-electric-cyan/10 border border-electric-cyan/30 text-electric-cyan"
+                            : "bg-secondary/30 border border-transparent text-muted-foreground"
+                        }`}
+                      >
+                        <span>{tier.label}</span>
+                        <span className="font-medium">{tier.price} Kč</span>
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
 
@@ -222,7 +252,6 @@ export function HeroSection() {
                     <button
                       onClick={decreaseQuantity}
                       className="w-12 h-12 flex items-center justify-center hover:bg-secondary transition-colors text-foreground disabled:opacity-50"
-                      disabled={quantity <= 1}
                     >
                       <Minus className="w-4 h-4" />
                     </button>
@@ -238,7 +267,7 @@ export function HeroSection() {
                     </button>
                   </div>
                   
-                  {quantity >= 20 && (
+                  {quantity >= 10 && (
                     <div className="px-3 py-1 rounded-full bg-electric-orange/10 border border-electric-orange/30">
                       <span className="text-sm text-electric-orange font-medium">{"Velkoobchodní objednávka"}</span>
                     </div>
@@ -253,7 +282,7 @@ export function HeroSection() {
                   <div className="text-right">
                     <span className="text-3xl font-bold text-electric-cyan">{totalPrice} Kč</span>
                     {quantity > 1 && (
-                      <p className="text-sm text-muted-foreground">{quantity} ks x {UNIT_PRICE} Kč</p>
+                      <p className="text-sm text-muted-foreground">{quantity} ks x {unitPrice} Kč</p>
                     )}
                   </div>
                 </div>

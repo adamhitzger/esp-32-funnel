@@ -143,7 +143,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
                 <h3 className="font-semibold text-foreground">{"ESP32-S3 DevKit"}</h3>
                 <p className="text-sm text-muted-foreground">{"Vývojová deska s USB-C"}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {"Množství:"} <span className="text-foreground font-medium">{order.quantity} balení / {order.quantity*3} ks</span>
+                  {"Množství:"} <span className="text-foreground font-medium">{order.quantity} ks</span>
                  
                 </p>
               </div>

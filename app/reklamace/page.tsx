@@ -3,10 +3,9 @@ import Link from "next/link"
 import { ArrowLeft, ShieldAlert } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Reklamační řád",
+  title: "Reklamační řád | especko.cz",
   description:
-    "Reklamační řád e-shopu especko.cz. Informace o postupu při reklamaci zboží.",
-    
+    "Reklamační řád e-shopu especko.cz. Jak reklamovat nebo vrátit zboží zakoupené na especko.cz.",
   authors: [{ name: "especko.cz", url: "https://especko.cz" }],
   creator: "especko.cz",
   publisher: "especko.cz",
@@ -18,11 +17,11 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "cs_CZ",
-    url: "https://especko.cz",
+    url: "https://especko.cz/reklamace",
     siteName: "especko.cz",
-    title: "ESP32 DevKit | Pohon pro vaše IoT projekty",
+    title: "Reklamační řád | especko.cz",
     description:
-      "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
+      "Reklamační řád e-shopu especko.cz. Jak reklamovat nebo vrátit zboží zakoupené na especko.cz.",
     images: [
       {
         url: "/images/esp32.png",
@@ -34,9 +33,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ESP32 DevKit | especko.cz",
+    title: "Reklamační řád | especko.cz",
     description:
-      "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
+      "Reklamační řád e-shopu especko.cz. Jak reklamovat nebo vrátit zboží zakoupené na especko.cz.",
     images: ["/images/esp32.jpg"],
   },
   robots: {
@@ -51,14 +50,10 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://especko.cz",
+    canonical: "https://especko.cz/reklamace",
   },
   icons: {
-    icon: [
-      {
-        url: "/especko.ico",
-      },
-    ],
+    icon: [{ url: "/especko.ico" }],
   },
 }
 
@@ -78,60 +73,98 @@ export default function Reklamace() {
           <div className="w-10 h-10 rounded-xl bg-electric-cyan/10 flex items-center justify-center">
             <ShieldAlert className="w-5 h-5 text-electric-cyan" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground">
-            Reklamační řád
-          </h1>
+          <h1 className="text-3xl font-bold text-foreground">Reklamační řád</h1>
         </div>
 
+        {/* Vrácení zboží */}
         <div className="rounded-2xl border border-electric-cyan/20 bg-card/80 backdrop-blur-sm p-6 mb-6">
-          <ol className="list-decimal pl-6 space-y-4 text-sm text-muted-foreground leading-relaxed">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Vrácení zboží (odstoupení od smlouvy)</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+            Zakoupené zboží můžete vrátit bez udání důvodu do 14 dnů od převzetí zásilky. Vrácení probíhá
+            jednoduše přes náš online formulář:
+          </p>
+          <ol className="list-decimal pl-6 space-y-2 text-sm text-muted-foreground leading-relaxed mb-6">
             <li>
-              Kupující je povinen dodané zboží bez zbytečného odkladu
-              prohlédnout a o případných zjištěných vadách do 5 dnů informovat
-              prodávajícího.
+              Přejděte na stránku{" "}
+              <Link href="/vraceni" className="text-electric-cyan hover:underline">
+                especko.cz/vraceni
+              </Link>{" "}
+              a zadejte e-mail nebo telefonní číslo z vaší objednávky.
             </li>
+            <li>Na zadaný e-mail vám přijde trasovací číslo zásilkovny a odkaz na vratkový portál.</li>
             <li>
-              Oznámení o zjištěných vadách musí kupující učinit písemně
-              (e-mailem na{" "}
-              <a
-                href="mailto:info@especko.cz"
+              Klikněte na tlačítko{" "}
+              <Link
+                href="https://returns.packeta.com/cs"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-electric-cyan hover:underline"
               >
+                vratkový portál Zásilkovny
+              </Link>
+              , kde zadáte kód a zásilkovna se postará o vše další.
+            </li>
+            <li>Peníze vám vrátíme do 14 dnů od obdržení zásilky zpět.</li>
+          </ol>
+          <div className="rounded-xl bg-secondary/50 border border-border p-4 text-sm text-muted-foreground">
+            Zboží musí být vráceno nepoškozené, v původním stavu a pokud možno v původním.
+          </div>
+        </div>
+
+        {/* Reklamace */}
+        <div className="rounded-2xl border border-electric-cyan/20 bg-card/80 backdrop-blur-sm p-6 mb-6">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Reklamace vadného zboží</h2>
+          <ol className="list-decimal pl-6 space-y-4 text-sm text-muted-foreground leading-relaxed">
+            <li>
+              Kupující je oprávněn uplatnit právo z vady, která se vyskytne u zboží do 24 měsíců od převzetí.
+              Projeví-li se vada v průběhu prvních 6 měsíců od převzetí, má se za to, že zboží bylo vadné již
+              při převzetí.
+            </li>
+            <li>
+              Reklamaci uplatněte e-mailem na{" "}
+              <a href="mailto:info@especko.cz" className="text-electric-cyan hover:underline">
                 info@especko.cz
               </a>
-              ) do 5 dnů od převzetí zboží. V písemném oznámení musí kupující
-              uvést zjištěné vady, popsat o jaké vady se jedná a jak se
-              projevují. Písemné oznámení kupující odešle do sídla
-              prodávajícího.
+              . V e-mailu popište zjištěné vady a jak se projevují, a přiložte číslo objednávky nebo
+              potvrzení o nákupu (např. potvrzovací e-mail). Fyzický doklad o zaplacení není při dobírce
+              vyžadován.
             </li>
             <li>
-              K reklamaci je nutné předložit kopii faktury a doklad o dodání a
-              zaplacení zboží, jehož vady jsou reklamovány.
+              Prodávající nepřebírá odpovědnost za škody vzniklé neodborným používáním produktů nebo
+              chybnou manipulací. Na vady tohoto původu se nevztahuje záruka.
             </li>
             <li>
-              Prodávající nepřebírá odpovědnost za škody vyplývající z užití
-              produktů, funkčních vlastností a škod z neodborného používání
-              produktů, stejně jako škod způsobených chybnou manipulací. Na
-              vady tohoto původu se nevztahuje ani poskytnutá záruka.
-            </li>
-            <li>
-              Prodávající se zavazuje informovat zákazníka nejpozději do tří
-              dnů od obdržení reklamace o způsobu vyřízení reklamace.
+              Prodávající se zavazuje informovat zákazníka nejpozději do 3 pracovních dnů od obdržení
+              reklamace o způsobu jejího vyřízení.
             </li>
           </ol>
+        </div>
+
+        {/* Mimosoudní řešení sporů */}
+        <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6 mb-6">
+          <h2 className="text-lg font-semibold text-foreground mb-3">Mimosoudní řešení sporů</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            K mimosoudnímu řešení spotřebitelských sporů je příslušná Česká obchodní inspekce, se sídlem
+            Štěpánská 567/15, 120 00 Praha 2, IČ: 000 20 869,{" "}
+            <a
+              href="https://adr.coi.cz/cs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-electric-cyan hover:underline"
+            >
+              adr.coi.cz
+            </a>
+            .
+          </p>
         </div>
 
         <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
           <p className="text-sm text-muted-foreground">
             Provozovatel:{" "}
-            <span className="text-foreground">
-              Adam Hitzger, IČO: 19712049
-            </span>
-            , se sídlem Ledečská 2984, 580 01 Havlíčkův Brod
+            <span className="text-foreground">Adam Hitzger, IČO: 19712049</span>, se sídlem Ledečská 2984,
+            580 01 Havlíčkův Brod
           </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            V Havlíčkově Brodě dne 02.01.2026
-          </p>
+          <p className="text-xs text-muted-foreground mt-2">V Havlíčkově Brodě dne 02.01.2026</p>
         </div>
       </div>
     </main>

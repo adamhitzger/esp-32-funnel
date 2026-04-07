@@ -7,7 +7,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Lock, ShieldCheck, MapPin, Loader2, Tag, X, Banknote, QrCode, Minus, Plus, Truck } from "lucide-react"
 import { Suspense, useEffect } from "react"
-import { SITE_URL, UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
+import { getTotalPrice, getUnitPrice, SITE_URL, UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
 import { createOrder, getCoupon } from "@/server/action"
 import { toast } from "sonner"
 import { ActionRes, CreatePaymentResponse } from "@/types"
@@ -32,6 +32,8 @@ const actionState: ActionRes<CreateOrderType>  & CreatePaymentResponse= {
 function CheckoutContent() {
   const searchParams = useSearchParams()
   const quantity = Math.max(1, Math.min(99, Number(searchParams.get("quantity")) || 1))
+  const unitPrice = getUnitPrice(quantity)
+  const totalPrice = getTotalPrice(quantity)
   
   const [packetaPoint, setPacketaPoint] = useState<{ id: string; city: string,street: string, zip: string } | null>(null)
   const [isPending, startTransition] = useTransition();
@@ -40,12 +42,15 @@ function CheckoutContent() {
   const [couponCode, setCouponCode] = useState("")
   const [deliveryPrice,setDeliveryPrice] = useState<number>(ZASILKOVNA_PRICE)
   const [state, action, isPendingCheckout] = useActionState(createOrder, actionState) 
-  const finalPrice = (UNIT_PRICE * quantity - (appliedCoupon ? appliedCoupon.discount : 0) + deliveryPrice).toFixed(2)
+  
+  const finalPrice = (totalPrice - (appliedCoupon ? appliedCoupon.discount : 0) + deliveryPrice).toFixed(2)
   const router = useRouter()
+  
   const updateQuantity = (newQuantity: number) => {
     const clampedQuantity = Math.max(1, Math.min(99, newQuantity))
     router.replace(`/checkout?quantity=${clampedQuantity}`, { scroll: false })
   }
+  
 
   const handleApplyCoupon = (e: FormEvent) => {
     e.preventDefault()
@@ -79,7 +84,7 @@ function CheckoutContent() {
         }else{
           setAppliedCoupon({
             code: coupon.name,
-            discount: (UNIT_PRICE * quantity) /100 * coupon.value
+            discount: totalPrice / 100 * coupon.value
           })
         }
       }
@@ -179,10 +184,10 @@ function CheckoutContent() {
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span className="text-sm">{"Zpet na produkt"}</span>
+          <span className="text-sm">{"Zpět na produkt"}</span>
         </Link>
 
-        <h1 className="text-3xl font-bold text-foreground mb-8">{"Dokonceni objednavky"}</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-8">{"Dokončení objednávky"}</h1>
 
         <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Left - Product summary */}
@@ -194,17 +199,15 @@ function CheckoutContent() {
                 <div className="relative w-24 h-24 rounded-xl overflow-hidden border border-border shrink-0">
                   <Image
                     src="/images/esp32.png"
-                    alt="ESP32 DevKit"
+                    alt="ESP32 DevKit USB-C"
                     fill
                     className="object-cover"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground">ESP32-S3 Devkit - balení 3 ks</h3>
+                  <h3 className="font-semibold text-foreground">ESP32-S3 Devkit</h3>
                   <p className="text-sm text-muted-foreground mt-1">{"Vývojová deska s USB-C"}</p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {"Množství:"} <span className="text-foreground font-medium">{quantity} balení / {quantity*3} ks</span>
-                  </p>
+                  
                   <div className="flex items-center gap-1 mt-2">
                       <button
                         type="button"
@@ -274,7 +277,7 @@ function CheckoutContent() {
               <div className="space-y-3 border-t border-border pt-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">{"Cena za kus"}</span>
-                  <span className="text-foreground">{UNIT_PRICE} Kč</span>
+                  <span className="text-foreground">{unitPrice} Kč</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">{"Počet"}</span>

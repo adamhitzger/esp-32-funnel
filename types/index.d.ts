@@ -100,6 +100,7 @@ export interface Order {
   _type?: string;
   _rev?: string;
   _id?: string;
+  _createdAt: string;
   firstName: string
   lastName: string
   email: string
@@ -118,4 +119,11 @@ export interface Order {
   packetaAddress: string | null
   status: string;
   invoice?: string | null
+}
+
+export interface GetRefunds{
+  orders: Array<Order>  | null , 
+  count: number, 
+  success: boolean, 
+  input: string
 }

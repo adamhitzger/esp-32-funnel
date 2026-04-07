@@ -15,7 +15,7 @@ import {
   Font,
   render,
 } from "@react-email/components"
-import { UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
+import { getTotalPrice, getUnitPrice, UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
 import { Order } from "@/types";
 
 
@@ -84,10 +84,10 @@ interface InvoiceProps {
 
 export function Invoice({ order}: InvoiceProps) {
   const status = STATUS_MAP[order.status] ?? STATUS_MAP["Přijatá"]
-  const unitPrice = UNIT_PRICE
-  const subtotal = unitPrice * order.quantity
+  const unitPrice = getUnitPrice(order.quantity)
+  const subtotal = getTotalPrice(order.quantity)
   const coupon = order.couponValue ? parseFloat(order.couponValue) : 0
-  const baseUrl = "https://especko.cz"
+
   return (
     <Html lang="cs">
       <Head>
@@ -168,7 +168,7 @@ export function Invoice({ order}: InvoiceProps) {
             {/* Product row */}
             <Row style={{ borderBottom: `1px solid #2a2a48` }}>
               <Column style={{ padding: "12px 0" }}>
-                <Text style={{ margin: 0, fontSize: 14, color: textPrimary, fontWeight: 500 }}>ESP32-WROOM-32 DevKit</Text>
+                <Text style={{ margin: 0, fontSize: 14, color: textPrimary, fontWeight: 500 }}>ESP32-S3 DevKit USB-C</Text>
               </Column>
               <Column align="center" style={{ padding: "12px 0" }}>
                 <Text style={{ margin: 0, fontSize: 14, color: textPrimary }}>{order.quantity} ks</Text>

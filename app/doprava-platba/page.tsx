@@ -1,13 +1,12 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowLeft, Truck, CreditCard, Banknote } from "lucide-react"
+import { ArrowLeft, Truck, CreditCard } from "lucide-react"
 import { ZASILKOVNA_PRICE } from "@/lib/utils"
 
 export const metadata: Metadata = {
-  title: "Doprava a platba",
-  description:
-    `Informace o způsobech dopravy a platby na especko.cz. Zásilkovna od ${ZASILKOVNA_PRICE} Kč, na dobírku `,
-keywords: [
+  title: "Doprava a platba | especko.cz",
+  description: `Informace o způsobech dopravy a platby na especko.cz. Zásilkovna od ${ZASILKOVNA_PRICE} Kč, platba na dobírku. Doručení 2–4 pracovní dny.`,
+  keywords: [
     "ESP32",
     "ESP32 DevKit",
     "mikrokontrolér",
@@ -31,11 +30,10 @@ keywords: [
   openGraph: {
     type: "website",
     locale: "cs_CZ",
-    url: "https://especko.cz",
+    url: "https://especko.cz/doprava-platba",
     siteName: "especko.cz",
-    title: "ESP32 DevKit | Pohon pro vaše IoT projekty",
-    description:
-      "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
+    title: "Doprava a platba | especko.cz",
+    description: `Zásilkovna od ${ZASILKOVNA_PRICE} Kč, platba na dobírku. Doručení 2–4 pracovní dny.`,
     images: [
       {
         url: "/images/esp32.jpg",
@@ -47,9 +45,8 @@ keywords: [
   },
   twitter: {
     card: "summary_large_image",
-    title: "ESP32 DevKit | especko.cz",
-    description:
-      "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
+    title: "Doprava a platba | especko.cz",
+    description: `Zásilkovna od ${ZASILKOVNA_PRICE} Kč, platba na dobírku. Doručení 2–4 pracovní dny.`,
     images: ["/images/esp32.jpg"],
   },
   robots: {
@@ -64,14 +61,10 @@ keywords: [
     },
   },
   alternates: {
-    canonical: "https://especko.cz",
+    canonical: "https://especko.cz/doprava-platba",
   },
   icons: {
-    icon: [
-      {
-        url: "/especko.ico",
-      },
-    ],
+    icon: [{ url: "/especko.ico" }],
   },
 }
 
@@ -87,9 +80,7 @@ export default function DopravaPlatba() {
           <span className="text-sm">Zpět na hlavní stránku</span>
         </Link>
 
-        <h1 className="text-3xl font-bold text-foreground mb-8">
-          Doprava a platba zboží
-        </h1>
+        <h1 className="text-3xl font-bold text-foreground mb-8">Doprava a platba zboží</h1>
 
         {/* Doprava */}
         <div className="rounded-2xl border border-electric-cyan/20 bg-card/80 backdrop-blur-sm p-6 mb-6">
@@ -97,9 +88,7 @@ export default function DopravaPlatba() {
             <div className="w-10 h-10 rounded-xl bg-electric-cyan/10 flex items-center justify-center">
               <Truck className="w-5 h-5 text-electric-cyan" />
             </div>
-            <h2 className="text-xl font-semibold text-foreground">
-              1. Způsoby dopravy
-            </h2>
+            <h2 className="text-xl font-semibold text-foreground">1. Způsoby dopravy</h2>
           </div>
 
           <div className="rounded-xl bg-secondary/50 border border-border p-4">
@@ -107,11 +96,14 @@ export default function DopravaPlatba() {
               <div>
                 <h3 className="font-medium text-foreground">Zásilkovna</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Doručení na výdejní místo Zásilkovny v Čechách i Slovensku.
+                  Doručení na výdejní místo Zásilkovny v Čechách i na Slovensku.
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Obvyklá doba doručení: 2–4 pracovní dny od potvrzení objednávky.
                 </p>
               </div>
               <span className="text-electric-cyan font-semibold whitespace-nowrap ml-4">
-                 {ZASILKOVNA_PRICE} Kč
+                {ZASILKOVNA_PRICE} Kč
               </span>
             </div>
           </div>
@@ -123,23 +115,17 @@ export default function DopravaPlatba() {
             <div className="w-10 h-10 rounded-xl bg-electric-cyan/10 flex items-center justify-center">
               <CreditCard className="w-5 h-5 text-electric-cyan" />
             </div>
-            <h2 className="text-xl font-semibold text-foreground">
-              2. Způsoby platby
-            </h2>
+            <h2 className="text-xl font-semibold text-foreground">2. Způsoby platby</h2>
           </div>
 
           <div className="space-y-3">
-            
-
             <div className="rounded-xl bg-secondary/50 border border-border p-4">
               <div className="flex items-center gap-3">
                 <CreditCard className="w-5 h-5 text-muted-foreground shrink-0" />
                 <div>
-                  <h3 className="font-medium text-foreground">
-                    Dobírka
-                  </h3>
-                   <p className="text-sm text-muted-foreground mt-1">
-                   Platba v hotovosti při převzetí zásilky na pobočce Zásilkovny.
+                  <h3 className="font-medium text-foreground">Dobírka</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Platba v hotovosti při převzetí zásilky na pobočce Zásilkovny.
                   </p>
                 </div>
               </div>
@@ -151,11 +137,9 @@ export default function DopravaPlatba() {
         <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
           <p className="text-sm text-muted-foreground">
             Provozovatel:{" "}
-            <span className="text-foreground">
-              Adam Hitzger, IČO: 19712049 
-            </span>
-            , se sídlem Ledečská 2984, 580 01 Havlíčkův Brod.
-           </p>
+            <span className="text-foreground">Adam Hitzger, IČO: 19712049</span>, se sídlem Ledečská 2984,
+            580 01 Havlíčkův Brod.
+          </p>
         </div>
       </div>
     </main>

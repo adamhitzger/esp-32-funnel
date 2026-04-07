@@ -5,7 +5,7 @@ const specs = [
   { label: "Flash paměť", value: "4 MB externí SPI Flash" },
   { label: "Wi-Fi", value: "802.11 b/g/n (2.4 GHz)" },
   { label: "Bluetooth", value: "v4.2 BR/EDR + BLE" },
-  { label: "GPIO", value: "až 34 pinů (ne všechny plně univerzální)" },
+  { label: "GPIO", value: "až 38 pinů (ne všechny plně univerzální)" },
   { label: "ADC", value: "až 18 kanálů, 12bit" },
   { label: "DAC", value: "2 kanály, 8bit" },
   { label: "Provozní napětí", value: "3,3 V" },

@@ -92,13 +92,22 @@ export const orders = defineType({
         }),
         defineField({
             type: "string",
-            title:"Status",
+            title:"Status objednávky",
             name: "status", 
             options: {
-                list: ["Přijatá", "Zaplacená" ,"Odeslaná", "Vyzvednutá", "Zrušená", "Vrácená"],
+                list: ["Přijatá","Odeslaná", "Vyzvednutá", "Zrušená", "Vrácená"],
                 layout: "dropdown",
             }
-        }),  
+        }),
+        defineField({
+            type: "string",
+            title:"Status platby",
+            name: "payment_status", 
+            options: {
+                list: ["Zaplacená","Nezaplacená"],
+                layout: "dropdown",
+            }
+        }),   
         defineField({
             type: "file",
             title:"Faktura",

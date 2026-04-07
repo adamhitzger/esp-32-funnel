@@ -13,7 +13,7 @@ export const GET_COUPON = groq`*[_type=="coupons" && name == $name][0]{
     min_order_value
 }`
 
-export const GET_ORDER_BY_EMAIL_OR_PHONE = groq`*[_type=="orders" && (email == $search || phone == $search)] | order(_createdAt desc)[0]{
+export const GET_ORDER_BY_EMAIL_OR_PHONE = groq`*[_type=="orders" && (email == $search || phone == $search)] | order(_createdAt desc){
   _id,
   firstName,
   lastName,
@@ -58,7 +58,7 @@ export const GET_REVIEWS = groq`*[_type=="reviews"] | order(_createdAt desc)[0..
   _createdAt
 }`
 
-export const GET_PAID_ORDERS = groq`*[_type=="orders" && status != "Vrácená" && status != "Zrušená" && status != "Vyzvednutá" && status != "Přijatá"]{
+export const GET_PAID_ORDERS = groq`*[_type=="orders" && status != "Vrácená" && status != "Zrušená" && status != "Vyzvednutá"]{
     _id,
     _rev,
     firstName,

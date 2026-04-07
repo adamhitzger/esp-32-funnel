@@ -1,12 +1,35 @@
 "use server"
 
-import { ActionRes, BarcodeSend, CreatePaymentResponse, GetProjects, Order, SanityFileAsset, SanityMetadata } from "@/types";
-import { CreateOrderType, newsletterSchema, NewsletterType, orderSchema, RefundInputs, refundSchema, reviewSchema, ReviewType } from "./schema";
+import { 
+    ActionRes, 
+    BarcodeSend, 
+    CreatePaymentResponse, 
+    GetRefunds, 
+    Order, 
+    SanityFileAsset, 
+    SanityMetadata 
+} from "@/types";
+import { 
+    CreateOrderType, 
+    newsletterSchema, 
+    NewsletterType, 
+    orderSchema, 
+    RefundCode, 
+    RefundInputs, 
+    refundSchema, 
+    reviewSchema, 
+    ReviewType, 
+    sendRefundCode
+} from "./schema";
 import { revalidatePath } from "next/cache";
 import { sanityClient, sanityFetch } from "@/sanity/lib/client";
-import { GET_COUPON, GET_CUR_USER, GET_ORDER_BY_EMAIL_OR_PHONE } from "@/sanity/lib/queries";
+import { 
+    GET_COUPON, 
+    GET_CUR_USER, 
+    GET_ORDER_BY_EMAIL_OR_PHONE 
+} from "@/sanity/lib/queries";
 import { Coupon } from "@/types";
-import { UNIT_PRICE } from "@/lib/utils";
+import { getTotalPrice, getUnitPrice } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
@@ -75,7 +98,7 @@ export async function getCoupon(coupon: string): Promise<Coupon | null>{
     }
 }
 
-export async function findOrderAndSendBarcode(prevState: ActionRes<RefundInputs>, formData: FormData): Promise<ActionRes<RefundInputs>>{
+export async function findOrderBarcode(prevState: GetRefunds, formData: FormData): Promise<GetRefunds>{
     let revalidate = false;
     try{
         const nonValidate: RefundInputs = {
@@ -86,78 +109,112 @@ export async function findOrderAndSendBarcode(prevState: ActionRes<RefundInputs>
 
     if (!validate.success) {
       return {
-        submitted: true,
-        success: false,
-        message: "Zadejte platný e-mail nebo telefonní číslo",
-        inputs: nonValidate,
+        orders: null,
+        count: 0,
+        success: false,     
+        input: nonValidate.search,
       }
     }
 
     const data = validate.data
 
-     const order = await sanityClient.fetch<Order | null>(GET_ORDER_BY_EMAIL_OR_PHONE, {
+     const order = await sanityClient.fetch<Array<Order> | null>(GET_ORDER_BY_EMAIL_OR_PHONE, {
       search: data.search,
     })
 
-    if (!order || !order._id) {
+    console.log("Order:", order)
+
+    if (!order || !order[0]._id || order.length === 0) {
       return {
-        submitted: true,
-        success: false,
-        message: "Objednávka s tímto e-mailem nebo telefonním číslem nebyla nalezena.",
-        inputs: data,
+        orders: null,
+        count: order?.length || 0,
+        success: true,     
+        input: nonValidate.search,
       }
-    }
-
-    if (!order.barcode) {
-      return {
-        submitted: true,
-        success: false,
-        message: "K této objednávce zatím nebyl přiřazen štítek. Kontaktujte prosím podporu.",
-        inputs: data,
-      }
-    }
-
-    const emailHtml = await renderRefundBarcodeEmail({
-      firstName: order.firstName,
-      lastName: order.lastName,
-      barcode: order.barcode,
-      orderId: order._id,
-    })
-
-    const emailSend = await transporter.sendMail({
-      from: `"Especko.cz" <${process.env.FROM_EMAIL}>`,
-      to: order.email,
-      subject: "Štítek pro vrácení zásilky - Especko.cz",
-      html: emailHtml,
-    })
-    
-    if(!emailSend.accepted){
-        return {
-      submitted: true,
-      success: false,
-      message: `Vyskytla se chyba při odeslání emailu. Kontaktujte podporu.`,
-      inputs: data,
+    }else{
+        return{
+            orders: order,
+            count: order.length,
+            success: true,     
+            input: nonValidate.search,
         }
-    }
-    revalidate=true;
-    return {
-      submitted: true,
-      success: true,
-      message: `Štítek byl odeslán na e-mail ${order.email}.`,
-      inputs: data,
-    }
+      }
     }catch (error) {
     console.error("[findOrderAndSendBarcode] Error:", error)
     return {
-      submitted: true,
-      success: false,
-      message: "Nastala chyba při zpracování požadavku. Zkuste to prosím později.",
+      orders: null,
+        count: 0,
+        success: false,     
+        input: "",
     }
   }finally{
     if(revalidate) revalidatePath("/vraceni");
   }
 }
 
+export async function sendBarcode(prevState: ActionRes<RefundCode>, formData: FormData): Promise<ActionRes<RefundCode>>{
+    
+    try {
+        const nonValidate: RefundCode = {
+            firstName: formData.get("firstName") as string,
+            lastName: formData.get("lastName") as string,
+            barcode: formData.get("barcode") as string,
+            email: formData.get("email") as string,
+            orderId: formData.get("orderId") as string
+        }
+
+        const validate = sendRefundCode.safeParse(nonValidate)
+        
+        if(!validate.success){
+            return{
+                success: false,
+                submitted: true,
+                message: "Špatná data"
+            }
+        }
+
+        const data = validate.data
+
+        const emailHtml = await renderRefundBarcodeEmail({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            barcode: data.barcode,
+            orderId: data.orderId,
+        })
+
+
+        const emailSend = await transporter.sendMail({
+            from: `"Especko.cz" <${process.env.FROM_EMAIL}>`,
+            to: data.email,
+            subject: "Štítek pro vrácení zásilky - Especko.cz",
+            html: emailHtml,
+        })
+    
+    if(!emailSend.accepted){
+        return {
+            submitted: true,
+            success: false,
+            message: `Vyskytla se chyba při odeslání emailu. Kontaktujte podporu.`,
+            inputs: data,
+        }
+    }else{
+        return{
+            submitted: true,
+            success: true,
+            message: `Štítek byl odeslán na e-mail ${data.email}.`,
+            inputs: data,
+        }
+    }
+    }catch(error){
+        console.log("Chyba [sendBarcode]: ", error)
+        return {
+            submitted: true,
+            success: false,
+            message: `Vyskytla se chyba na naší straně. Kontaktujte podporu`,
+        }
+    }
+}
+   
 export async function signOutNewsletter(prevState: ActionRes<NewsletterType>, formData: FormData): Promise<ActionRes<NewsletterType>>{
     let revalidate: boolean = false;
 
@@ -440,6 +497,8 @@ export async function saveNewsletter(email: string): Promise<ActionRes<Newslette
             success: false,
             message: "Error na naší straně, vše dáváme do pořádku, vyčkejte prosím."
         }
+    }finally{
+        if(revalidate) revalidatePath("/saveNewsletter")
     }   
 }
 
@@ -480,18 +539,18 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
         const data = validate.data;
         inputs = data;
 
-        const totalPrice: number = data.quantity * UNIT_PRICE + data.deliveryPrice - data.sale
-        const itemPrice: number = data.quantity * UNIT_PRICE + data.sale
+        const totalPrice: number = getTotalPrice(data.quantity) + data.deliveryPrice - data.sale
+        const itemPrice: number = getUnitPrice(data.quantity)
         
         console.log(data, totalPrice, itemPrice)
 
         const  packeta = await createPacket({
-                            name: data.firstName,
-                            surname: data.lastName,
-                            email: data.email,
-                            phone: data.phone,
-                            packetaId: Number(data.packetaId),
-                            total: totalPrice,
+            name: data.firstName,
+            surname: data.lastName,
+            email: data.email,
+            phone: data.phone,
+            packetaId: Number(data.packetaId),
+            total: totalPrice,
         })
         console.log("Packeta:",packeta)
     
@@ -546,8 +605,6 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
                 text: "Nová objednávka: "+ data.email
             })
         })
-
-        console.log("Telegram notification:", sendNotify)
 
         return {
             submitted: true,

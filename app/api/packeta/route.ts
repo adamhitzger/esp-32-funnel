@@ -4,7 +4,7 @@ import { sanityClient, sanityFetch } from "@/sanity/lib/client"
 import { Order } from "@/types"
 import { GET_PAID_ORDERS } from "@/sanity/lib/queries"
 
-// 🔥 mapování Packeta → order status (doporučeno technické klíče)
+
 const PACKETA_STATUS_MAP: Record<number, string> = {
   2: "Odeslána",
   7: "Vyzvednutá",

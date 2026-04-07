@@ -180,7 +180,7 @@ export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
             {/* Product row */}
             <Row style={{ borderBottom: `1px solid #2a2a48` }}>
               <Column style={{ padding: "12px 0" }}>
-                <Text style={{ margin: 0, fontSize: 14, color: textPrimary, fontWeight: 500 }}>ESP32-WROOM-32 DevKit</Text>
+                <Text style={{ margin: 0, fontSize: 14, color: textPrimary, fontWeight: 500 }}>ESP32-S3 DevKit USB-C</Text>
               </Column>
               <Column align="center" style={{ padding: "12px 0" }}>
                 <Text style={{ margin: 0, fontSize: 14, color: textPrimary }}>{order.quantity} ks</Text>
@@ -255,6 +255,7 @@ export function OrderStatusEmail({ order }: OrderStatusEmailProps) {
                 <TableRow label="E-mail" value={order.email} />
                 {order.phone && <TableRow label="Telefon" value={order.phone} />}
               </Section>
+              
             </Column>
 
             {/* Spacer */}

@@ -39,6 +39,15 @@ export const refundSchema = z.object({
   search: z.string().min(1, { message: "Zadejte e-mail nebo telefonní číslo" }).trim(),
 })
 
+export const sendRefundCode = z.object({
+    firstName:z.string().min(1, {message: "Jméno je povinné"}).trim(),
+      lastName: z.string().min(1, {message: "Přijmení je povinné"}).trim(),
+      barcode: z.string().min(1, {message: "Zásilkovna kód je povinný"}).trim(),
+      orderId: z.string().min(1, {message: "OrderId je povinné"}).trim(),
+      email: z.string().email().min(1, {message: "E-mail je povinný"}).trim()
+})
+
+export type RefundCode = z.infer<typeof sendRefundCode>
 export type RefundInputs = z.infer<typeof refundSchema>
 export type ReviewType = z.infer<typeof reviewSchema>
 export type CreateOrderType = z.infer<typeof orderSchema>

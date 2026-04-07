@@ -18,7 +18,7 @@ const productJsonLd = {
   "@type": "Product",
   name: "ESP32 DevKit V1",
   description:
-    "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Dvoujádrový procesor 240 MHz, 4MB Flash, 520KB SRAM, 34 GPIO pinů.",
+    "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Dvoujádrový procesor 240 MHz, 4MB Flash, 520KB SRAM, 38 GPIO pinů.",
   image: `${SITE_URL}/images/esp32.jpg`,
   brand: {
     "@type": "Brand",
@@ -71,7 +71,7 @@ const productJsonLd = {
     { "@type": "PropertyValue", name: "SRAM", value: "520 KB" },
     { "@type": "PropertyValue", name: "WiFi", value: "802.11 b/g/n" },
     { "@type": "PropertyValue", name: "Bluetooth", value: "4.2 + BLE" },
-    { "@type": "PropertyValue", name: "GPIO piny", value: "34" },
+    { "@type": "PropertyValue", name: "GPIO piny", value: "38" },
   ],
 }
 

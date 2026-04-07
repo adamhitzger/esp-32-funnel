@@ -3,9 +3,9 @@ import Link from "next/link"
 import { ArrowLeft, FileText } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Obchodní podmínky",
+  title: "Obchodní podmínky | especko.cz",
   description:
-    "Obchodní podmínky e-shopu",
+    "Obchodní podmínky e-shopu especko.cz provozovaného Adamem Hitzgerem, IČO: 19712049.",
   authors: [{ name: "especko.cz", url: "https://especko.cz" }],
   creator: "especko.cz",
   publisher: "especko.cz",
@@ -17,11 +17,11 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "cs_CZ",
-    url: "https://especko.cz",
+    url: "https://especko.cz/podminky",
     siteName: "especko.cz",
-    title: "ESP32 DevKit | Pohon pro vaše IoT projekty",
+    title: "Obchodní podmínky | especko.cz",
     description:
-      "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
+      "Obchodní podmínky e-shopu especko.cz provozovaného Adamem Hitzgerem, IČO: 19712049.",
     images: [
       {
         url: "/images/esp32.jpg",
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ESP32 DevKit | especko.cz",
+    title: "Obchodní podmínky | especko.cz",
     description:
-      "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
+      "Obchodní podmínky e-shopu especko.cz provozovaného Adamem Hitzgerem, IČO: 19712049.",
     images: ["/images/esp32.png"],
   },
   robots: {
@@ -50,14 +50,10 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://especko.cz",
+    canonical: "https://especko.cz/podminky",
   },
   icons: {
-    icon: [
-     {
-        url: "/especko.ico",
-      },
-    ],
+    icon: [{ url: "/especko.ico" }],
   },
 }
 
@@ -85,98 +81,77 @@ export default function Podminky() {
           <div className="w-10 h-10 rounded-xl bg-electric-cyan/10 flex items-center justify-center">
             <FileText className="w-5 h-5 text-electric-cyan" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground">
-            Obchodní podmínky
-          </h1>
+          <h1 className="text-3xl font-bold text-foreground">Obchodní podmínky</h1>
         </div>
 
         <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
-          OSVČ {COMPANY} se sídlem {ADDRESS} a identifikačním číslem
-          (IČO) {ICO} pro prodej zboží prostřednictvím on-line obchodu
-          umístěného na internetové adrese www.{WEB}
+          OSVČ {COMPANY} se sídlem {ADDRESS} a identifikačním číslem (IČO) {ICO} pro prodej zboží
+          prostřednictvím on-line obchodu umístěného na internetové adrese www.{WEB}
         </p>
 
         <div className="space-y-6">
           {/* 1. Úvodní ustanovení */}
           <section className="rounded-2xl border border-electric-cyan/20 bg-card/80 backdrop-blur-sm p-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4">
-              1. Úvodní ustanovení
-            </h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">1. Úvodní ustanovení</h2>
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>
-                Tyto obchodní podmínky (dále jen &quot;obchodní podmínky&quot;)
-                podnikatel {COMPANY}, se sídlem {ADDRESS}, identifikační
-                číslo: {ICO}  (dále jen &quot;prodávající&quot;) upravují v
-                souladu s ustanovením § 1751 odst. 1 zákona č. 89/2012 Sb.,
-                občanský zákoník, ve znění pozdějších předpisů (dále jen
-                &quot;občanský zákoník&quot;) vzájemná práva a povinnosti
-                smluvních stran vzniklé v souvislosti nebo na základě kupní
-                smlouvy (dále jen &quot;kupní smlouva&quot;) uzavírané mezi
-                prodávajícím a jinou fyzickou osobou (dále jen
-                &quot;kupující&quot;) prostřednictvím internetového obchodu
-                prodávajícího. Internetový obchod je prodávajícím provozován na
-                webové stránce umístěné na internetové adrese www.{WEB} (dále
+                Tyto obchodní podmínky (dále jen &quot;obchodní podmínky&quot;) podnikatel {COMPANY}, se
+                sídlem {ADDRESS}, identifikační číslo: {ICO} (dále jen &quot;prodávající&quot;) upravují v
+                souladu s ustanovením § 1751 odst. 1 zákona č. 89/2012 Sb., občanský zákoník, ve znění
+                pozdějších předpisů (dále jen &quot;občanský zákoník&quot;) vzájemná práva a povinnosti
+                smluvních stran vzniklé v souvislosti nebo na základě kupní smlouvy (dále jen &quot;kupní
+                smlouva&quot;) uzavírané mezi prodávajícím a jinou fyzickou osobou (dále jen
+                &quot;kupující&quot;) prostřednictvím internetového obchodu prodávajícího. Internetový obchod
+                je prodávajícím provozován na webové stránce umístěné na internetové adrese www.{WEB} (dále
                 jen &quot;webová stránka&quot;).
               </li>
               <li>
-                Obchodní podmínky se nevztahují na případy, kdy osoba, která má
-                v úmyslu nakoupit zboží od prodávajícího, je právnickou osobou
-                či osobou, jež jedná při objednávání zboží v rámci své
-                podnikatelské činnosti nebo v rámci svého samostatného výkonu
-                povolání.
+                Obchodní podmínky se nevztahují na případy, kdy osoba, která má v úmyslu nakoupit zboží od
+                prodávajícího, je právnickou osobou či osobou, jež jedná při objednávání zboží v rámci své
+                podnikatelské činnosti nebo v rámci svého samostatného výkonu povolání.
               </li>
               <li>
-                Ustanovení odchylná od obchodních podmínek je možné sjednat v
-                kupní smlouvě. Odchylná ujednání v kupní smlouvě mají přednost
-                před ustanoveními obchodních podmínek.
+                Ustanovení odchylná od obchodních podmínek je možné sjednat v kupní smlouvě. Odchylná
+                ujednání v kupní smlouvě mají přednost před ustanoveními obchodních podmínek.
               </li>
               <li>
-                Ustanovení obchodních podmínek jsou nedílnou součástí kupní
-                smlouvy. Kupní smlouva a obchodní podmínky jsou vyhotoveny v
-                českém jazyce. Kupní smlouvu lze uzavřít v českém jazyce.
+                Ustanovení obchodních podmínek jsou nedílnou součástí kupní smlouvy. Kupní smlouva a obchodní
+                podmínky jsou vyhotoveny v českém jazyce. Kupní smlouvu lze uzavřít v českém jazyce.
               </li>
               <li>
-                Znění obchodních podmínek může prodávající měnit či doplňovat.
-                Tímto ustanovením nejsou dotčena práva a povinnosti vzniklá po
-                dobu účinnosti předchozího znění obchodních podmínek.
+                Znění obchodních podmínek může prodávající měnit či doplňovat. Tímto ustanovením nejsou
+                dotčena práva a povinnosti vzniklá po dobu účinnosti předchozího znění obchodních podmínek.
               </li>
             </ul>
           </section>
 
           {/* 2. Uzavření kupní smlouvy */}
           <section className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4">
-              2. Uzavření kupní smlouvy
-            </h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">2. Uzavření kupní smlouvy</h2>
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>
-                Veškerá prezentace zboží umístěná ve webovém rozhraní obchodu
-                je informativního charakteru a prodávající není povinen uzavřít
-                kupní smlouvu ohledně tohoto zboží. Ustanovení § 1732 odst. 2
-                občanského zákoníku se nepoužije.
+                Veškerá prezentace zboží umístěná ve webovém rozhraní obchodu je informativního charakteru a
+                prodávající není povinen uzavřít kupní smlouvu ohledně tohoto zboží. Ustanovení § 1732 odst.
+                2 občanského zákoníku se nepoužije.
               </li>
               <li>
-                Webové rozhraní obchodu obsahuje informace o zboží, a to
-                včetně uvedení cen jednotlivého zboží a nákladů za navrácení
-                zboží. Ceny zboží jsou uvedeny včetně daně z přidané hodnoty a
-                všech souvisejících poplatků. Ceny zboží zůstávají v platnosti
-                po dobu, kdy jsou zobrazovány ve webovém rozhraní obchodu.
+                Webové rozhraní obchodu obsahuje informace o zboží, a to včetně uvedení cen jednotlivého
+                zboží a nákladů za navrácení zboží. Ceny zboží jsou uvedeny včetně daně z přidané hodnoty a
+                všech souvisejících poplatků. Ceny zboží zůstávají v platnosti po dobu, kdy jsou zobrazovány
+                ve webovém rozhraní obchodu.
               </li>
               <li>
-                Pro objednání zboží vyplní kupující objednávkový formulář ve
-                webovém rozhraní obchodu. Objednávku odešle kupující
-                prodávajícímu kliknutím na tlačítko &quot;Objednat&quot;. Údaje
+                Pro objednání zboží vyplní kupující objednávkový formulář ve webovém rozhraní obchodu.
+                Objednávku odešle kupující prodávajícímu kliknutím na tlačítko &quot;Objednat&quot;. Údaje
                 uvedené v objednávce jsou prodávajícím považovány za správné.
               </li>
               <li>
-                Smluvní vztah mezi prodávajícím a kupujícím vzniká doručením
-                přijetí objednávky (akceptací), jež je prodávajícím zasláno
-                kupujícímu elektronickou poštou, a to na adresu elektronické
+                Smluvní vztah mezi prodávajícím a kupujícím vzniká doručením přijetí objednávky (akceptací),
+                jež je prodávajícím zasláno kupujícímu elektronickou poštou, a to na adresu elektronické
                 pošty kupujícího.
               </li>
               <li>
-                Kupující souhlasí s použitím komunikačních prostředků na dálku
-                při uzavírání kupní smlouvy.
+                Kupující souhlasí s použitím komunikačních prostředků na dálku při uzavírání kupní smlouvy.
               </li>
             </ul>
           </section>
@@ -188,122 +163,110 @@ export default function Podminky() {
             </h2>
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>
-                Cenu zboží a případné náklady spojené s dodáním zboží dle kupní
-                smlouvy může kupující uhradit prodávajícímu následujícími
-                způsoby:
+                Cenu zboží a případné náklady spojené s dodáním zboží dle kupní smlouvy může kupující uhradit
+                prodávajícímu následujícími způsoby:
                 <ul className="list-disc pl-6 mt-2 space-y-1">
+                  <li>v hotovosti na dobírku při převzetí zásilky na výdejním místě Zásilkovny;</li>
                   <li>
-                    v hotovosti na dobírku v místě určeném kupujícím v
-                    objednávce;
-                  </li>
-                  <li>
-                    bezhotovostně převodem na účet prodávajícího č. {ACCOUNT},
-                    vedený u společnosti Česká spořitelna, a.s.
+                    bezhotovostně převodem na účet prodávajícího č. {ACCOUNT}, vedený u společnosti Česká
+                    spořitelna, a.s.
                   </li>
                 </ul>
               </li>
               <li>
-                Společně s kupní cenou je kupující povinen zaplatit
-                prodávajícímu také náklady spojené s balením a dodáním zboží ve
-                smluvené výši.
+                Společně s kupní cenou je kupující povinen zaplatit prodávajícímu také náklady spojené s
+                balením a dodáním zboží ve smluvené výši.
               </li>
               <li>
-                V případě platby na dobírku je kupní cena splatná při převzetí
-                zboží. V případě bezhotovostní platby je kupní cena splatná do
-                7 dnů od uzavření kupní smlouvy.
+                V případě platby na dobírku je kupní cena splatná při převzetí zboží. V případě
+                bezhotovostní platby je kupní cena splatná do 7 dnů od uzavření kupní smlouvy.
               </li>
               <li>
-                V případě bezhotovostní platby je kupující povinen uhrazovat
-                kupní cenu zboží společně s uvedením variabilního symbolu
-                platby.
+                V případě bezhotovostní platby je kupující povinen uhrazovat kupní cenu zboží společně s
+                uvedením variabilního symbolu platby.
               </li>
               <li>
-                Případné slevy z ceny zboží poskytnuté prodávajícím kupujícímu
-                nelze vzájemně kombinovat.
+                Případné slevy z ceny zboží poskytnuté prodávajícím kupujícímu nelze vzájemně kombinovat.
               </li>
             </ul>
           </section>
 
           {/* 4. Odstoupení od kupní smlouvy */}
           <section className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4">
-              4. Odstoupení od kupní smlouvy
-            </h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">4. Odstoupení od kupní smlouvy</h2>
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>
-                Kupující bere na vědomí, že dle ustanovení § 1837 občanského
-                zákoníku nelze mimo jiné odstoupit od kupní smlouvy o dodávce
-                zboží, které bylo upraveno podle přání kupujícího nebo pro jeho
-                osobu.
+                Kupující bere na vědomí, že dle ustanovení § 1837 občanského zákoníku nelze mimo jiné
+                odstoupit od kupní smlouvy o dodávce zboží, které bylo upraveno podle přání kupujícího nebo
+                pro jeho osobu.
               </li>
               <li>
-                Nejedná-li se o případ uvedený výše či o jiný případ, kdy nelze
-                od kupní smlouvy odstoupit, má kupující v souladu s ustanovením
-                § 1829 odst. 1 občanského zákoníku právo od kupní smlouvy
-                odstoupit, a to do čtrnácti (14) dnů od převzetí zboží.
+                Nejedná-li se o případ uvedený výše či o jiný případ, kdy nelze od kupní smlouvy odstoupit,
+                má kupující v souladu s ustanovením § 1829 odst. 1 občanského zákoníku právo od kupní
+                smlouvy odstoupit, a to do čtrnácti (14) dnů od převzetí zboží.
               </li>
               <li>
-                V případě odstoupení od kupní smlouvy se kupní smlouva od
-                počátku ruší. Zboží musí být kupujícím prodávajícímu vráceno do
-                čtrnácti (14) dnů od doručení odstoupení od kupní smlouvy.
-                Odstoupí-li kupující od kupní smlouvy, nese kupující náklady
-                spojené s navrácením zboží prodávajícímu.
+                V případě odstoupení od kupní smlouvy se kupní smlouva od počátku ruší. Zboží musí být
+                kupujícím prodávajícímu vráceno do čtrnácti (14) dnů od doručení odstoupení od kupní
+                smlouvy. Vrácení zboží probíhá prostřednictvím vratkového portálu Zásilkovny dostupného na
+                stránce{" "}
+                <Link href="/vraceni" className="text-electric-cyan hover:underline">
+                  especko.cz/vraceni
+                </Link>
+                . Náklady na dopravu při vrácení nese kupující.
               </li>
               <li>
-                V případě odstoupení vrátí prodávající peněžní prostředky
-                přijaté od kupujícího do čtrnácti (14) dnů od odstoupení, a to
-                stejným způsobem, jakým je od kupujícího přijal.
+                V případě odstoupení vrátí prodávající peněžní prostředky přijaté od kupujícího do čtrnácti
+                (14) dnů od obdržení vráceného zboží, a to převodem na bankovní účet kupujícího.
               </li>
             </ul>
           </section>
 
           {/* 5. Přeprava a dodání zboží */}
           <section className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4">
-              5. Přeprava a dodání zboží
-            </h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">5. Přeprava a dodání zboží</h2>
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>
-                Je-li prodávající podle kupní smlouvy povinen dodat zboží na
-                místo určené kupujícím v objednávce, je kupující povinen převzít
-                zboží při dodání.
+                Zboží je doručováno prostřednictvím Zásilkovny na výdejní místo zvolené kupujícím při
+                objednávce. Obvyklá doba doručení je 2–4 pracovní dny od potvrzení objednávky.
               </li>
               <li>
-                V případě, že je z důvodů na straně kupujícího nutno zboží
-                doručovat opakovaně nebo jiným způsobem, než bylo uvedeno v
-                objednávce, je kupující povinen uhradit náklady spojené s
+                Je-li prodávající podle kupní smlouvy povinen dodat zboží na místo určené kupujícím v
+                objednávce, je kupující povinen převzít zboží při dodání.
+              </li>
+              <li>
+                V případě, že je z důvodů na straně kupujícího nutno zboží doručovat opakovaně nebo jiným
+                způsobem, než bylo uvedeno v objednávce, je kupující povinen uhradit náklady spojené s
                 opakovaným doručováním zboží.
               </li>
               <li>
-                Při převzetí zboží od přepravce je kupující povinen zkontrolovat
-                neporušenost obalů zboží a v případě jakýchkoliv závad toto
-                neprodleně oznámit přepravci.
+                Při převzetí zboží od přepravce je kupující povinen zkontrolovat neporušenost obalů zboží a
+                v případě jakýchkoliv závad toto neprodleně oznámit přepravci.
               </li>
             </ul>
           </section>
 
           {/* 6. Práva z vadného plnění */}
           <section className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4">
-              6. Práva z vadného plnění
-            </h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">6. Práva z vadného plnění</h2>
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>
-                Prodávající odpovídá kupujícímu, že zboží při převzetí nemá
-                vady. Zejména prodávající odpovídá kupujícímu, že v době, kdy
-                kupující zboží převzal, má zboží vlastnosti, které si strany
-                ujednaly, se hodí k účelu, který pro jeho použití prodávající
-                uvádí, a je v odpovídajícím množství.
+                Prodávající odpovídá kupujícímu, že zboží při převzetí nemá vady. Zejména prodávající
+                odpovídá kupujícímu, že v době, kdy kupující zboží převzal, má zboží vlastnosti, které si
+                strany ujednaly, se hodí k účelu, který pro jeho použití prodávající uvádí, a je v
+                odpovídajícím množství.
               </li>
               <li>
-                Projeví-li se vada v průběhu šesti měsíců od převzetí, má se za
-                to, že zboží bylo vadné již při převzetí. Kupující je oprávněn
-                uplatnit právo z vady, která se vyskytne u spotřebního zboží v
-                době dvaceti čtyř měsíců od převzetí.
+                Projeví-li se vada v průběhu šesti měsíců od převzetí, má se za to, že zboží bylo vadné již
+                při převzetí. Kupující je oprávněn uplatnit právo z vady, která se vyskytne u spotřebního
+                zboží v době dvaceti čtyř měsíců od převzetí.
               </li>
               <li>
-                Další práva a povinnosti stran související s odpovědností
-                prodávajícího za vady může upravit reklamační řád prodávajícího.
+                Další práva a povinnosti stran související s odpovědností prodávajícího za vady upravuje{" "}
+                <Link href="/reklamace" className="text-electric-cyan hover:underline">
+                  reklamační řád prodávajícího
+                </Link>
+                .
               </li>
             </ul>
           </section>
@@ -315,29 +278,28 @@ export default function Podminky() {
             </h2>
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>
-                Svou informační povinnost vůči kupujícímu ve smyslu čl. 13
-                Nařízení Evropského parlamentu a Rady 2016/679 o ochraně
-                fyzických osob v souvislosti se zpracováním osobních údajů
-                (GDPR) plní prodávající prostřednictvím zvláštního dokumentu.
+                Svou informační povinnost vůči kupujícímu ve smyslu čl. 13 Nařízení Evropského parlamentu a
+                Rady 2016/679 o ochraně fyzických osob v souvislosti se zpracováním osobních údajů (GDPR)
+                plní prodávající prostřednictvím{" "}
+                <Link href="/zasady" className="text-electric-cyan hover:underline">
+                  Zásad zpracování osobních údajů
+                </Link>
+                .
               </li>
               <li>
-                Kupující souhlasí s ukládáním tzv. cookies na jeho počítač. V
-                případě, že je nákup na webové stránce možné provést bez
-                ukládání cookies, může kupující souhlas kdykoliv odvolat.
+                Webová stránka používá soubory cookies nezbytné pro svůj provoz. Kupující může nastavení
+                cookies spravovat ve svém prohlížeči.
               </li>
             </ul>
           </section>
 
           {/* 8. Závěrečná ustanovení */}
           <section className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4">
-              8. Závěrečná ustanovení
-            </h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">8. Závěrečná ustanovení</h2>
             <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
               <li>
-                K mimosoudnímu řešení spotřebitelských sporů z kupní smlouvy je
-                příslušná Česká obchodní inspekce, se sídlem Štěpánská 567/15,
-                120 00 Praha 2, IČ: 000 20 869, internetová adresa:{" "}
+                K mimosoudnímu řešení spotřebitelských sporů z kupní smlouvy je příslušná Česká obchodní
+                inspekce, se sídlem Štěpánská 567/15, 120 00 Praha 2, IČ: 000 20 869, internetová adresa:{" "}
                 <a
                   href="https://adr.coi.cz/cs"
                   target="_blank"
@@ -349,12 +311,8 @@ export default function Podminky() {
                 .
               </li>
               <li>
-                Kontaktní údaje prodávajícího: adresa pro doručování {ADDRESS},
-                adresa elektronické pošty{" "}
-                <a
-                  href={`mailto:${EMAIL}`}
-                  className="text-electric-cyan hover:underline"
-                >
+                Kontaktní údaje prodávajícího: adresa pro doručování {ADDRESS}, adresa elektronické pošty{" "}
+                <a href={`mailto:${EMAIL}`} className="text-electric-cyan hover:underline">
                   {EMAIL}
                 </a>
                 , telefon{" "}
@@ -370,9 +328,7 @@ export default function Podminky() {
           </section>
 
           <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6">
-            <p className="text-xs text-muted-foreground">
-              V Havlíčkově Brodě dne 02.01.2026
-            </p>
+            <p className="text-xs text-muted-foreground">V Havlíčkově Brodě dne 02.01.2026</p>
           </div>
         </div>
       </div>

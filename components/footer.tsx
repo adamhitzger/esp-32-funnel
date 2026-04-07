@@ -71,7 +71,7 @@ export function Footer() {
                   <TikTokIcon className="w-4 h-4" />
                 </Link>
               </div>
-</div>
+            </div>
             {/**<Link href="https://www.csas.cz/cs/osobni-finance" target="_blank" rel="noopener" >
             <Image alt="Erste logo" width={150} height={96} src="/erste.png" />
           </Link> */}
@@ -80,11 +80,11 @@ export function Footer() {
               <Link href="/" className="text-muted-foreground hover:text-electric-cyan transition-colors">
                 Produkt
               </Link>
+              <Link href="/vraceni" className="text-muted-foreground hover:text-electric-cyan transition-colors">
+                Vracení
+              </Link>
               <Link href="/doprava-platba" className="text-muted-foreground hover:text-electric-cyan transition-colors">
                 Doprava a platba
-              </Link>
-              <Link href="/reklamace" className="text-muted-foreground hover:text-electric-cyan transition-colors">
-                Reklamace
               </Link>
             </nav>
           </div>
