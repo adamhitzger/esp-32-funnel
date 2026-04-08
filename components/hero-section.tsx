@@ -7,7 +7,6 @@ import Link from "next/link"
 import { useState } from "react"
 import { getTotalPrice, getUnitPrice, PRICING_TIERS, ZASILKOVNA_PRICE } from "@/lib/utils"
 import { sendGTMEvent } from '@next/third-parties/google';
-import { fbEvent } from "@rivercode/facebook-conversion-api-nextjs"
 
 const features = [
   "240MHz dvoujádrový",
@@ -91,6 +90,7 @@ export function HeroSection() {
       <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-electric-orange/20 rounded-full blur-[96px]" />
 
       <div className="container mx-auto px-4 relative z-10">
+        <Link href={"/#checkout"}>
         <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-12 lg:mb-16">
           <span className="relative inline-block">
             <span className="relative z-10 text-electric-cyan">Nakupte</span>
@@ -118,6 +118,7 @@ export function HeroSection() {
             </svg>
           </span>
         </h1>
+        </Link>
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left - Product Image */}
           <div className="order-2 lg:order-1">
@@ -290,6 +291,7 @@ export function HeroSection() {
 
               {/* Checkout button */}
               <Button
+              id="checkout"
                 asChild
                 size="lg"
                 className="w-full h-14 text-lg font-semibold bg-electric-cyan hover:bg-electric-cyan/90 text-background shadow-[0_0_30px_rgba(0,200,255,0.4)] hover:shadow-[0_0_50px_rgba(0,200,255,0.6)] transition-all"
@@ -301,15 +303,7 @@ export function HeroSection() {
                                   value: totalPrice,
                                   quantity: quantity
                                 })
-                                fbEvent({
-                                  eventName: "begin_checkout",
-                                  value: Number(totalPrice),
-                                  products: [{
-                                    sku: "ESP32_S3",
-                                    quantity: quantity
-                                  }],
-                                  currency: "CZK",
-                                })
+                                
                   }} 
                   href={`/checkout?quantity=${quantity}`}
                   >

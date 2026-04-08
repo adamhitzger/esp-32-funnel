@@ -13,7 +13,6 @@ import { toast } from "sonner"
 import { ActionRes, CreatePaymentResponse } from "@/types"
 import { CreateOrderType } from "@/server/schema"
 import { sendGTMEvent } from "@next/third-parties/google"
-import { fbEvent } from '@rivercode/facebook-conversion-api-nextjs';
 
 declare global {
   interface Window {
@@ -123,16 +122,7 @@ function CheckoutContent() {
             transaction_id: state.transaction_id,
             email: String(state.inputs?.email), 
         })
-        fbEvent({
-            eventName: "create_payment",
-            products: [{
-              sku: "ESP32-S3",
-              quantity: quantity
-            }],
-            value: Number(finalPrice),
-            currency: "CZK",
-            emails: [String(state.inputs?.email)], 
-        })
+        
         redirect(SITE_URL+"status/"+state.transaction_id)
       }else {
         toast.error(state.message)

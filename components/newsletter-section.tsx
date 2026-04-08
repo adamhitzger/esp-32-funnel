@@ -7,7 +7,6 @@ import { NewsletterType } from "@/server/schema"
 import { authorizeNewsletter } from "@/server/action"
 import { toast } from "sonner"
 import { sendGTMEvent } from '@next/third-parties/google';
-import { fbEvent } from "@rivercode/facebook-conversion-api-nextjs"
 
 const actionState: ActionRes<NewsletterType> = {
   submitted: false,
@@ -30,10 +29,7 @@ export function NewsletterSection() {
                    event: "submit_newsletter",
                    email: String(send.inputs?.email),
               })  
-              fbEvent({
-                eventName: "submit_newsletter",
-                   emails:[ String(send.inputs?.email)],
-              })                               
+                                            
             }
          }
       })
