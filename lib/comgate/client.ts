@@ -103,7 +103,7 @@ export const comgate = new ComgateRestClient({
     secret: process.env.COMGATE_API_PASSWORD as string, 
     language: "cs",
     country: "CZ",
-    test: true,
+    test: false,
     currency: "CZK",
     delivery: "PICKUP",
     baseUrl: "https://payments.comgate.cz/v2.0/"
