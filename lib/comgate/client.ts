@@ -37,7 +37,7 @@ export class ComgateRestClient {
     }
 
     public async statusOfPayment(transId: string): Promise<ComgateStatusResponse> {
-        const res = await this.axios.post(`payment/transId/${transId}.json`,{
+        const res = await this.axios.post(`payment/transId/${transId}.json`,null,{
             headers: { 'Authorization': this.createSignature() },
         });
 
