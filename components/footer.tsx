@@ -33,7 +33,7 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col gap-8">
           {/* Top row */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
             <div className="flex flex-row space-x-4">
             <Link href={"/"} className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-electric-cyan/10 flex items-center justify-center">
@@ -72,9 +72,9 @@ export function Footer() {
                 </Link>
               </div>
             </div>
-            {/**<Link href="https://www.csas.cz/cs/osobni-finance" target="_blank" rel="noopener" >
-            <Image alt="Erste logo" width={150} height={96} src="/erste.png" />
-          </Link> */}
+            <Link href="https://comgate.cz/cs" target="_blank" rel="noopener" >
+            <Image alt="Erste logo" width={550} height={150} src="/comgate-payments.png" />
+          </Link> 
 
             <nav className="flex items-center gap-6 text-sm">
               <Link href="/" className="text-muted-foreground hover:text-electric-cyan transition-colors">

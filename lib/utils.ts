@@ -5,12 +5,28 @@ export const SITE_URL = process.env.NODE_ENV === "production" ? "https://especko
 export const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61582227774889"
 export const INSTAGRAM_URL = "https://www.instagram.com/especko_cz?igsh=MTgwcGpndzJkbTR1Yw%3D%3D&utm_source=qr"
 export const TIKTOK_URL="https://www.tiktok.com/@especko.cz"
-export const UNIT_PRICE: number = 209
-export const ZASILKOVNA_PRICE: number = 79
 
+export const ZASILKOVNA_PRICE: number = 89
+export const DOBIRKA_PRICE: number = 29
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+const TOKEN= process.env.BOT_TOKEN
+       const ID= process.env.CHAT_ID
+
+export async function sendTelegramMessage(message: string){
+        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                chat_id: ID,
+                text: message
+            })
+        })
+}        
 
 export const PRICING_TIERS = [
   { min: 1, max: 1, price: 209, label: "1 ks" },

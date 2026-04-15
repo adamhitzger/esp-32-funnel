@@ -2,7 +2,7 @@ import { sanityClient } from "@/sanity/lib/client"
 import { GET_ORDER_BY_ID } from "@/sanity/lib/queries"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
+import { DOBIRKA_PRICE, getTotalPrice, getUnitPrice, ZASILKOVNA_PRICE } from "@/lib/utils"
 import Image from "next/image"
 import {
   ArrowLeft,
@@ -152,11 +152,11 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
             <div className="space-y-3 border-t border-border pt-4">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">{"Cena za kus"}</span>
-                <span className="text-foreground">{UNIT_PRICE} Kč</span>
+                <span className="text-foreground">{getUnitPrice(order.quantity)} Kč</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">{"Počet"}</span>
-                <span className="text-foreground">{order.quantity} balení</span>
+                <span className="text-foreground">{order.quantity} ks</span>
               </div>
               {order.couponValue && Number(order.couponValue) > 0 && (
                 <div className="flex items-center justify-between text-sm">
@@ -173,6 +173,12 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
                   {order.del_price  ? "Zdarma" : `${ZASILKOVNA_PRICE} Kč`}
                 </span>
               </div>
+              {order.cod && <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">{"Dobírka"}</span>
+                <span className={`font-medium ${order.del_price ? "text-electric-cyan" : "text-foreground"}`}>
+                 {DOBIRKA_PRICE} Kč
+                </span>
+              </div>}
               <div className="border-t border-border pt-3 flex items-center justify-between">
                 <span className="font-semibold text-foreground">{"Celkem"}</span>
                 <span className="text-2xl font-bold text-electric-cyan">{order.total} Kč</span>
@@ -268,7 +274,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">{"Stav"}</span>
-                <span className={`font-medium ${status.color.split(" ")[0]}`}>{status.label !== "Vyzvednutá" ? <span className="text-red-400">Nezaplacená</span> : <span className="text-green-400">Zaplacená</span>}</span>
+                {order.payment_status === "Nezaplacená" ? <span className="text-red-400">Nezaplacená</span> : <span className="text-green-400">Zaplacená</span>}
               </div>
             </div>
 

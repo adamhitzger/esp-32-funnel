@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Check, Minus, Plus, ShoppingCart, Truck, RotateCcw, X, ChevronLeft, ChevronRight, Banknote } from "lucide-react"
+import { Check, Minus, Plus, ShoppingCart, Truck, RotateCcw, X, ChevronLeft, ChevronRight, Banknote, ExternalLink } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -313,7 +313,18 @@ export function HeroSection() {
               </Button>
 
               <div className="flex flex-row justify-center text-center text-sm  text-muted-foreground mt-4 space-x-2">
-                <p>Bezpečná platba při převzetí zásilky</p>               </div>
+                <p>Bezpečná platba při převzetí zásilky nebo online platba přes  <Link 
+                      href="https://www.comgate.eu/cs/platebni-brana" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-electric-cyan hover:underline inline-flex items-center gap-1"
+                    >
+                      Comgate, a.s.
+                      <ExternalLink className="w-3 h-3" />
+                    </Link> 
+                    </p>
+                <ExternalLink className="pl-3 h-4 w-4 " />
+             </div>
             </div>
           </div>
         </div>

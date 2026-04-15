@@ -11,11 +11,10 @@ import {
   Row,
   Section,
   Text,
-  Button,
   Font,
   render,
 } from "@react-email/components"
-import { getTotalPrice, getUnitPrice, UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
+import { DOBIRKA_PRICE, getTotalPrice, getUnitPrice, ZASILKOVNA_PRICE } from "@/lib/utils"
 import { Order } from "@/types";
 
 
@@ -198,6 +197,23 @@ export function Invoice({ order}: InvoiceProps) {
                 </Text>
               </Column>
             </Row>
+            {order.cod && 
+            <Row style={{ borderBottom: `1px solid #2a2a48` }}>
+              <Column style={{ padding: "12px 0" }}>
+                <Text style={{ margin: 0, fontSize: 14, color: textMuted }}>Dobírka</Text>
+              </Column>
+              <Column align="center" style={{ padding: "12px 0" }}>
+                <Text style={{ margin: 0, fontSize: 14, color: textMuted }}>–</Text>
+              </Column>
+              <Column align="center" style={{ padding: "12px 0" }}>
+                <Text style={{ margin: 0, fontSize: 14, color: textMuted }}>–</Text>
+              </Column>
+              <Column align="right" style={{ padding: "12px 0" }}>
+                <Text style={{ margin: 0, fontSize: 14, color: order.cod ? accent : textPrimary, fontWeight: 500 }}>
+                  {`${DOBIRKA_PRICE} Kč`}
+                </Text>
+              </Column>
+            </Row>}
 
             {/* Coupon row */}
             {coupon > 0 && (

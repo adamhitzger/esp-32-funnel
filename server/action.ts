@@ -6,6 +6,7 @@ import {
     CreatePaymentResponse, 
     GetRefunds, 
     Order, 
+    PacketaData, 
     SanityFileAsset, 
     SanityMetadata 
 } from "@/types";
@@ -29,13 +30,14 @@ import {
     GET_ORDER_BY_EMAIL_OR_PHONE 
 } from "@/sanity/lib/queries";
 import { Coupon } from "@/types";
-import { getTotalPrice, getUnitPrice } from "@/lib/utils";
+import { DOBIRKA_PRICE, getTotalPrice, getUnitPrice, sendTelegramMessage, SITE_URL } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
 import { renderNewsletterVerifyEmail } from "@/components/email/email-verify";
 import { renderInvoicePDF } from "@/components/email/invoice";
 import { renderRefundBarcodeEmail } from "@/components/email/refund-barcode";
+import { comgate, ComgateRestClient } from "@/lib/comgate/client";
 
 const transporter = nodemailer.createTransport({
      host: "smtp.seznam.cz",
@@ -46,6 +48,8 @@ const transporter = nodemailer.createTransport({
          pass: process.env.FROM_EMAIL_PASSWORD!,
         }
 });
+
+
 
 export async function sendStatusMail(order: Order, subject: string, invoice: string | null): Promise<boolean>{
     try{
@@ -505,6 +509,7 @@ export async function saveNewsletter(email: string): Promise<ActionRes<Newslette
 export async function createOrder(prevState: ActionRes<CreateOrderType>, formData: FormData): Promise<ActionRes<CreateOrderType> & CreatePaymentResponse>{
     let revalidate = false;
     let inputs = {};
+    let redirectUri: string = ""
     try{
 
         const nonValidate: CreateOrderType = {
@@ -518,13 +523,16 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
                 zip: formData.get("zip") as string,
                 country: formData.get("country") as string,
                 packetaId: Number(formData.get("packetaId")),
+                cod: Boolean(formData.get("cod") === "cod" ?true:false),
                 deliveryPrice: Number((formData.get("deliveryPrice"))),
                 quantity: Number(formData.get("quantity")), 
                 sale: Number(formData.get("sale")),
                 packetaAddress: formData.get("packetaAddress") as string
         }
+        
         inputs = nonValidate;
         const validate = orderSchema.safeParse(nonValidate)
+       
         console.log(validate.error)
         if(!validate.success){
             return {
@@ -538,23 +546,24 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
 
         const data = validate.data;
         inputs = data;
-
-        const totalPrice: number = getTotalPrice(data.quantity) + data.deliveryPrice - data.sale
+ console.log("Cod", data.cod)
+        const totalPrice: number = getTotalPrice(data.quantity) + (data.cod ? DOBIRKA_PRICE : 0) + data.deliveryPrice - data.sale
         const itemPrice: number = getUnitPrice(data.quantity)
         
         console.log(data, totalPrice, itemPrice)
 
-        const  packeta = await createPacket({
+        const packeta = await createPacket({
             name: data.firstName,
             surname: data.lastName,
             email: data.email,
             phone: data.phone,
             packetaId: Number(data.packetaId),
             total: totalPrice,
+            cod: data.cod
         })
         console.log("Packeta:",packeta)
-    
-        const orderCreate = await sanityClient.create({
+
+        const sanityData = {
             _type: "orders",
             firstName: data.firstName,
             lastName: data.lastName,
@@ -571,12 +580,40 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             del_price: Number(data.deliveryPrice) === 0 ? true : false,
             packetaId: data.packetaId,
             status: "Přijatá",
-            barcode: packeta,
+            cod: data.cod,
+            payment_status: "Nezaplacená",
+            barcode: String(packeta),
             packetaAddress: data.packetaAddress,
-        })
+        }
+        
+       
+    
+        const orderCreate = await sanityClient.create(sanityData)
 
         const orderId: string = orderCreate._id
         console.log("Objednavka vytvořena:",orderCreate)   
+
+         if(!data.cod){
+            const createPay = await comgate.createPayment(sanityData as unknown as Order, `${data.quantity}ks ESP-32 Devkit USB-C`, orderId)
+            if(!createPay.success){
+                const createPay = await comgate.createPayment(sanityData as unknown as Order, `${data.quantity}ks ESP-32 Devkit USB-C`, orderId)
+                console.log("Comgate /create: ", createPay)
+                if(!createPay.success){
+                    return{
+                        submitted: true,
+                        success: false,
+                        inputs: data,
+                        message: "Selhalo vytvoření platby",
+                    }
+                }
+            }else if(createPay.code === 0){
+                redirectUri = String(createPay.redirect)
+                const updateOrderTransId = await sanityClient.patch(orderId).set({trans_id: createPay.transId}).commit();
+            }
+        }else{
+            redirectUri = String(SITE_URL+"/status/"+orderId)
+        }
+        
         const invoice = await ensureInvoicePdf(orderCreate as unknown as Order);
         console.log(invoice)
 
@@ -592,26 +629,15 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             }
         }
 
-       const TOKEN= process.env.BOT_TOKEN
-       const ID= process.env.CHAT_ID
-
-        const sendNotify = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                chat_id: ID,
-                text: "Nová objednávka: "+ data.email
-            })
-        })
+       sendTelegramMessage("Nová objednávka: "+ data.email)
 
         return {
             submitted: true,
             success: true,
             inputs: data,
             message: "Objednávka proběhla",
-            transaction_id: orderId
+            transaction_id: orderId,
+            redirect_url: redirectUri
         }
         
     }catch(error){
@@ -677,24 +703,24 @@ export async function getPacketStatus(packetId: string): Promise<{ok: boolean, s
     }
 }
 
-export async function createPacket({name, surname, email, phone,packetaId, total}: BarcodeSend){
-let packetaCode: string = "";
-
-        const rBody = {
-          createPacket: {
-            apiPassword: process.env.PACKETA_API_PASSWORD,
-            packetAttributes: {
+export async function createPacket({name, surname, email, phone,packetaId, total, cod}: BarcodeSend){
+        let packetaCode: string = "";
+        const packetaData: PacketaData = {
                 number: String(`${packetaId}-${total}`).substring(0,35),
                 name: name,
                 surname: surname,
                 email: email,
                 phone: String(phone),
                 addressId: packetaId,
-                cod: total,
                 value: total,
                 weight: 1,
-                eshop: "especko",
-            }
+                eshop: "especko",          
+        }
+        if(cod) packetaData.cod = total
+        const rBody = {
+          createPacket: {
+            apiPassword: process.env.PACKETA_API_PASSWORD,
+            packetAttributes: packetaData
           }
         }
         try{

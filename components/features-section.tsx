@@ -37,7 +37,7 @@ export function FeaturesSection() {
   return (
     <section className="py-24 relative">
       {/* Background accent */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--electric-cyan)_0%,_transparent_70%)] opacity-5" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--electric-cyan)_0%,transparent_70%)] opacity-5" />
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">

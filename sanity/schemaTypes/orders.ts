@@ -107,7 +107,17 @@ export const orders = defineType({
                 list: ["Zaplacená","Nezaplacená"],
                 layout: "dropdown",
             }
-        }),   
+        }),  
+        defineField({
+            type: "boolean",
+            title:"Dobírka",
+            name: "cod", 
+        }), 
+        defineField({
+            type: "string",
+            title:"Comgate ID",
+            name: "trans_id", 
+        }),
         defineField({
             type: "file",
             title:"Faktura",

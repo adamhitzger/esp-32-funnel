@@ -29,7 +29,7 @@ export function BlogPost({article}: {article: Article}){
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-card/80 to-transparent" />
                   </div>
                 )}
 

@@ -5,8 +5,10 @@ import { Order } from "@/types"
 import { GET_PAID_ORDERS } from "@/sanity/lib/queries"
 
 
-const PACKETA_STATUS_MAP: Record<number, string> = {
-  2: "Odeslána",
+const PACKETA_STATUS_MAP: Record<number, "Přijatá" | "Odeslaná" | "Vyzvednutá" | "Zrušená" | "Vrácená"> = {
+  2: "Odeslaná",
+  3: "Odeslaná",
+  4: "Odeslaná",
   7: "Vyzvednutá",
   9: "Vrácená",
   11: "Zrušená",
@@ -17,7 +19,7 @@ export async function GET(req: NextRequest) {
     const orders = await sanityFetch<Array<Order>>({
       query: GET_PAID_ORDERS,
     })
-
+    console.log(orders)
     if (!orders?.length) {
       return NextResponse.json({ ok: true, message: "No orders" })
     }
@@ -30,8 +32,9 @@ export async function GET(req: NextRequest) {
 
           const statusCode = await getPacketStatus(o.barcode)
           if (!statusCode.statusCode) return
-
+          console.log(o.barcode,statusCode.statusCode)
           const newStatus = PACKETA_STATUS_MAP[statusCode.statusCode]
+          console.log(o.barcode,newStatus)
           if (!newStatus) return
 
           // 🧠 neupdatuj pokud je status stejný
@@ -48,7 +51,7 @@ export async function GET(req: NextRequest) {
               console.log("[Cron] Skipped (race):", o._id)
               return
             }
-
+          o.status = newStatus
           // ✉️ email až po úspěchu
           const email = await sendStatusMail(o, getEmailText(statusCode.statusCode), String(o.invoice))
           if(!email){

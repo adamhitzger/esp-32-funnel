@@ -5,9 +5,9 @@ import { redirect, useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Lock, ShieldCheck, MapPin, Loader2, Tag, X, Banknote, QrCode, Minus, Plus, Truck } from "lucide-react"
+import { ArrowLeft, Lock, ShieldCheck, MapPin, Loader2, Tag, X, Banknote, QrCode, Minus, Plus, Truck, CreditCard } from "lucide-react"
 import { Suspense, useEffect } from "react"
-import { getTotalPrice, getUnitPrice, SITE_URL, UNIT_PRICE, ZASILKOVNA_PRICE } from "@/lib/utils"
+import { DOBIRKA_PRICE, getTotalPrice, getUnitPrice, SITE_URL, ZASILKOVNA_PRICE } from "@/lib/utils"
 import { createOrder, getCoupon } from "@/server/action"
 import { toast } from "sonner"
 import { ActionRes, CreatePaymentResponse } from "@/types"
@@ -41,10 +41,10 @@ function CheckoutContent() {
   const [couponCode, setCouponCode] = useState("")
   const [deliveryPrice,setDeliveryPrice] = useState<number>(ZASILKOVNA_PRICE)
   const [state, action, isPendingCheckout] = useActionState(createOrder, actionState) 
-  
-  const finalPrice = (totalPrice - (appliedCoupon ? appliedCoupon.discount : 0) + deliveryPrice).toFixed(2)
+  const [paymentMethod, setPaymentMethod] = useState<"online" | "cod">("online")
+  const finalPrice = (totalPrice+ (paymentMethod === "cod" ?DOBIRKA_PRICE : 0) - (appliedCoupon ? appliedCoupon.discount : 0) + deliveryPrice).toFixed(2)
   const router = useRouter()
-  
+  console.log(paymentMethod)
   const updateQuantity = (newQuantity: number) => {
     const clampedQuantity = Math.max(1, Math.min(99, newQuantity))
     router.replace(`/checkout?quantity=${clampedQuantity}`, { scroll: false })
@@ -123,7 +123,7 @@ function CheckoutContent() {
             email: String(state.inputs?.email), 
         })
         
-        redirect(SITE_URL+"status/"+state.transaction_id)
+        if(state.redirect_url)redirect(state.redirect_url)
       }else {
         toast.error(state.message)
       }
@@ -283,6 +283,12 @@ function CheckoutContent() {
                   <span className="text-muted-foreground">{"Doprava"}</span>
                   <span className="text-electric-cyan font-medium">{deliveryPrice} Kč</span>
                 </div>
+                {paymentMethod === "cod" && 
+                  <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">{"Dobírka"}</span>
+                  <span className="text-electric-cyan font-medium">{DOBIRKA_PRICE} Kč</span>
+                </div>
+                }
                 <div className="border-t border-border pt-3 flex items-center justify-between">
                   <span className="font-semibold text-foreground">{"Celkem"}</span>
                   <span className="text-2xl font-bold text-electric-cyan">{finalPrice} Kč</span>
@@ -484,33 +490,103 @@ function CheckoutContent() {
                 </div>
               </div>
 
-                            <div className="rounded-2xl border border-electric-cyan/20 bg-card/80 backdrop-blur-sm p-6">
+                    <div className="rounded-2xl border border-electric-cyan/20 bg-card/80 backdrop-blur-sm p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Banknote className="w-5 h-5 text-electric-cyan" />
                   <h2 className="text-lg font-semibold text-foreground">{"Platba"}</h2>
                 </div>
 
-                <div className="rounded-xl bg-secondary/50 border border-electric-cyan/30 p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-electric-cyan/10 flex items-center justify-center shrink-0">
-                      <Truck className="w-6 h-6 text-electric-cyan" />
+                <div className="space-y-3">
+                  {/* Online payment - Comgate */}
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("online")}
+                    className={`w-full rounded-xl p-4 text-left transition-all ${
+                      paymentMethod === "online"
+                        ? "bg-electric-cyan/10 border-2 border-electric-cyan"
+                        : "bg-secondary/50 border-2 border-transparent hover:border-electric-cyan/30"
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 ${
+                        paymentMethod === "online" ? "bg-electric-cyan/20" : "bg-secondary"
+                      }`}>
+                        <CreditCard className={`w-6 h-6 ${paymentMethod === "online" ? "text-electric-cyan" : "text-muted-foreground"}`} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-medium text-foreground">{"Platba online"}</h3>
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-electric-cyan/10 text-electric-cyan">{"Doporučeno"}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {"Platba kartou nebo bankovním převodem přes platební bránu Comgate."}
+                        </p>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                        paymentMethod === "online" ? "border-electric-cyan bg-electric-cyan" : "border-muted-foreground"
+                      }`}>
+                        {paymentMethod === "online" && (
+                          <div className="w-2 h-2 rounded-full bg-background" />
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium text-foreground">{"Dobírka"}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {"Platba v hotovosti při převzetí zásilky na pobočce Zásilkovny."}
-                      </p>
-                    </div>
-                  </div>
+                    {paymentMethod === "online" && (
+                      <div className="mt-4 pt-4 border-t border-electric-cyan/20">
+                        <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                          <ShieldCheck className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5" />
+                          <span>
+                            {"Bezpečná platba kartou Visa, Mastercard nebo bankovním tlačítkem. Poskytovatel: Comgate, a.s."}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </button>
 
-                  <div className="mt-4 pt-4 border-t border-border">
-                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
-                      <ShieldCheck className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5" />
-                      <span>
-                        {"Zaplatíte až při vyzvednutí balíčku. Žádné platby předem."}
-                      </span>
+                  {/* Cash on delivery */}
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("cod")}
+                    className={`w-full rounded-xl p-4 text-left transition-all ${
+                      paymentMethod === "cod"
+                        ? "bg-electric-cyan/10 border-2 border-electric-cyan"
+                        : "bg-secondary/50 border-2 border-transparent hover:border-electric-cyan/30"
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 ${
+                        paymentMethod === "cod" ? "bg-electric-cyan/20" : "bg-secondary"
+                      }`}>
+                        <Truck className={`w-6 h-6 ${paymentMethod === "cod" ? "text-electric-cyan" : "text-muted-foreground"}`} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-medium text-foreground">{"Dobírka"}</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {"Platba v hotovosti při převzetí zásilky na pobočce Zásilkovny."}
+                        </p>
+                      </div>
+                      <span className="text-electric-cyan font-semibold whitespace-nowrap ml-4">
+                +{DOBIRKA_PRICE} Kč
+              </span>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                        paymentMethod === "cod" ? "border-electric-cyan bg-electric-cyan" : "border-muted-foreground"
+                      }`}>
+                        {paymentMethod === "cod" && (
+                          <div className="w-2 h-2 rounded-full bg-background" />
+                        )}
+                      </div>
+                       
                     </div>
-                  </div>
+                    {paymentMethod === "cod" && (
+                      <div className="mt-4 pt-4 border-t border-electric-cyan/20">
+                        <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                          <ShieldCheck className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5" />
+                          <span>
+                            {"Zaplatíte až při vyzvednutí balíčku. Žádné platby předem."}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </button>
                 </div>
               </div>
 
@@ -572,6 +648,14 @@ function CheckoutContent() {
                     <input
                         name="deliveryPrice"
                         value={deliveryPrice}
+                        readOnly
+                        type="hidden"
+                        required
+                        className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
+                    />
+                    <input
+                        name="cod"
+                        value={paymentMethod}
                         readOnly
                         type="hidden"
                         required

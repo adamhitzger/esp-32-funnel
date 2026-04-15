@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, Search, RotateCcw, Mail, ExternalLink, CheckCircle2, Package, Calendar, Hash } from "lucide-react"
 import { findOrderBarcode, sendBarcode } from "@/server/action"
 import { ActionRes, GetRefunds, Order } from "@/types"
-import { RefundCode, RefundInputs } from "@/server/schema"
+import { RefundCode,  } from "@/server/schema"
 import { formatDate } from "@/lib/utils"
 import { toast } from "sonner"
 
@@ -102,12 +102,12 @@ export default function RefundPage() {
                   {isPending ? (
                     <>
                       <span className="w-5 h-5 border-2 border-background/30 border-t-background rounded-full animate-spin mr-2" />
-                      Hledám objednávku...
+                      Prohledávám objednávky...
                     </>
                   ) : (
                     <>
-                      <Mail className="w-5 h-5 mr-2" />
-                      Odeslat štítek na e-mail
+                      <Search className="w-5 h-5 mr-2" />
+                      Prohledat objednávky
                     </>
                   )}
                 </Button>
@@ -152,14 +152,6 @@ export default function RefundPage() {
                             <span className="text-muted-foreground">E-mail:</span>
                             <span className="text-foreground truncate">{order.email}</span>
                           </div>
-
-                          {order.barcode && (
-                            <div className="flex items-center gap-2 text-sm">
-                              <Hash className="w-4 h-4 text-muted-foreground" />
-                              <span className="text-muted-foreground">Štítek:</span>
-                              <span className="font-mono text-electric-cyan">{order.barcode}</span>
-                            </div>
-                          )}
                         </div>
                       </div>
 

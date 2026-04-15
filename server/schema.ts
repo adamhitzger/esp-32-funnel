@@ -22,6 +22,7 @@ export const orderSchema = z.object({
     }).min(5,{message: "PSČ je povinné"}).trim(),
     country: z.string().min(1, { message: "Země je povinná" }).trim(),
     packetaId: z.number(),
+    cod: z.boolean(),
     deliveryPrice: z.number(),
     quantity: z.number(), 
     sale: z.number(),
