@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
 
     // 2. Vždy ověř stav přes API (nedůvěřuj jen notifikaci)
     const verified = await comgate.statusOfPayment(transId);
+    console.log("Status Promise status: ",verified.code, verified.message)
 
     if (!verified) {
       return NextResponse.json({ code: 500 }, { status: 500 });
