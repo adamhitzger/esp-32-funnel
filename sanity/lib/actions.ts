@@ -21,11 +21,13 @@ export default function refundOrder({
         console.log("RefundOrder Sanity data: ", data)    
 
         try{
+            if(!data.cod){
                     const refund = await comgate.refundOrderById(data.trans_id, Number(data.total), String(data._id));
                     console.log("Refund comgate test:  ", refund.message + " " + refund.code)
-
-                    const dobropis = await ensureInvoicePdf(data, false);
-                    console.log(dobropis)
+            }
+                   
+            const dobropis = await ensureInvoicePdf(data, false);
+            console.log(dobropis)
             
                     const sendMail = await sendStatusMail(data, "Objednávka byla přijata.", dobropis.url)
                     if(!sendMail){

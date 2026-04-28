@@ -37,7 +37,7 @@ export default defineConfig({
   document: {
     actions: ((prev: DocumentActionComponent[], context: { schemaType: string}) => {
       if(context.schemaType === "orders"){
-        return [refundOrder, ...prev];
+        return [ ...prev,refundOrder];
       }
       return prev;
     }) as DocumentActionsResolver,

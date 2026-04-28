@@ -862,6 +862,7 @@ const asset = await sanityClient.assets.upload("file", buffer, {
         const updateOrderStatus = await sanityClient
                 .patch(id) // _id = payment_uid
                 .set({ 
+                  status: "Vrácená",
                   dobropis: {
                     _type: "file",
                     asset: {

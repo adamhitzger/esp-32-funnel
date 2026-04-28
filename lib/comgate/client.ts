@@ -95,7 +95,7 @@ export class ComgateRestClient {
             const request = await this.axios.post(`refund.json`, {
                 "transId": trans_id,
                 "amount": amount*100,
-                "test": true,  //this.test,
+                "test": true,//this.test,
                 "refId": refId
                 }, {
                     headers: {
