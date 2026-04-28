@@ -95,7 +95,7 @@ export const orders = defineType({
             title:"Status objednávky",
             name: "status", 
             options: {
-                list: ["Přijatá","Odeslaná", "Vyzvednutá", "Zrušená", "Vrácená"],
+                list: ["Přijatá" , "Odeslaná" , "Připraveno k odeslání" , "Odeslaná do cílové destinace" , "Připravena k vyzvednutí" , "Vyzvednutá" , "Zrušená" , "Vrácená"],
                 layout: "dropdown",
             }
         }),
@@ -122,6 +122,11 @@ export const orders = defineType({
             type: "file",
             title:"Faktura",
             name: "invoice", 
+        }),
+        defineField({
+            type: "file",
+            title:"Dobropis",
+            name: "dobropis", 
         }),
     ]
 })

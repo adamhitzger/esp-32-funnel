@@ -111,6 +111,8 @@ export interface EnVars {
   ersteRefToken: string
 }
 
+export type OrderStatuses = "Přijatá" | "Odeslaná" | "Připraveno k odeslání" | "Odeslaná do cílové destinace" | "Připravena k vyzvednutí" | "Vyzvednutá" | "Zrušená" | "Vrácená"
+
 export interface Order {
   _type?: string;
   _rev?: string;
@@ -132,11 +134,12 @@ export interface Order {
   country: string
   packetaId: string | null
   packetaAddress: string | null
-  status: "Přijatá" | "Odeslaná" |  "Vyzvednutá" |  "Zrušená" |  "Vrácená";
+  status: OrderStatuses;
   trans_id: string;
   cod: boolean;
   payment_status: "Zaplacená" | "Nezaplacená";
-  invoice?: string | null
+  invoice?: string | null;
+  dobropis?: string | null; 
 }
 
 export interface GetRefunds{
@@ -219,6 +222,11 @@ export type ComgateStatusCode = 0 | 1100 | 1200 | 1400 | 1500;
 
 export interface ComgateStatusError {
   code: Exclude<ComgateStatusCode, 0>;
+  message: string;
+}
+
+export interface ComgateRefund {
+  code: ComgateStatusCode;
   message: string;
 }
 

@@ -78,10 +78,11 @@ function TableRow({
 }
 
 interface InvoiceProps {
-  order: Order
+  order: Order,
+  isInvoice: boolean
 }
 
-export function Invoice({ order}: InvoiceProps) {
+export function Invoice({ order, isInvoice}: InvoiceProps) {
   const status = STATUS_MAP[order.status] ?? STATUS_MAP["Přijatá"]
   const unitPrice = getUnitPrice(order.quantity)
   const subtotal = getTotalPrice(order.quantity)
@@ -173,10 +174,10 @@ export function Invoice({ order}: InvoiceProps) {
                 <Text style={{ margin: 0, fontSize: 14, color: textPrimary }}>{order.quantity} ks</Text>
               </Column>
               <Column align="center" style={{ padding: "12px 0" }}>
-                <Text style={{ margin: 0, fontSize: 14, color: textPrimary }}>{unitPrice} Kč</Text>
+                <Text style={{ margin: 0, fontSize: 14, color: textPrimary }}>{isInvoice ? null : "-"}{unitPrice} Kč</Text>
               </Column>
               <Column align="right" style={{ padding: "12px 0" }}>
-                <Text style={{ margin: 0, fontSize: 14, color: textPrimary, fontWeight: 600 }}>{subtotal} Kč</Text>
+                <Text style={{ margin: 0, fontSize: 14, color: textPrimary, fontWeight: 600 }}>{isInvoice ? null : "-"}{subtotal} Kč</Text>
               </Column>
             </Row>
 
@@ -222,7 +223,7 @@ export function Invoice({ order}: InvoiceProps) {
                   <Text style={{ margin: 0, fontSize: 14, color: textMuted }}>Slevový kupón</Text>
                 </Column>
                 <Column align="right" style={{ padding: "12px 0" }}>
-                  <Text style={{ margin: 0, fontSize: 14, color: accent, fontWeight: 500 }}>-{coupon} Kč</Text>
+                  <Text style={{ margin: 0, fontSize: 14, color: accent, fontWeight: 500 }}>{isInvoice ? null : "+"}{coupon} Kč</Text>
                 </Column>
               </Row>
             )}
@@ -233,7 +234,7 @@ export function Invoice({ order}: InvoiceProps) {
                 <Text style={{ margin: 0, fontSize: 16, color: textPrimary, fontWeight: 700 }}>Celkem</Text>
               </Column>
               <Column align="right" style={{ padding: "16px 0 4px" }}>
-                <Text style={{ margin: 0, fontSize: 22, color: accent, fontWeight: 700 }}>{order.total} Kč</Text>
+                <Text style={{ margin: 0, fontSize: 22, color: accent, fontWeight: 700 }}>{isInvoice ? null : "-"}{order.total} Kč</Text>
               </Column>
             </Row>
           </Section>
@@ -319,6 +320,6 @@ export function Invoice({ order}: InvoiceProps) {
   )
 }
 
-export async function renderInvoicePDF(order: Order): Promise<string> {
-  return render(<Invoice order={order} />)
+export async function renderInvoicePDF(order: Order, isInvoice: boolean): Promise<string> {
+  return render(<Invoice order={order} isInvoice={isInvoice}/>)
 }

@@ -12,21 +12,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-const TOKEN= process.env.BOT_TOKEN
-       const ID= process.env.CHAT_ID
 
-export async function sendTelegramMessage(message: string){
-        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                chat_id: ID,
-                text: message
-            })
-        })
-}        
+
+       
 
 export const PRICING_TIERS = [
   { min: 1, max: 1, price: 209, label: "1 ks" },

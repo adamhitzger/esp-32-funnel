@@ -30,14 +30,30 @@ import {
     GET_ORDER_BY_EMAIL_OR_PHONE 
 } from "@/sanity/lib/queries";
 import { Coupon } from "@/types";
-import { DOBIRKA_PRICE, getTotalPrice, getUnitPrice, sendTelegramMessage, SITE_URL } from "@/lib/utils";
+import { DOBIRKA_PRICE, getTotalPrice, getUnitPrice, SITE_URL } from "@/lib/utils";
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
 import { renderNewsletterVerifyEmail } from "@/components/email/email-verify";
 import { renderInvoicePDF } from "@/components/email/invoice";
 import { renderRefundBarcodeEmail } from "@/components/email/refund-barcode";
-import { comgate, ComgateRestClient } from "@/lib/comgate/client";
+import { comgate } from "@/lib/comgate/client";
+
+const TOKEN= process.env.BOT_TOKEN
+const ID= process.env.CHAT_ID
+
+export async function sendTelegramMessage(message: string){
+        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                chat_id: ID,
+                text: message
+            })
+        })
+} 
 
 const transporter = nodemailer.createTransport({
      host: "smtp.seznam.cz",
@@ -614,7 +630,7 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             redirectUri = String(SITE_URL+"/status/"+orderId)
         }
         
-        const invoice = await ensureInvoicePdf(orderCreate as unknown as Order);
+        const invoice = await ensureInvoicePdf(orderCreate as unknown as Order, true);
         console.log(invoice)
 
         const sendMail = await sendStatusMail(orderCreate as unknown as Order, "Objednávka byla přijata.", invoice.url)
@@ -747,8 +763,7 @@ export async function createPacket({name, surname, email, phone,packetaId, total
 let cachedExecutablePath: string | null = null;
 let downloadPromise: Promise<string> | null = null;
 
-const CHROMIUM_PACK_URL = 
-  `https://especko.cz/chromium-pack.tar`
+const CHROMIUM_PACK_URL = `https://especko.cz/chromium-pack.tar`
 
 async function getChromiumPath(): Promise<string> {
   if (cachedExecutablePath) return cachedExecutablePath;
@@ -810,7 +825,8 @@ export async function generatePdf(html: string): Promise<Buffer> {
 export async function uploadPdfToSanity(
   buffer: Buffer,
   filename: string,
-  id: string
+  id: string,
+  isInvoice: boolean
 ) {
 
   const file = await sanityFetch<SanityFileAsset>({
@@ -830,7 +846,7 @@ const asset = await sanityClient.assets.upload("file", buffer, {
     filename,
     contentType: "application/pdf",
   });
-
+  if(isInvoice){
   const updateOrderStatus = await sanityClient
                 .patch(id) // _id = payment_uid
                 .set({ 
@@ -842,7 +858,21 @@ const asset = await sanityClient.assets.upload("file", buffer, {
                     },
                   }
                 }).commit()
-    console.log("Upload pdf to sanity: ", uploadPdfToSanity)
+    }else{
+        const updateOrderStatus = await sanityClient
+                .patch(id) // _id = payment_uid
+                .set({ 
+                  dobropis: {
+                    _type: "file",
+                    asset: {
+                      _type: "reference",
+                      _ref: asset._id,
+                    },
+                  }
+                }).commit()
+
+        console.log("Update dobropis Sanity : ", updateOrderStatus )
+    }
     return {
         created: true, 
         id: asset._id,
@@ -853,20 +883,19 @@ const asset = await sanityClient.assets.upload("file", buffer, {
   
 }
 
-export async function ensureInvoicePdf(order:Order): Promise<{created: boolean, asset_id?: string, url: string}> {
-  // 1️⃣ render email
-  const html = await renderInvoicePDF(order);
+export async function ensureInvoicePdf(order:Order, isInvoice: boolean): Promise<{created: boolean, asset_id?: string, url: string}> {
+ 
+  const html = await renderInvoicePDF(order, isInvoice);
 
-  // 2️⃣ generate pdf
   const pdfBuffer = await generatePdf(html);
-
-  // 3️⃣ upload
+  
   const assetId = await uploadPdfToSanity(
     pdfBuffer,
-    `invoice-${order._id}.pdf`,
-    String(order._id)
+    `${isInvoice ? "invoice" : "dopropis"}-${order._id}.pdf`,
+    String(order._id),
+    isInvoice
   );
-
+  
   return {
         created: assetId.created,
         url: assetId.url,

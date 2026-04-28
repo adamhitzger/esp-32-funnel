@@ -5,13 +5,14 @@
  */
 import {StreamLanguage} from '@codemirror/language'
 import {visionTool} from '@sanity/vision'
-import {defineConfig} from 'sanity'
+import {defineConfig, DocumentActionComponent, DocumentActionsResolver} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {codeInput} from "@sanity/code-input"
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import {apiVersion, dataset, projectId} from './sanity/env'
 import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
+import refundOrder from './sanity/lib/actions'
 
 export default defineConfig({
   basePath: '/studio',
@@ -33,4 +34,12 @@ export default defineConfig({
       ]
     })
   ],
+  document: {
+    actions: ((prev: DocumentActionComponent[], context: { schemaType: string}) => {
+      if(context.schemaType === "orders"){
+        return [refundOrder, ...prev];
+      }
+      return prev;
+    }) as DocumentActionsResolver,
+  }
 })

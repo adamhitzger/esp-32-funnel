@@ -1,15 +1,12 @@
 
 import { comgate } from '@/lib/comgate/client';
-import { sendTelegramMessage } from '@/lib/utils';
-import { sanityClient, sanityFetch } from '@/sanity/lib/client';
+import { sendTelegramMessage } from '@/server/action';
+import { sanityClient } from '@/sanity/lib/client';
 import { ComgateWebhook } from '@/types';
 import { NextRequest, NextResponse } from 'next/server';
 
-
-
 export async function POST(req: NextRequest) {
   try {
-    // Comgate posílá JSON (REST API) nebo form-urlencoded (HTTP POST API)
     const contentType = req.headers.get('content-type') || '';
     
     let data: ComgateWebhook;
@@ -23,7 +20,7 @@ export async function POST(req: NextRequest) {
       data = Object.fromEntries(params) as unknown as ComgateWebhook;
     }
 
-    const { transId, status, refId, secret } = data;
+    const { transId, secret } = data;
 
     // 1. Ověř secret
     if (secret !== process.env.COMGATE_API_PASSWORD) {
@@ -44,6 +41,7 @@ export async function POST(req: NextRequest) {
                     .patch(verified.refId)
                     .set({payment_status: "Zaplacená"})
                     .commit();
+                    
                     sendTelegramMessage("Objednávka č. "+verified.refId+" byla zaplacena a autorizována")
             break;
             case "CANCELLED":

@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getPacketStatus, sendStatusMail } from "@/server/action"
 import { sanityClient, sanityFetch } from "@/sanity/lib/client"
-import { Order } from "@/types"
+import { Order, OrderStatuses } from "@/types"
 import { GET_PAID_ORDERS } from "@/sanity/lib/queries"
 
 
-const PACKETA_STATUS_MAP: Record<number, "Přijatá" | "Odeslaná" | "Vyzvednutá" | "Zrušená" | "Vrácená"> = {
+const PACKETA_STATUS_MAP: Record<number, OrderStatuses> = {
   2: "Odeslaná",
-  3: "Odeslaná",
-  4: "Odeslaná",
+  3: "Připraveno k odeslání",
+  4: "Odeslaná do cílové destinace",
+  5: "Připravena k vyzvednutí",
   7: "Vyzvednutá",
   9: "Vrácená",
   11: "Zrušená",
@@ -69,7 +70,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true })
   } catch (error) {
     console.error("ERROR v cron jobu:", error)
-    return NextResponse.json({ ok: false }, { status: 200 }) // ❗ vždy 200 pro cron
+    return NextResponse.json({ ok: false }, { status: 200 }) 
   }
 }
 
@@ -78,6 +79,12 @@ function getEmailText(code: number): string {
   switch (code) {
     case 2:
       return "Objednávka byla předána Zásilkovně."
+    case 3:
+      return "Připraveno k odeslání do skladu."
+    case 4:
+      return "Odesláno do cílové destinace."
+    case 5:
+      return "Připraveno k vyzvednutí."  
     case 7:
       return "Objednávka byla doručena."
     case 9:

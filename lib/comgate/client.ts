@@ -1,5 +1,5 @@
 
-import { ComgateClientConfig, ComgateCreateResponse, ComgateStatusResponse, ComgateWebhook, Order } from "@/types";
+import { ComgateClientConfig, ComgateCreateResponse, ComgateRefund, ComgateStatusResponse, ComgateWebhook, Order } from "@/types";
 import axios, {AxiosError, AxiosInstance} from "axios"
 
 
@@ -31,11 +31,13 @@ export class ComgateRestClient {
         });
     }
 
+    //signature hash
     private createSignature(): string{
         const authHash = Buffer.from(`${this.merchant}:${this.secret}`).toString('base64');
         return `Basic ${authHash}`
     }
 
+    //status
     public async statusOfPayment(transId: string): Promise<ComgateStatusResponse> {
         const res = await this.axios.get(`payment/transId/${transId}.json`,{
             headers: { 'Authorization': this.createSignature() },
@@ -66,9 +68,6 @@ export class ComgateRestClient {
                     billingAddrCountry: order.country,
                     delivery: this.delivery,
                     lang: this.language,
-                    url_paid:`https://especko.cz/status/${order_id}`,
-                    url_cancelled:`https://especko.cz/checkout/error`,
-                    url_pending:`https://especko.cz/status/${order_id}`, 
                 },
                 {
                     headers: {
@@ -91,11 +90,32 @@ export class ComgateRestClient {
     }
 
     //refund
+    public async refundOrderById(trans_id: string, amount: number, refId: string): Promise<ComgateRefund>{
+        try{
+            const request = await this.axios.post(`refund.json`, {
+                "transId": trans_id,
+                "amount": amount*100,
+                "test": true,  //this.test,
+                "refId": refId
+                }, {
+                    headers: {
+                        "Authorization": this.createSignature()    
+                    }
+                }
+            )
+            console.log("Comgate API /refund:",request.data)
+            return{
+                ...request.data
+            }
+        }catch(error){
+            console.log(error)
+            return{
+               code: 1500,
+                message: error instanceof Error ? error.message : 'Neočekávaná chyba',
+            }
+        }
 
-    //cancel
-
-    //status
-    
+    }
 }
 
 export const comgate = new ComgateRestClient({
