@@ -43,7 +43,10 @@ export async function GET(req: NextRequest) {
 
           const updated = await sanityClient
             .patch(String(o._id))
-            .set({ status: newStatus })
+            .set({ 
+              status: newStatus,
+              payment_status: newStatus === "Vyzvednutá" && o.cod ? "Zaplacená" : "Nezaplacená"
+            })
             .commit()
 
           console.log("[Cron] Updated:", o._id, newStatus)

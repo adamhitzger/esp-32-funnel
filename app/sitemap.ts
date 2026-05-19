@@ -37,6 +37,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap>{
     },
     ...blogUrls,
     {
+      url: `${SITE_URL}/jak-objednat`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/vraceni`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.8,
+    },
+    {
       url: `${SITE_URL}/checkout`,
       lastModified: new Date(),
       changeFrequency: "monthly",

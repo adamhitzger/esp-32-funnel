@@ -6,6 +6,9 @@ import { Footer } from '@/components/footer';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import CookiesBanner from '@/components/cookies-banner';
 import { FBPixelScript } from '@rivercode/facebook-conversion-api-nextjs/components';
+import { AnnouncementBar } from '@/components/announcement-bar';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { HowToOrderPopup } from '@/components/how-to-order-popup';
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -82,12 +85,15 @@ export default function RootLayout({
   return (
     <html lang="cs">
       <body className="font-sans antialiased"  suppressHydrationWarning>
+        <AnnouncementBar/>
+        <ThemeToggle/>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_KEY as string} />
         <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_KEY as string}/>
         <FBPixelScript/> 
           {children}
           <Footer/>
           <Toaster/>
+          <HowToOrderPopup/>
         <CookiesBanner/>
       </body>
     </html>
