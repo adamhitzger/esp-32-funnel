@@ -312,7 +312,7 @@ export function HeroSection() {
                                 })
                                 
                   }} 
-                  href={`/checkout?quantity=${quantity}`}
+                  href={`/checkout?quantity=${quantity}${gad_url}`}
                   >
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   {"Objednat"}
