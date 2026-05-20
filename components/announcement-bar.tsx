@@ -28,7 +28,7 @@ export function AnnouncementBar() {
       <div className="container mx-auto px-4 py-2 flex items-center justify-center gap-2 text-sm">
         <ShoppingCart className="w-4 h-4 shrink-0" />
         <span className="text-center">
-          {"Nevíte jak u nás nakupoupit?"}{" "}
+          {"Nevíte jak u nás nakoupit?"}{" "}
           <Link 
             href="/jak-objednat" 
             className="font-semibold underline underline-offset-2 hover:no-underline"
