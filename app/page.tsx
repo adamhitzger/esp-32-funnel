@@ -10,6 +10,7 @@ import { ReviewType } from "@/server/schema"
 import { GET_REVIEWS } from "@/sanity/lib/queries"
 import { ReviewsSection } from "@/components/reviews-section"
 import { ZASILKOVNA_PRICE } from "@/lib/utils"
+import { Suspense } from "react"
 
 const SITE_URL = "https://especko.cz"
 
@@ -115,7 +116,9 @@ export default async function Home() {
       />
   
     <main className="min-h-screen bg-background">
+      <Suspense fallback={<div className="min-h-screen p-8 w-full animate-pulse bg-gray-400"></div>}>
       <HeroSection />
+      </Suspense>
       <FeaturesSection />
       <SpecsSection />
       <BlogSection/>
