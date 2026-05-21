@@ -38,6 +38,7 @@ interface PageProps {
 
 export default async function BlogPage({ params, searchParams }: PageProps) {
   const sparams = await searchParams;
+  
   const {param} = await params;
   const currentPage = Math.max(1, parseInt(sparams.page || "1", 10));
   const { articles, total } = await getArticles(currentPage, param);
@@ -103,7 +104,7 @@ export default async function BlogPage({ params, searchParams }: PageProps) {
                 className="border-border hover:border-electric-cyan/50 hover:bg-electric-cyan/10 disabled:opacity-40"
               >
                 {currentPage > 1 ? (
-                  <Link href={`/blog?page=${currentPage - 1}`}>
+                  <Link href={`/blog/${param}?page=${currentPage - 1}`}>
                     <ChevronLeft className="w-4 h-4" />
                   </Link>
                 ) : (
@@ -152,7 +153,7 @@ export default async function BlogPage({ params, searchParams }: PageProps) {
                       {isActive ? (
                         <span>{page}</span>
                       ) : (
-                        <Link href={`/blog?page=${page}`}>{page}</Link>
+                        <Link href={`/blog/${param}?page=${page}`}>{page}</Link>
                       )}
                     </Button>
                   );
@@ -168,7 +169,7 @@ export default async function BlogPage({ params, searchParams }: PageProps) {
                 className="border-border hover:border-electric-cyan/50 hover:bg-electric-cyan/10 disabled:opacity-40"
               >
                 {currentPage < totalPages ? (
-                  <Link href={`/blog?page=${currentPage + 1}`}>
+                  <Link href={`/blog/${param}?page=${currentPage + 1}`}>
                     <ChevronRight className="w-4 h-4" />
                   </Link>
                 ) : (
