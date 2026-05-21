@@ -19,6 +19,12 @@ export const blogSchema = defineType({
             }
         }),
         defineField({
+            name: "category",
+            title: "Kategorie",
+            type: "reference",
+            to: [{type: "article_category"}]
+        }),
+        defineField({
             name: "datum",
             type: "date",
             title: "Datum"

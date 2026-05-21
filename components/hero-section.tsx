@@ -29,13 +29,6 @@ export function HeroSection() {
   const [quantity, setQuantity] = useState(1)
   const [selectedImage, setSelectedImage] = useState(0)
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
-  const searchParams = useSearchParams();
-  const gad_source = searchParams.get("gad_source") || "";
-  const gad_campaignid = searchParams.get("gad_campaignid") || "";
-  const gclid = searchParams.get("gclid") || "";
-  const gbraid = searchParams.get("gbraid") || "";
-
-  const gad_url = gad_source.length > 1 && gad_campaignid.length > 1 && gbraid.length > 1 && gclid.length > 1 && `&gad_source=${gad_source}&gad_campaignid=${gad_campaignid}&gbraid=${gbraid}&gclid=${gclid}`
   const openLightbox = (index: number) => {
     setSelectedImage(index)
     setIsLightboxOpen(true)
@@ -312,7 +305,7 @@ export function HeroSection() {
                                 })
                                 
                   }} 
-                  href={`/checkout?quantity=${quantity}${gad_url}`}
+                  href={`/checkout?quantity=${quantity}`}
                   >
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   {"Objednat"}

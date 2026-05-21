@@ -122,6 +122,13 @@ function CheckoutContent() {
             transaction_id: state.transaction_id,
             email: String(state.inputs?.email), 
         })
+
+        sendGTMEvent({
+          send_to: 'AW-17997098076/EuZgCM_lroUcENzY14VD',
+          value: finalPrice,
+          currency: 'CZK',
+          transaction_id: state.transaction_id,
+        });
         
         if(state.redirect_url)redirect(state.redirect_url)
       }else {
