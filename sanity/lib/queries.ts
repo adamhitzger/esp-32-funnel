@@ -89,13 +89,26 @@ export const GET_PAID_ORDERS = groq`*[_type=="orders" && status != "Vrácená" &
 export const GET_HOME_ARTICLES = groq`*[_type == "article"] | order(datum desc)[0...3] {
       _id,
       heading,
+      category-> {
+    _id,
+    name,
+    slug,
+  },
       slug,
       datum,
       "image": image.asset->url,
       description
     }`
 
-export const GET_ARTICLES_BY_PAGE = groq`*[_type == "article"] | order(datum desc) [$start...$end] {
+export const GET_ARTICLE_CATEGORIES_BY_PAGE = groq`*[_type == "article_category"][$start...$end] {
+        _id,
+        name,
+        slug,
+        "image": image.asset->url,
+        description
+      }`
+
+export const GET_ARTICLES_BY_PAGE = groq`*[_type == "article" && category->slug.current == $category] | order(datum desc) [$start...$end] {
         _id,
         heading,
         slug,
@@ -104,12 +117,19 @@ export const GET_ARTICLES_BY_PAGE = groq`*[_type == "article"] | order(datum des
         description
       }`
 
-export const ARTICLES_COUNT = groq`count(*[_type == "article"])`
+export const ARTICLES_COUNT = groq`count(*[_type == "article" && category->slug.current == $category])`
+
+export const ARTICLE_CATEGORIES_COUNT = groq`count(*[_type == "article_category"])`
 
 export const GET_ARTCILE_BY_SLUG = groq`*[_type == "article" && slug.current == $slug][0] {
       _id,
       heading,
       slug,
+     category-> {
+    _id,
+    name,
+    slug,
+  },
       datum,
       image,
       description,

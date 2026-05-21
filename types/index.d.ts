@@ -10,6 +10,14 @@ export interface ActionRes<T> {
     } 
 }
 
+export interface ArticleCategory {
+  _id: string;
+  name: string;
+  slug: { current: string };
+  image: string;
+  description: string
+}
+
 export interface SanityMetadata { 
     _id: string;
     _createdAt: string,
@@ -77,6 +85,7 @@ export interface SanityFileAsset {
 export interface Article {
   _id: string;
   heading: string;
+  category: ArticleCategory
   slug: { current: string };
   datum: string;
   image: any;

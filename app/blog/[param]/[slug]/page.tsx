@@ -74,7 +74,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params;
   const article = await getArticle(slug);
-
+  console.log("KAtegorie:", article?.category)
   if (!article) {
     notFound();
   }
@@ -90,7 +90,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
         <div className="container mx-auto px-4 relative z-10">
           <Button asChild variant="ghost" size="sm" className="mb-6 text-muted-foreground hover:text-foreground">
-            <Link href="/blog" className="gap-2">
+            <Link href={`/blog/${article.category.slug.current}`} className="gap-2">
               <ArrowLeft className="w-4 h-4" />
               Zpět na články
             </Link>

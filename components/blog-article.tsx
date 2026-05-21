@@ -1,19 +1,19 @@
 "use client"
-import { Article } from "@/types"
+import { Article, ArticleCategory } from "@/types"
 import { sendGTMEvent } from "@next/third-parties/google"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, Calendar } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image"
-export function BlogPost({article}: {article: Article}){
+export function BlogPost({article, category}: {article: Article, category: string}){
     return(
          <Link
-              href={`/blog/${article.slug.current}`}
+              href={`/blog/${category}/${article.slug.current}`}
               className="group"
               onClick={()=> {sendGTMEvent({
                    event: "view_article",
                    content_id: article._id,
-                   path: `especko.cz/blog/${article.slug.current}`,
+                   path: `especko.cz/blog/${category}/${article.slug.current}`,
                    name: article.heading, 
               }) 
               
@@ -60,6 +60,52 @@ export function BlogPost({article}: {article: Article}){
                   {/* Read more */}
                   <div className="flex items-center gap-1 mt-4 text-sm font-medium text-electric-cyan">
                     <span>Přečíst více</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </div>
+              </article>
+            </Link>
+    )
+}
+export function BlogCategoryPost({article}: {article: ArticleCategory}){
+    return(
+         <Link
+              href={`/blog/${article.slug.current}`}
+              className="group"
+        
+            >
+              <article className="h-full rounded-2xl border border-border bg-card/50 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-electric-cyan/50 hover:shadow-[0_0_30px_rgba(0,200,255,0.1)]">
+                {/* Image */}
+                {article.image && (
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={urlFor(article.image).url()}
+                      alt={article.name}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-card/80 to-transparent" />
+                  </div>
+                )}
+
+                {/* Content */}
+                <div className="p-5">
+                  {/* Date */}
+                 
+
+                  {/* Title */}
+                  <h3 className="text-lg font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-electric-cyan transition-colors">
+                    {article.name}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-sm text-muted-foreground line-clamp-3">
+                    {article.description}
+                  </p>
+
+                  {/* Read more */}
+                  <div className="flex items-center gap-1 mt-4 text-sm font-medium text-electric-cyan">
+                    <span>Seznam článků</span>
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>

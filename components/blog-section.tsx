@@ -37,7 +37,7 @@ export async function BlogSection() {
         {/* Articles Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {articles.map((article) => (
-           <BlogPost article={article} key={article._id}/>
+           <BlogPost article={article} key={article._id} category={article.category.slug.current}/>
           ))}
         </div>
 

@@ -2,84 +2,29 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Article, ArticleCategory } from "@/types";
+import type { Article } from "@/types";
 import type { Metadata } from "next";
 import { sanityFetch } from "@/sanity/lib/client";
-import { ARTICLE_CATEGORIES_COUNT, ARTICLES_COUNT, GET_ARTICLE_CATEGORIES_BY_PAGE, GET_ARTICLES_BY_PAGE } from "@/sanity/lib/queries";
+import { ARTICLES_COUNT, GET_ARTICLES_BY_PAGE } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
-import { BlogCategoryPost, BlogPost } from "@/components/blog-article";
+import { BlogPost } from "@/components/blog-article";
 
-export const metadata: Metadata = {
-  title: "Blog | ESP32 DevKit",
-  description: "ESP32 Tutoriály na especko.cz",
-authors: [{ name: "especko.cz", url: "https://especko.cz/blog" }],
-  creator: "especko.cz",
-  publisher: "especko.cz",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  openGraph: {
-    type: "website",
-    locale: "cs_CZ",
-    url: "https://especko.cz/blog",
-    siteName: "especko.cz",
-    title: "ESP32 DevKit | Pohon pro vaše IoT projekty",
-    description:
-      "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
-    images: [
-      {
-        url: "/images/esp32.png",
-        width: 1200,
-        height: 630,
-        alt: "ESP32 DevKit vývojová deska",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "ESP32 Tutoriály na especko.cz",
-    description:
-      "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
-    images: ["/images/esp32.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  alternates: {
-    canonical: "https://especko.cz/blog",
-  },
-  icons: {
-    icon: [
-      {
-        url: "/especko.ico",
-      },
-    ],
-  },
-};
 
-const ARTICLE_CATS_PER_PAGE = 8;
+const ARTICLES_PER_PAGE = 6;
 
-async function getArticles(page: number): Promise<{ articles: ArticleCategory[]; total: number }> {
-  const start = (page - 1) * ARTICLE_CATS_PER_PAGE;
-  const end = start + ARTICLE_CATS_PER_PAGE;
+
+async function getArticles(page: number, category: string): Promise<{ articles: Article[]; total: number }> {
+  const start = (page - 1) * ARTICLES_PER_PAGE;
+  const end = start + ARTICLES_PER_PAGE;
   
   const [articles, total] = await Promise.all([
-    await sanityFetch<ArticleCategory[]>({
-        query: GET_ARTICLE_CATEGORIES_BY_PAGE,
-        params: { start, end }
+    await sanityFetch<Article[]>({
+        query: GET_ARTICLES_BY_PAGE,
+        params: { category, start, end }
     }),
     await sanityFetch<number>({
-        query: ARTICLE_CATEGORIES_COUNT,
+        query: ARTICLES_COUNT,
+        params: {category}
     }),
   ]);
   
@@ -87,14 +32,16 @@ async function getArticles(page: number): Promise<{ articles: ArticleCategory[];
 }
 
 interface PageProps {
-  searchParams: Promise<{ page?: string }>;
+  params: Promise<{ param: string }>;
+  searchParams: Promise<{ page?: string }>; 
 }
 
-export default async function BlogPage({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const currentPage = Math.max(1, parseInt(params.page || "1", 10));
-  const { articles, total } = await getArticles(currentPage);
-  const totalPages = Math.ceil(total / ARTICLE_CATS_PER_PAGE);
+export default async function BlogPage({ params, searchParams }: PageProps) {
+  const sparams = await searchParams;
+  const {param} = await params;
+  const currentPage = Math.max(1, parseInt(sparams.page || "1", 10));
+  const { articles, total } = await getArticles(currentPage, param);
+  const totalPages = Math.ceil(total / ARTICLES_PER_PAGE);
 
   return (
     <main className="min-h-screen bg-background">
@@ -130,7 +77,7 @@ export default async function BlogPage({ searchParams }: PageProps) {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((article) => (
-             <BlogCategoryPost article={article} key={article._id}/>
+             <BlogPost article={article} key={article._id} category={param}/>
             ))}
           </div>
 
