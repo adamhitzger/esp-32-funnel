@@ -12,6 +12,7 @@ export interface ActionRes<T> {
 
 export interface ArticleCategory {
   _id: string;
+  _createdAt: string,
   name: string;
   slug: { current: string };
   image: string;

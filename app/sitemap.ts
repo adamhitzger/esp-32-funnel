@@ -1,5 +1,5 @@
 import { sanityFetch } from "@/sanity/lib/client";
-import { Article } from "@/types";
+import { Article, ArticleCategory } from "@/types";
 import type { MetadataRoute } from "next"
 
 const SITE_URL = "https://especko.cz"
@@ -14,12 +14,31 @@ async function getAllArticleSlugs(): Promise<Article[]> {
   `});
 }
 
+async function getAllArticleCategorySlugs(): Promise<ArticleCategory[]> {
+  return await sanityFetch<ArticleCategory[]>({query:`
+    *[_type == "article_category"] {
+      _createdAt,
+      "slug": slug.current,
+      datum
+    }
+  `});
+}
+
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap>{
   const articles = await getAllArticleSlugs();
+  const categories = await getAllArticleCategorySlugs()
 
   const blogUrls = articles.map((article) => ({
     url: `${SITE_URL}/blog/${article.category}/${article.slug}`,
     lastModified: new Date(article.datum),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  const blogCategoryUrls = categories.map((article) => ({
+    url: `${SITE_URL}/blog/${article.slug}`,
+    lastModified: new Date(article._createdAt),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
@@ -36,6 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap>{
       changeFrequency: "daily",
       priority: 0.9,
     },
+    ...blogCategoryUrls,
     ...blogUrls,
     {
       url: `${SITE_URL}/jak-objednat`,
