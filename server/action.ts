@@ -56,7 +56,7 @@ export async function sendTelegramMessage(message: string){
 } 
 
 const transporter = nodemailer.createTransport({
-     host: "smtp.seznam.cz",
+        host: "smtp.seznam.cz",
         port: 587,
         secure: false,
         auth: {

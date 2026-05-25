@@ -5,7 +5,6 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Footer } from '@/components/footer';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import CookiesBanner from '@/components/cookies-banner';
-import { FBPixelScript } from '@rivercode/facebook-conversion-api-nextjs/components';
 import { AnnouncementBar } from '@/components/announcement-bar';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { HowToOrderPopup } from '@/components/how-to-order-popup';
@@ -89,7 +88,6 @@ export default function RootLayout({
         <ThemeToggle/>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_KEY as string} />
         <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_KEY as string}/>
-        <FBPixelScript/> 
           {children}
           <Footer/>
           <Toaster/>

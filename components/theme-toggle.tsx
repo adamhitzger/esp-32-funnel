@@ -23,8 +23,6 @@ export function ThemeToggle() {
     } else {
       document.documentElement.classList.add("dark")
     }
-
-    
   }, [])
 
   const toggleTheme = useCallback(() => {

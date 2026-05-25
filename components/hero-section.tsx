@@ -89,7 +89,7 @@ export function HeroSection() {
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-electric-cyan/20 rounded-full blur-[128px]" />
       <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-electric-orange/20 rounded-full blur-[96px]" />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto p-6 relative z-10">
         <Link href={"/#checkout"}>
         <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-12 lg:mb-16">
           <span className="relative inline-block">

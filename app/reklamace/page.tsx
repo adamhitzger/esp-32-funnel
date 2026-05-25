@@ -87,7 +87,7 @@ export default function Reklamace() {
             <li>
               Přejděte na stránku{" "}
               <Link href="/vraceni" className="text-electric-cyan hover:underline">
-                especko.cz/vraceni
+                Vráceni
               </Link>{" "}
               a zadejte e-mail nebo telefonní číslo z vaší objednávky.
             </li>

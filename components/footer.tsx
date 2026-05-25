@@ -100,7 +100,7 @@ export function Footer() {
                 Produkt
               </Link>
               <Link href="/vraceni" className="text-muted-foreground hover:text-electric-cyan transition-colors">
-                Vracení
+                Vrácení
               </Link>
               <Link href="/doprava-platba" className="text-muted-foreground hover:text-electric-cyan transition-colors">
                 Doprava a platba
