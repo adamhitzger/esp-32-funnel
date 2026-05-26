@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Footer } from '@/components/footer';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
-import CookiesBanner from '@/components/cookies-banner';
+import Script from 'next/script';
 import { AnnouncementBar } from '@/components/announcement-bar';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { HowToOrderPopup } from '@/components/how-to-order-popup';
@@ -86,13 +86,20 @@ export default function RootLayout({
       <body className="font-sans antialiased"  suppressHydrationWarning>
         <AnnouncementBar/>
         <ThemeToggle/>
+        <Script
+          id="cookiebot"
+          src="https://consent.cookiebot.com/uc.js"
+          data-cbid="fee6e3b4-e6e6-4709-b64c-1b0352b8c39b"
+          data-blockingmode="auto"
+          strategy="beforeInteractive"
+        />
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_KEY as string} />
         <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_KEY as string}/>
           {children}
           <Footer/>
           <Toaster/>
           <HowToOrderPopup/>
-        <CookiesBanner/>
+         
       </body>
     </html>
   )
