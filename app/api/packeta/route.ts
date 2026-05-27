@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
             .patch(String(o._id))
             .set({ 
               status: newStatus,
-              payment_status: newStatus === "Vyzvednutá" && o.cod ? "Zaplacená" : "Nezaplacená"
+              payment_status: newStatus === "Vyzvednutá" && o.cod && "Zaplacená"
             })
             .commit()
 
