@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       orders.map(async (o: Order) => {
         try {
           if (!o.barcode) return
-
+          let payment_status: String = o.payment_status
           const statusCode = await getPacketStatus(o.barcode)
           if (!statusCode.statusCode) return
           console.log(o.barcode,statusCode.statusCode)
@@ -41,11 +41,13 @@ export async function GET(req: NextRequest) {
           // 🧠 neupdatuj pokud je status stejný
           if (o.status === newStatus) return
 
+          if(newStatus === "Vyzvednutá" && o.cod && o.payment_status === "Nezaplacená") payment_status = "Zaplacená";
+
           const updated = await sanityClient
             .patch(String(o._id))
             .set({ 
               status: newStatus,
-              payment_status: newStatus === "Vyzvednutá" && o.cod && "Zaplacená"
+              payment_status:  payment_status
             })
             .commit()
 
