@@ -194,7 +194,7 @@ export function Invoice({ order, isInvoice}: InvoiceProps) {
               </Column>
               <Column align="right" style={{ padding: "12px 0" }}>
                 <Text style={{ margin: 0, fontSize: 14, color: order.del_price ? accent : textPrimary, fontWeight: 500 }}>
-                  {order.del_price ? "Zdarma" : `${ZASILKOVNA_PRICE} Kč`}
+                  {order.del_price ? "Zdarma" : (isInvoice ?`${ZASILKOVNA_PRICE} Kč` : `-${ZASILKOVNA_PRICE} Kč`)}
                 </Text>
               </Column>
             </Row>
