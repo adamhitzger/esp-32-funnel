@@ -1,10 +1,11 @@
 "use client"
 
 import { Users, Award, Truck, Heart } from "lucide-react"
+import { PRICING_TIERS } from "@/lib/utils"
 
 const stats = [
-  { icon: Users, value: "30+", label: "Spokojených zákazníků" },
-  { icon: Award, value: "100%", label: "Kvalitní komponenty" },
+  { icon: Users, value: "10+", label: "Spokojených zákazníků" },
+  { icon: Award, value: "100%", label: "Testovaných kusů" },
   { icon: Truck, value: "24h", label: "Expedice objednávek" },
   { icon: Heart, value: "CZ", label: "Česká podpora" },
 ]
@@ -74,7 +75,7 @@ export function AboutSection() {
                 </span>
                 <span className="text-muted-foreground">
                   <strong className="text-foreground">Testované produkty</strong> - Každý kus 
-                  kontrolujeme před odesláním
+                  před odesláním vyzkoušíme na testovacím programu s PWM a motorem
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -83,7 +84,7 @@ export function AboutSection() {
                 </span>
                 <span className="text-muted-foreground">
                   <strong className="text-foreground">Rychlé dodání</strong> - Objednávky expedujeme 
-                  do 24 hodin přes Zásilkovnu
+                  do 24 hodin přes Zásilkovnu, i o víkendu
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -100,8 +101,8 @@ export function AboutSection() {
                   <span className="w-2 h-2 rounded-full bg-electric-cyan" />
                 </span>
                 <span className="text-muted-foreground">
-                  <strong className="text-foreground">Férové ceny</strong> - Žádné přemrštěné marže, 
-                  jen kvalita za rozumnou cenu
+                  <strong className="text-foreground">Férové ceny</strong> - Při větším odběru 
+                  množstevní sleva až na {Math.min(...PRICING_TIERS.map(t => t.price))} Kč za kus
                 </span>
               </li>
             </ul>

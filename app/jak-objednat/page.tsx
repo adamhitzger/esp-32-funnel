@@ -16,7 +16,7 @@ const steps = [
     icon: ShoppingCart,
     title: "Vyberte produkt a množství",
     description:
-      "Na hlavní stránce si prohlédněte ESP32 DevKit V1. Zvolte požadované množství pomocí tlačítek + a -. Při větším množství se automaticky uplatní množstevní sleva podle ceníku. Klikněte na tlačítko \"Objednat\" pro přechod k pokladně.",
+      "Na hlavní stránce si prohlédněte ESP32 DevKit USB-C. Zvolte požadované množství pomocí tlačítek + a -. Při větším množství se automaticky uplatní množstevní sleva podle ceníku. Klikněte na tlačítko \"Objednat\" pro přechod k pokladně.",
     highlights: [
       "Prohlédněte si fotogalerii produktu",
       "Zvolte množství kusů",
@@ -87,7 +87,7 @@ export default function JakObjednatPage() {
             Jak objednat na našem e-shopu
           </h1>
           <p className="text-muted-foreground text-lg">
-            Jednoduchý návod ve 4 krocích, jak si objednat ESP32 DevKit.
+            Jednoduchý návod ve 4 krocích, jak si objednat ESP32 DevKit USB-C.
           </p>
         </div>
 
@@ -167,7 +167,7 @@ export default function JakObjednatPage() {
               Připraveni objednat?
             </h3>
             <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-              Objednejte si ESP32 DevKit ještě dnes a začněte s vaším IoT projektem!
+              Objednejte si ESP32 DevKit USB-C ještě dnes a začněte s vaším IoT projektem!
             </p>
             <Button asChild size="lg" className="bg-electric-cyan text-background hover:bg-electric-cyan/90">
               <Link href="/">

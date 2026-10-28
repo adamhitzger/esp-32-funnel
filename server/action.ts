@@ -11,6 +11,8 @@ import {
     SanityMetadata 
 } from "@/types";
 import { 
+    contactSchema, 
+    ContactType, 
     CreateOrderType, 
     newsletterSchema, 
     NewsletterType, 
@@ -30,7 +32,9 @@ import {
     GET_ORDER_BY_EMAIL_OR_PHONE 
 } from "@/sanity/lib/queries";
 import { Coupon } from "@/types";
-import { DOBIRKA_PRICE, getTotalPrice, getUnitPrice, SITE_URL } from "@/lib/utils";
+import { calculateOrderPrice, CONTACT_EMAIL, isCouponApplicable, SITE_URL } from "@/lib/utils";
+import { headers } from "next/headers";
+import { createHash } from "crypto";
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
 import { renderOrderStatusEmail } from "@/components/email/template";
@@ -255,10 +259,11 @@ export async function signOutNewsletter(prevState: ActionRes<NewsletterType>, fo
 
         const data = validation.data;
 
-        const getUser = await sanityFetch<NewsletterType & SanityMetadata>({
-            query: GET_CUR_USER,
-            params: {email: data.email}
-        });
+        const getUser = await sanityClient.withConfig({ useCdn: false }).fetch<NewsletterType & SanityMetadata>(
+            GET_CUR_USER,
+            {email: data.email},
+            { cache: "no-store" }
+        );
 
         console.log("[signOutNewsletter] User: ", getUser);
                 
@@ -315,6 +320,8 @@ export async function saveReview(prevState: ActionRes<ReviewType>, formData: For
             }
         }
         const data = validate.data;
+
+        
 
         const saveRev = await sanityClient.create({
             _type: "reviews",
@@ -464,10 +471,12 @@ export async function saveNewsletter(email: string): Promise<ActionRes<Newslette
         const data = validate.data;
         console.log(data.email)
 
-        const getUser = await sanityFetch<NewsletterType>({
-            query: GET_CUR_USER,
-            params: {email: data.email},
-        });
+        // Bez CDN a bez Next cache – jinak vrací až 30 s starou (i smazanou) odpověď
+        const getUser = await sanityClient.withConfig({ useCdn: false }).fetch<NewsletterType | null>(
+            GET_CUR_USER,
+            { email: data.email },
+            { cache: "no-store" }
+        );
 
         console.log("[saveNewsletter] User: ", getUser);
         
@@ -540,10 +549,11 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
                 country: formData.get("country") as string,
                 packetaId: Number(formData.get("packetaId")),
                 cod: Boolean(formData.get("cod") === "cod" ?true:false),
-                deliveryPrice: Number((formData.get("deliveryPrice"))),
                 quantity: Number(formData.get("quantity")), 
-                sale: Number(formData.get("sale")),
-                packetaAddress: formData.get("packetaAddress") as string
+                coupon: (formData.get("coupon") as string | null) ?? "",
+                packetaAddress: formData.get("packetaAddress") as string,
+                consent: Boolean(formData.get("consent") === "on" ? true : false),
+                newsletterConsent: Boolean(formData.get("newsletterConsent") === "on" ? true : false )
         }
         
         inputs = nonValidate;
@@ -561,12 +571,35 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
         }
 
         const data = validate.data;
+
+        if(!data.consent){
+            return {
+                submitted: true,
+                success: false,
+                message: "Nesouhlasili jste s obchodními podmínkami",
+                inputs: nonValidate,
+            }
+        }
+
         inputs = data;
  console.log("Cod", data.cod)
-        const totalPrice: number = getTotalPrice(data.quantity) + (data.cod ? DOBIRKA_PRICE : 0) + data.deliveryPrice - data.sale
-        const itemPrice: number = getUnitPrice(data.quantity)
+        // Cenu počítá jen server – kupón si znovu načteme ze Sanity, částkám z formuláře nevěříme
+        let coupon: Coupon | null = null
+        if(data.coupon){
+            coupon = await sanityClient.withConfig({ useCdn: false }).fetch<Coupon | null>(GET_COUPON, { name: data.coupon })
+            if(!coupon || !isCouponApplicable(coupon, data.quantity)){
+                return {
+                    submitted: true,
+                    success: false,
+                    message: "Slevový kód už není platný nebo nesplňuje minimální hodnotu objednávky. Odeberte ho prosím a objednejte znovu.",
+                    inputs: nonValidate,
+                }
+            }
+        }
+        const price = calculateOrderPrice(data.quantity, data.cod, coupon)
+        const totalPrice: number = price.total
         
-        console.log(data, totalPrice, itemPrice)
+        console.log(data, price)
 
         const packeta = await createPacket({
             name: data.firstName,
@@ -591,9 +624,9 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             psc: data.zip,
             country: data.country,
             total: String(totalPrice.toFixed(2)),
-            couponValue:String(data.sale.toFixed(2)),
+            couponValue:String(price.discount.toFixed(2)),
             quantity: Number(data.quantity),
-            del_price: Number(data.deliveryPrice) === 0 ? true : false,
+            del_price: price.shipping === 0,
             packetaId: data.packetaId,
             status: "Přijatá",
             cod: data.cod,
@@ -610,9 +643,9 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
         console.log("Objednavka vytvořena:",orderCreate)   
 
          if(!data.cod){
-            const createPay = await comgate.createPayment(sanityData as unknown as Order, `${data.quantity}ks ESP-32 Devkit USB-C`, orderId)
+            const createPay = await comgate.createPayment(sanityData as unknown as Order, `${data.quantity}ks ESP32 DevKit USB-C`, orderId)
             if(!createPay.success){
-                const createPay = await comgate.createPayment(sanityData as unknown as Order, `${data.quantity}ks ESP-32 Devkit USB-C`, orderId)
+                const createPay = await comgate.createPayment(sanityData as unknown as Order, `${data.quantity}ks ESP32 DevKit USB-C`, orderId)
                 console.log("Comgate /create: ", createPay)
                 if(!createPay.success){
                     return{
@@ -646,6 +679,9 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
         }
 
        sendTelegramMessage("Nová objednávka: "+ data.email)
+
+    
+      if(data.newsletterConsent) saveNewsletter(data.email);
 
         return {
             submitted: true,
@@ -902,4 +938,108 @@ export async function ensureInvoicePdf(order:Order, isInvoice: boolean): Promise
         url: assetId.url,
         asset_id: assetId.id
   };
+}
+
+
+const CONTACT_RATE_LIMIT = 3
+const CONTACT_RATE_WINDOW_MS = 10 * 60 * 1000
+const CONTACT_SUCCESS_MESSAGE = "Děkujeme, zprávu jsme přijali. Odpovíme vám do 24 hodin."
+const CONTACT_ERROR_MESSAGE = `Zprávu se nepodařilo odeslat. Zkuste to prosím znovu, nebo nám napište přímo na ${CONTACT_EMAIL}.`
+
+export async function sendContactMessage(prevState: ActionRes<ContactType>, formData: FormData): Promise<ActionRes<ContactType>>{
+    const inputs: ContactType = {
+        name: String(formData.get("name") ?? ""),
+        email: String(formData.get("email") ?? ""),
+        topic: String(formData.get("topic") ?? ""),
+        message: String(formData.get("message") ?? ""),
+        consent: formData.get("consent") === "on" ? "on" : undefined,
+    }
+    try{
+        // Honeypot vyplní jen bot – tváříme se, že vše proběhlo, a nic neposíláme
+        if(formData.get("website")){
+            return { submitted: true, success: true, message: CONTACT_SUCCESS_MESSAGE }
+        }
+
+        const validate = contactSchema.safeParse(inputs)
+        if(!validate.success){
+            return {
+                submitted: true,
+                success: false,
+                message: "Zkontrolujte prosím zvýrazněná pole.",
+                inputs,
+                errors: validate.error.flatten().fieldErrors
+            }
+        }
+        const data = validate.data
+
+        // Rate limit podle IP; ukládáme jen hash solený dnešním datem, ne samotnou IP
+        const headerList = await headers()
+        const ip = headerList.get("x-forwarded-for")?.split(",")[0].trim() || headerList.get("x-real-ip") || "unknown"
+        const ipHash = createHash("sha256").update(`${ip}:${new Date().toISOString().slice(0, 10)}`).digest("hex")
+        const since = new Date(Date.now() - CONTACT_RATE_WINDOW_MS).toISOString()
+        const recent = await sanityClient.withConfig({ useCdn: false }).fetch<number>(
+            `count(*[_type == "contactMessage" && ipHash == $ipHash && _createdAt > $since])`,
+            { ipHash, since }
+        )
+        if(recent >= CONTACT_RATE_LIMIT){
+            return {
+                submitted: true,
+                success: false,
+                message: `Poslali jste několik zpráv krátce po sobě. Zkuste to prosím za pár minut, nebo nám napište na ${CONTACT_EMAIL}.`,
+                inputs
+            }
+        }
+
+        const saved = await sanityClient.create({
+            _type: "contactMessage",
+            name: data.name,
+            email: data.email,
+            topic: data.topic,
+            message: data.message,
+            emailSent: false,
+            resolved: false,
+            ipHash,
+        }).catch((error) => {
+            console.error("[sendContactMessage] Uložení do Sanity selhalo:", error)
+            return null
+        })
+
+        let emailSent = false
+        try{
+            const mail = await transporter.sendMail({
+                from: `"Especko.cz" <${process.env.FROM_EMAIL}>`,
+                to: process.env.CONTACT_TO_EMAIL,
+                replyTo: { name: data.name, address: data.email },
+                subject: `[Kontakt] ${data.topic} – ${data.name}`,
+                text: [
+                    "Nová zpráva z kontaktního formuláře especko.cz",
+                    "",
+                    `Jméno: ${data.name}`,
+                    `E-mail: ${data.email}`,
+                    `Téma: ${data.topic}`,
+                    "",
+                    data.message,
+                    "",
+                    "Odpovědí na tento e-mail napíšete přímo zákazníkovi.",
+                ].join("\n"),
+            })
+            emailSent = mail.accepted.length > 0
+        }catch(error){
+            console.error("[sendContactMessage] Odeslání e-mailu selhalo:", error)
+        }
+
+        if(!saved && !emailSent){
+            return { submitted: true, success: false, message: CONTACT_ERROR_MESSAGE, inputs }
+        }
+        if(saved && emailSent){
+            await sanityClient.patch(saved._id).set({ emailSent: true }).commit().catch((error) => {
+                console.error("[sendContactMessage] Nepodařilo se označit e-mail jako odeslaný:", error)
+            })
+        }
+
+        return { submitted: true, success: true, message: CONTACT_SUCCESS_MESSAGE }
+    }catch(error){
+        console.error("[sendContactMessage]", error)
+        return { submitted: true, success: false, message: CONTACT_ERROR_MESSAGE, inputs }
+    }
 }

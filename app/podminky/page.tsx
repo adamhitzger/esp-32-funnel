@@ -27,7 +27,7 @@ export const metadata: Metadata = {
         url: "/images/esp32.png",
         width: 1200,
         height: 630,
-        alt: "ESP32 DevKit vývojová deska",
+        alt: "ESP32 DevKit USB-C vývojová deska",
       },
     ],
   },

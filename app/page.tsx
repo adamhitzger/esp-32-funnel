@@ -9,27 +9,27 @@ import { sanityFetch } from "@/sanity/lib/client"
 import { ReviewType } from "@/server/schema"
 import { GET_REVIEWS } from "@/sanity/lib/queries"
 import { ReviewsSection } from "@/components/reviews-section"
-import { ZASILKOVNA_PRICE } from "@/lib/utils"
+import { ContactSection } from "@/components/contact-section"
+import { CONTACT_EMAIL, CONTACT_PHONE, PRICING_TIERS, ZASILKOVNA_PRICE } from "@/lib/utils"
 const SITE_URL = "https://especko.cz"
 
 const productJsonLd = {
   "@context": "https://schema.org",
   "@type": "Product",
-  name: "ESP32 DevKit V1",
+  name: "ESP32 DevKit USB-C",
   description:
-    "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Dvoujádrový procesor 240 MHz, 4MB Flash, 520KB SRAM, 38 GPIO pinů.",
+    "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Dvoujádrový procesor 240 MHz, 4MB Flash, 520KB SRAM, 34 GPIO, USB-C.",
   image: `${SITE_URL}/images/esp32.png`,
   brand: {
     "@type": "Brand",
     name: "Especko.cz",
   },
-  sku: "ESP32-DEVKIT-V1",
-  mpn: "ESP32-WROOM-32",
+  sku: "ESP32-DEVKIT-USBC",
   offers: {
     "@type": "Offer",
     url: SITE_URL,
     priceCurrency: "CZK",
-    price: "199",
+    price: String(PRICING_TIERS[0].price),
     priceValidUntil: "2026-12-31",
     seller: {
       "@type": "Organization",
@@ -70,7 +70,7 @@ const productJsonLd = {
     { "@type": "PropertyValue", name: "SRAM", value: "520 KB" },
     { "@type": "PropertyValue", name: "WiFi", value: "802.11 b/g/n" },
     { "@type": "PropertyValue", name: "Bluetooth", value: "4.2 + BLE" },
-    { "@type": "PropertyValue", name: "GPIO piny", value: "38" },
+    { "@type": "PropertyValue", name: "GPIO piny", value: "34" },
   ],
 }
 
@@ -82,7 +82,8 @@ const organizationJsonLd = {
   logo: `${SITE_URL}/images/esp32.png`,
   contactPoint: {
     "@type": "ContactPoint",
-    email: "info@especko.cz",
+    email: CONTACT_EMAIL,
+    telephone: CONTACT_PHONE,
     contactType: "customer service",
     availableLanguage: "Czech",
   },
@@ -121,6 +122,7 @@ export default async function Home() {
       <AboutSection/>
       <ReviewsSection reviews={reviews}/>
       <NewsletterSection />
+      <ContactSection />
       <SocialFollowDialog/>
     </main>
       </>

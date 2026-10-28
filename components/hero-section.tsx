@@ -5,7 +5,7 @@ import { Check, Minus, Plus, ShoppingCart, Truck, RotateCcw, X, ChevronLeft, Che
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import { getTotalPrice, getUnitPrice, PRICING_TIERS, ZASILKOVNA_PRICE } from "@/lib/utils"
+import { DOBIRKA_PRICE, getTotalPrice, getUnitPrice, PRICING_TIERS, ZASILKOVNA_PRICE } from "@/lib/utils"
 import { sendGTMEvent } from '@next/third-parties/google';
 import { useSearchParams } from "next/navigation"
 
@@ -15,14 +15,14 @@ const features = [
   "Bluetooth 4.2 + BLE",
   "4MB Flash paměť",
   "520KB SRAM",
-  "38 GPIO pinů",
+  "34 GPIO, 38 pinů",
 ]
 
 const galleryImages = [
-  { src: "/images/esp1.jpg", alt: "ESP32 DevKit - boční pohled" },
-  { src: "/images/esp2.jpg", alt: "ESP32 DevKit - detailní záběr" },
-  { src: "/images/esp3.jpg", alt: "ESP32 DevKit - zadní strana PCB" },
-  { src: "/images/esp4.jpg", alt: "ESP32 DevKit - pohled shora" },
+  { src: "/images/esp1.jpg", alt: "ESP32 DevKit USB-C - boční pohled" },
+  { src: "/images/esp2.jpg", alt: "ESP32 DevKit USB-C - detailní záběr" },
+  { src: "/images/esp3.jpg", alt: "ESP32 DevKit USB-C - zadní strana PCB" },
+  { src: "/images/esp4.jpg", alt: "ESP32 DevKit USB-C - pohled shora" },
 ]
 
 export function HeroSection() {
@@ -56,6 +56,7 @@ export function HeroSection() {
 
   const unitPrice = getUnitPrice(quantity)
   const totalPrice = getTotalPrice(quantity)
+  const totalWithShipping = totalPrice + ZASILKOVNA_PRICE
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-12 lg:py-0">
@@ -189,15 +190,15 @@ export function HeroSection() {
           {/* Right - Buy Section */}
           <div className="order-2">
             <div className="p-6 md:p-8 rounded-3xl border border-electric-cyan/30 bg-card/80 backdrop-blur-sm shadow-[0_0_60px_rgba(0,200,255,0.15)]">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-electric-orange/30 bg-electric-orange/10 mb-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-electric-cyan/30 bg-electric-cyan/10 mb-4">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric-orange opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-electric-orange" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric-cyan opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-electric-cyan" />
                 </span>
-                <span className="text-sm font-medium text-electric-orange">{"Omezené zásoby - skladem"}</span>
+                <span className="text-sm font-medium text-electric-cyan">{"Skladem"}</span>
               </div>
 
-              <h2 className="text-xl font-bold text-foreground mb-1">ESP32-S3 DevKit USB-C</h2>
+              <h2 className="text-xl font-bold text-foreground mb-1">ESP32 DevKit USB-C</h2>
               <p className="text-muted-foreground text-sm mb-6">{"Kompletní vývojová deska s USB-C"}</p>
 
               {/* Features list */}
@@ -280,15 +281,23 @@ export function HeroSection() {
 
               {/* Total */}
               <div className="p-4 rounded-xl bg-secondary/50 border border-border mb-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">{"Celkem"}</span>
-                  <div className="text-right">
-                    <span className="text-3xl font-bold text-electric-cyan">{totalPrice} Kč</span>
-                    {quantity > 1 && (
-                      <p className="text-sm text-muted-foreground">{quantity} ks x {unitPrice} Kč</p>
-                    )}
+                <dl className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between gap-4">
+                    <dt className="text-muted-foreground">{`Zboží (${quantity} × ${unitPrice} Kč)`}</dt>
+                    <dd className="text-foreground font-medium">{totalPrice} Kč</dd>
                   </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <dt className="text-muted-foreground">{"Doprava Zásilkovnou"}</dt>
+                    <dd className="text-foreground font-medium">{ZASILKOVNA_PRICE} Kč</dd>
+                  </div>
+                </dl>
+                <div className="flex items-center justify-between gap-4 mt-3 pt-3 border-t border-border">
+                  <span className="text-muted-foreground">{"Celkem"}</span>
+                  <span className="text-3xl font-bold text-electric-cyan">{totalWithShipping} Kč</span>
                 </div>
+                <p className="text-xs text-muted-foreground mt-2 text-right">
+                  {`Včetně dopravy. Platba online, nebo na dobírku (+${DOBIRKA_PRICE} Kč).`}
+                </p>
               </div>
 
               {/* Checkout button */}
@@ -313,6 +322,13 @@ export function HeroSection() {
                   {"Objednat"}
                 </Link>
               </Button>
+
+              <p className="text-center text-sm text-muted-foreground mt-3">
+                {"Dotaz? "}
+                <Link href="/#kontakt" className="text-electric-cyan hover:underline">
+                  {"Napište nám"}
+                </Link>
+              </p>
 
               <div className="flex flex-row justify-center text-center text-sm  text-muted-foreground mt-4 space-x-2">
                 <p>Bezpečná platba při převzetí zásilky nebo online platba přes  <Link 

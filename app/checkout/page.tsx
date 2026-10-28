@@ -7,10 +7,10 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Lock, ShieldCheck, MapPin, Loader2, Tag, X, Banknote, QrCode, Minus, Plus, Truck, CreditCard } from "lucide-react"
 import { Suspense, useEffect } from "react"
-import { DOBIRKA_PRICE, getTotalPrice, getUnitPrice, SITE_URL, ZASILKOVNA_PRICE } from "@/lib/utils"
+import { calculateOrderPrice, DOBIRKA_PRICE, isCouponApplicable, SITE_URL } from "@/lib/utils"
 import { createOrder, getCoupon } from "@/server/action"
 import { toast } from "sonner"
-import { ActionRes, CreatePaymentResponse } from "@/types"
+import { ActionRes, Coupon, CreatePaymentResponse } from "@/types"
 import { CreateOrderType } from "@/server/schema"
 import { sendGTMEvent } from "@next/third-parties/google"
 
@@ -31,18 +31,18 @@ const actionState: ActionRes<CreateOrderType>  & CreatePaymentResponse= {
 function CheckoutContent() {
   const searchParams = useSearchParams()
   const quantity = Math.max(1, Math.min(99, Number(searchParams.get("quantity")) || 1))
-  const unitPrice = getUnitPrice(quantity)
-  const totalPrice = getTotalPrice(quantity)
   
   const [packetaPoint, setPacketaPoint] = useState<{ id: string; city: string,street: string, zip: string } | null>(null)
   const [isPending, startTransition] = useTransition();
-  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null)
   const [couponLoading, setCouponLoading] = useState(false)
   const [couponCode, setCouponCode] = useState("")
-  const [deliveryPrice,setDeliveryPrice] = useState<number>(ZASILKOVNA_PRICE)
   const [state, action, isPendingCheckout] = useActionState(createOrder, actionState) 
   const [paymentMethod, setPaymentMethod] = useState<"online" | "cod">("online")
-  const finalPrice = (totalPrice+ (paymentMethod === "cod" ?DOBIRKA_PRICE : 0) - (appliedCoupon ? appliedCoupon.discount : 0) + deliveryPrice).toFixed(2)
+  // Stejný výpočet jako na serveru v createOrder
+  const price = calculateOrderPrice(quantity, paymentMethod === "cod", appliedCoupon)
+  const unitPrice = price.unitPrice
+  const finalPrice = price.total.toFixed(2)
   const router = useRouter()
   console.log(paymentMethod)
   const updateQuantity = (newQuantity: number) => {
@@ -66,26 +66,15 @@ function CheckoutContent() {
           setCouponLoading(false)
           return
       }else{
-        if(coupon.min_order_value >= Number(finalPrice)){
-          toast.error("Vaše hodnota objednávky je menší než požadovaná minimální hodnota objednávky pro uplatnění slevového kupónu!")
+        if(!isCouponApplicable(coupon, quantity)){
+          toast.error(`Kupón lze uplatnit od hodnoty zboží ${coupon.min_order_value} Kč.`)
           setCouponLoading(false)
           return
         }
         if(coupon.free_del){
           toast.success("Uplatnila se doprava zdarma!")
-          setDeliveryPrice(0);
         }
-        if(coupon.type){
-          setAppliedCoupon({
-            code: coupon.name,
-            discount: coupon.value
-          })
-        }else{
-          setAppliedCoupon({
-            code: coupon.name,
-            discount: totalPrice / 100 * coupon.value
-          })
-        }
+        setAppliedCoupon(coupon)
       }
     })
 
@@ -94,7 +83,6 @@ function CheckoutContent() {
 
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null)
-    setDeliveryPrice(ZASILKOVNA_PRICE)
     setCouponCode("")
   }
 
@@ -203,7 +191,7 @@ function CheckoutContent() {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground">ESP32-S3 Devkit</h3>
+                  <h3 className="font-semibold text-foreground">ESP32 DevKit USB-C</h3>
                   <p className="text-sm text-muted-foreground mt-1">{"Vývojová deska s USB-C"}</p>
                   
                   <div className="flex items-center gap-1 mt-2">
@@ -235,8 +223,12 @@ function CheckoutContent() {
                   <div className="flex items-center justify-between rounded-xl bg-electric-cyan/5 border border-electric-cyan/20 px-4 py-3">
                     <div className="flex items-center gap-2">
                       <Tag className="w-4 h-4 text-electric-cyan" />
-                      <span className="text-sm font-medium text-foreground">{appliedCoupon.code}</span>
-                      <span className="text-xs text-electric-cyan">-{appliedCoupon.discount.toFixed(2)} Kč</span>
+                      <span className="text-sm font-medium text-foreground">{appliedCoupon.name}</span>
+                      {price.coupon ? (
+                        <span className="text-xs text-electric-cyan">-{price.discount.toFixed(2)} Kč</span>
+                      ) : (
+                        <span className="text-xs text-electric-orange">{`platí od ${appliedCoupon.min_order_value} Kč`}</span>
+                      )}
                     </div>
                     <button
                       type="button"
@@ -281,15 +273,15 @@ function CheckoutContent() {
                   <span className="text-muted-foreground">{"Počet"}</span>
                   <span className="text-foreground">{quantity} ks</span>
                 </div>
-                {appliedCoupon && (
+                {price.discount > 0 && (
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">{"Sleva"}</span>
-                    <span className="text-electric-cyan font-medium">-{appliedCoupon.discount.toFixed(2)} Kč</span>
+                    <span className="text-electric-cyan font-medium">-{price.discount.toFixed(2)} Kč</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">{"Doprava"}</span>
-                  <span className="text-electric-cyan font-medium">{deliveryPrice} Kč</span>
+                  <span className="text-electric-cyan font-medium">{price.shipping === 0 ? "Zdarma" : `${price.shipping} Kč`}</span>
                 </div>
                 {paymentMethod === "cod" && 
                   <div className="flex items-center justify-between text-sm">
@@ -309,7 +301,7 @@ function CheckoutContent() {
               <div className="mt-6 pt-4 border-t border-border space-y-3">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <ShieldCheck className="w-4 h-4 text-electric-cyan shrink-0" />
-                  <span>{"Bezpečná platba na dobírku"}</span>
+                  <span>{paymentMethod === "cod" ? "Platíte až při převzetí na výdejním místě Zásilkovny." : "Online platba přes platební bránu Comgate."}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Lock className="w-4 h-4 text-electric-cyan shrink-0" />
@@ -654,14 +646,6 @@ function CheckoutContent() {
                 )}
               </div>
                     <input
-                        name="deliveryPrice"
-                        value={deliveryPrice}
-                        readOnly
-                        type="hidden"
-                        required
-                        className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
-                    />
-                    <input
                         name="cod"
                         value={paymentMethod}
                         readOnly
@@ -686,14 +670,42 @@ function CheckoutContent() {
                         required
                         className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
                     />
+                    <input name="coupon" value={price.coupon?.name ?? ""} readOnly type="hidden" />
+              <div className="space-y-3">
+                <div>
+                  <label className="flex items-start gap-3 text-sm text-muted-foreground cursor-pointer">
                     <input
-                        name="sale"
-                        value={appliedCoupon ? appliedCoupon.discount : 0}
-                        readOnly
-                        type="hidden"
-                        required
-                        className="w-full h-11 px-4 rounded-xl bg-secondary/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-electric-cyan/50 focus:border-electric-cyan/50 transition-all"
+                      name="consent"
+                      type="checkbox"
+                      required
+                      defaultChecked={state.inputs?.consent}
+                      aria-invalid={!!state.errors?.consent}
+                      aria-describedby={state.errors?.consent ? "consent-error" : undefined}
+                      className="mt-0.5 w-4 h-4 shrink-0 accent-[var(--electric-cyan)]"
                     />
+                    <span>
+                      {"Souhlasím s "}
+                      <Link href={"/podminky"} className="text-electric-cyan hover:underline">{"obchodními podmínkami"}</Link>
+                      {" a beru na vědomí "}
+                      <Link href={"/zasady"} className="text-electric-cyan hover:underline">{"zásady zpracování osobních údajů"}</Link>
+                      {"."}
+                    </span>
+                  </label>
+                  {state.errors?.consent ?
+                  <span id="consent-error" className="text-electric-orange text-xs">{state.errors?.consent}</span>
+                  : null}
+                </div>
+                <label className="flex items-start gap-3 text-sm text-muted-foreground cursor-pointer">
+                  <input
+                    name="newsletterConsent"
+                    type="checkbox"
+                    defaultChecked={state.inputs?.newsletterConsent}
+                    className="mt-0.5 w-4 h-4 shrink-0 accent-[var(--electric-cyan)]"
+                  />
+                  <span>{"Chci dostávat novinky a slevy e-mailem. Odhlásit se můžete kdykoli."}</span>
+                </label>
+              </div>
+
               {/* Submit */}
               <Button
                 type="submit"
@@ -705,9 +717,6 @@ function CheckoutContent() {
                 {isPendingCheckout ? "Zpracovávám..." : `Objednat ${finalPrice} Kč`}
               </Button>
 
-              <p className="text-center text-xs text-muted-foreground">
-                Kliknutím na tlačítko souhlasíte s <Link href={"/podminky"} className="underline underline-offset-1">obchodními podmínkami</Link>. Vaše data jsou v bezpečí.
-              </p>
             </form>
           </div>
         </div>

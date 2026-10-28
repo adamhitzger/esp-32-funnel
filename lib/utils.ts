@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { Coupon } from '@/types'
 
 export const SITE_URL = process.env.NODE_ENV === "production" ? "https://especko.cz/" : "http://localhost:3000/"
 export const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61582227774889"
@@ -9,6 +10,8 @@ export const YOUTUBE_URL = "https://www.youtube.com/@especko_cz"
 
 export const ZASILKOVNA_PRICE: number = 89
 export const DOBIRKA_PRICE: number = 29
+export const CONTACT_EMAIL = "info@especko.cz"
+export const CONTACT_PHONE = "+420 605 859 361"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -33,6 +36,27 @@ export function getUnitPrice(quantity: number): number {
 
 export function getTotalPrice(quantity: number): number {
   return getUnitPrice(quantity) * quantity
+}
+
+/** Kupón se uplatní, jen když zboží (bez dopravy a dobírky) dosáhne minimální hodnoty */
+export function isCouponApplicable(coupon: Pick<Coupon, "min_order_value">, quantity: number): boolean {
+  return getTotalPrice(quantity) >= (coupon.min_order_value ?? 0)
+}
+
+/**
+ * Jediný výpočet ceny objednávky – používá ho checkout (zobrazení) i server (createOrder).
+ * Server ho volá s kupónem načteným ze Sanity, nikdy s částkami z formuláře.
+ */
+export function calculateOrderPrice(quantity: number, cod: boolean, coupon: Coupon | null) {
+  const unitPrice = getUnitPrice(quantity)
+  const subtotal = getTotalPrice(quantity)
+  const applied = coupon && isCouponApplicable(coupon, quantity) ? coupon : null
+  const rawDiscount = applied ? (applied.type ? applied.value : subtotal / 100 * applied.value) : 0
+  const discount = Math.round(Math.min(rawDiscount, subtotal) * 100) / 100
+  const shipping = applied?.free_del ? 0 : ZASILKOVNA_PRICE
+  const codFee = cod ? DOBIRKA_PRICE : 0
+  const total = Math.round((subtotal - discount + shipping + codFee) * 100) / 100
+  return { unitPrice, subtotal, discount, shipping, codFee, total, coupon: applied }
 }
 
 export function normalizePhone(phone: string): string {

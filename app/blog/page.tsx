@@ -10,7 +10,7 @@ import { urlFor } from "@/sanity/lib/image";
 import { BlogCategoryPost, BlogPost } from "@/components/blog-article";
 
 export const metadata: Metadata = {
-  title: "Blog | ESP32 DevKit",
+  title: "Blog | ESP32 DevKit USB-C",
   description: "ESP32 Tutoriály na especko.cz",
 authors: [{ name: "especko.cz", url: "https://especko.cz/blog" }],
   creator: "especko.cz",
@@ -25,7 +25,7 @@ authors: [{ name: "especko.cz", url: "https://especko.cz/blog" }],
     locale: "cs_CZ",
     url: "https://especko.cz/blog",
     siteName: "especko.cz",
-    title: "ESP32 DevKit | Pohon pro vaše IoT projekty",
+    title: "ESP32 DevKit USB-C | Pohon pro vaše IoT projekty",
     description:
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
     images: [
@@ -33,7 +33,7 @@ authors: [{ name: "especko.cz", url: "https://especko.cz/blog" }],
         url: "/images/esp32.png",
         width: 1200,
         height: 630,
-        alt: "ESP32 DevKit vývojová deska",
+        alt: "ESP32 DevKit USB-C vývojová deska",
       },
     ],
   },

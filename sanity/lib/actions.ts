@@ -23,7 +23,7 @@ export default function refundOrder({
 
         try{
             if(!data.cod){
-                const refund = await comgate.refundOrderById(data.trans_id, Number(data.total)-ZASILKOVNA_PRICE, String(data._id));
+                const refund = await comgate.refundOrderById(data.trans_id, Number(data.total) - (data.del_price ? 0 : ZASILKOVNA_PRICE), String(data._id));
                 console.log("Refund comgate test:  ", refund.message + " " + refund.code)
             }
                    

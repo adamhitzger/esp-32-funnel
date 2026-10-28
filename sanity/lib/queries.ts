@@ -10,7 +10,7 @@ export const GET_COUPON = groq`*[_type=="coupons" && name == $name][0]{
     name,
     type,
     value,
-    min_order_value
+    "min_order_value": min_order_val
 }`
 
 export const GET_ORDER_BY_EMAIL_OR_PHONE = groq`*[_type=="orders" && (email == $search || phone == $search)] | order(_createdAt desc){

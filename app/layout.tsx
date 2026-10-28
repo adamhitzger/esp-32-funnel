@@ -16,7 +16,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://especko.cz"),
   title: {
-    default: "ESP32 DevKit | especko.cz - Pohon pro vaše IoT projekty",
+    default: "ESP32 DevKit USB-C | especko.cz - Pohon pro vaše IoT projekty",
     template: "%s | especko.cz",
   },
   description:
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     locale: "cs_CZ",
     url: "https://especko.cz",
     siteName: "especko.cz",
-    title: "ESP32 DevKit | Pohon pro vaše IoT projekty",
+    title: "ESP32 DevKit USB-C | Pohon pro vaše IoT projekty",
     description:
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
     images: [
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
         url: "/images/esp32.png",
         width: 1200,
         height: 630,
-        alt: "ESP32 DevKit vývojová deska",
+        alt: "ESP32 DevKit USB-C vývojová deska",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ESP32 DevKit | especko.cz",
+    title: "ESP32 DevKit USB-C | especko.cz",
     description:
       "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Ideální pro IoT, automatizaci a vestavěné systémy.",
     images: ["/images/esp32.png"],

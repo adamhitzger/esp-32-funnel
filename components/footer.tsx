@@ -2,7 +2,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Zap } from "lucide-react"
-import { FACEBOOK_URL, INSTAGRAM_URL, TIKTOK_URL, YOUTUBE_URL } from "@/lib/utils"
+import { CONTACT_EMAIL, CONTACT_PHONE, FACEBOOK_URL, INSTAGRAM_URL, TIKTOK_URL, YOUTUBE_URL } from "@/lib/utils"
 function FacebookIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -108,6 +108,9 @@ export function Footer() {
               <Link href="/jak-objednat" className="text-muted-foreground hover:text-electric-cyan transition-colors">
                 Jak probíhá nákup
               </Link>
+              <Link href="/#kontakt" className="text-muted-foreground hover:text-electric-cyan transition-colors">
+                Kontakt
+              </Link>
             </nav>
           </div>
 
@@ -130,6 +133,10 @@ export function Footer() {
    
      <p className="text-xs text-muted-foreground text-center">
               Adam Hitzger, IČO: 19712049 | Ledečská 2984, 580 01 Havlíčkův Brod
+              <br />
+              <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-electric-cyan transition-colors">{CONTACT_EMAIL}</a>
+              {" | "}
+              <a href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`} className="hover:text-electric-cyan transition-colors">{CONTACT_PHONE}</a>
             </p>
            
            

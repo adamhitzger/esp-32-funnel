@@ -5,7 +5,8 @@ import { coupon } from './coupons'
 import { newsletter } from './newsletter'
 import { blogSchema } from './blog'
 import { articleCategorySchema } from './blog_category'
+import { contactMessage } from './contact'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [review, orders, coupon, newsletter, blogSchema, articleCategorySchema],
+  types: [review, orders, coupon, newsletter, blogSchema, articleCategorySchema, contactMessage],
 }

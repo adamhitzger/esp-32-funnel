@@ -134,14 +134,14 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
               <div className="relative w-20 h-20 rounded-xl bg-secondary/50 border border-border overflow-hidden shrink-0">
                 <Image
                   src="/images/esp32.png"
-                  alt="ESP32 DevKit"
+                  alt="ESP32 DevKit USB-C"
                   fill
                   sizes="80px"
                   className="object-contain p-2"
                 />
               </div>
               <div>
-                <h3 className="font-semibold text-foreground">{"ESP32-S3 DevKit"}</h3>
+                <h3 className="font-semibold text-foreground">{"ESP32 DevKit USB-C"}</h3>
                 <p className="text-sm text-muted-foreground">{"Vývojová deska s USB-C"}</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   {"Množství:"} <span className="text-foreground font-medium">{order.quantity} ks</span>

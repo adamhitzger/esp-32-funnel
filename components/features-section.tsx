@@ -28,7 +28,7 @@ const features = [
   },
   {
     icon: Plug,
-    title: "38 GPIO pinů",
+    title: "34 GPIO, 38 pinů",
     description: "Rozsáhlé I/O možnosti včetně ADC, DAC, PWM, I2C, SPI a UART."
   }
 ]

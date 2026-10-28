@@ -97,7 +97,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
             Co říkají naši zákazníci
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Přečtěte si recenze od spokojených zákazníků, kteří již používají ESP32 DevKit.
+            Přečtěte si recenze od spokojených zákazníků, kteří již používají ESP32 DevKit USB-C.
           </p>
         </div>
 
