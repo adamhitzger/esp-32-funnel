@@ -24,7 +24,7 @@ export const metadata: Metadata = {
       "Zásady zpracování osobních údajů e-shopu especko.cz provozovaného Adamem Hitzgerem, IČO: 19712049.",
     images: [
       {
-        url: "/images/esp32.jpg",
+        url: "/images/esp32.png",
         width: 1200,
         height: 630,
         alt: "ESP32 DevKit vývojová deska",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "Zásady zpracování osobních údajů | especko.cz",
     description:
       "Zásady zpracování osobních údajů e-shopu especko.cz provozovaného Adamem Hitzgerem, IČO: 19712049.",
-    images: ["/images/esp32.jpg"],
+    images: ["/images/esp32.png"],
   },
   robots: {
     index: true,

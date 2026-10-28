@@ -2,9 +2,8 @@
 import { Article, ArticleCategory } from "@/types"
 import { sendGTMEvent } from "@next/third-parties/google"
 import Link from "next/link"
-import Image from "next/image"
+import { SanityImage } from "@/components/sanity-image"
 import { ArrowRight, Calendar } from "lucide-react";
-import { urlFor } from "@/sanity/lib/image"
 export function BlogPost({article, category}: {article: Article, category: string}){
     return(
          <Link
@@ -23,10 +22,11 @@ export function BlogPost({article, category}: {article: Article, category: strin
                 {/* Image */}
                 {article.image && (
                   <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={urlFor(article.image).url()}
+                    <SanityImage
+                      image={article.image}
                       alt={article.heading}
                       fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-card/80 to-transparent" />
@@ -78,10 +78,11 @@ export function BlogCategoryPost({article}: {article: ArticleCategory}){
                 {/* Image */}
                 {article.image && (
                   <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={urlFor(article.image).url()}
+                    <SanityImage
+                      image={article.image}
                       alt={article.name}
                       fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-card/80 to-transparent" />

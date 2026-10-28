@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     description: `Zásilkovna od ${ZASILKOVNA_PRICE} Kč, platba na dobírku. Doručení 2–4 pracovní dny.`,
     images: [
       {
-        url: "/images/esp32.jpg",
+        url: "/images/esp32.png",
         width: 1200,
         height: 630,
         alt: "ESP32 DevKit vývojová deska",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Doprava a platba | especko.cz",
     description: `Zásilkovna od ${ZASILKOVNA_PRICE} Kč, platba na dobírku. Doručení 2–4 pracovní dny.`,
-    images: ["/images/esp32.jpg"],
+    images: ["/images/esp32.png"],
   },
   robots: {
     index: true,

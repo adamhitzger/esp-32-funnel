@@ -136,6 +136,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
                   src="/images/esp32.png"
                   alt="ESP32 DevKit"
                   fill
+                  sizes="80px"
                   className="object-contain p-2"
                 />
               </div>

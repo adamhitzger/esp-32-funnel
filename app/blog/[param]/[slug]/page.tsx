@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { SanityImage } from "@/components/sanity-image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { PortableText } from "next-sanity";
@@ -128,10 +128,12 @@ export default async function ArticlePage({ params }: PageProps) {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="relative aspect-video rounded-2xl overflow-hidden border border-border">
-                <Image
-                  src={urlFor(article.image).width(1200).height(675).url()}
+                <SanityImage
+                  image={article.image}
+                  aspectRatio={16 / 9}
                   alt={article.heading}
                   fill
+                  sizes="(min-width: 896px) 896px, 100vw"
                   className="object-cover"
                   priority
                 />

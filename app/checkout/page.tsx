@@ -198,6 +198,7 @@ function CheckoutContent() {
                     src="/images/esp32.png"
                     alt="ESP32 DevKit USB-C"
                     fill
+                    sizes="96px"
                     className="object-cover"
                   />
                 </div>

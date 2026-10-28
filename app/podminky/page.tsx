@@ -24,7 +24,7 @@ export const metadata: Metadata = {
       "Obchodní podmínky e-shopu especko.cz provozovaného Adamem Hitzgerem, IČO: 19712049.",
     images: [
       {
-        url: "/images/esp32.jpg",
+        url: "/images/esp32.png",
         width: 1200,
         height: 630,
         alt: "ESP32 DevKit vývojová deska",

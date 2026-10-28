@@ -18,7 +18,7 @@ const productJsonLd = {
   name: "ESP32 DevKit V1",
   description:
     "Vysoce výkonný mikrokontrolér ESP32 s WiFi a Bluetooth. Dvoujádrový procesor 240 MHz, 4MB Flash, 520KB SRAM, 38 GPIO pinů.",
-  image: `${SITE_URL}/images/esp32.jpg`,
+  image: `${SITE_URL}/images/esp32.png`,
   brand: {
     "@type": "Brand",
     name: "Especko.cz",
@@ -79,7 +79,7 @@ const organizationJsonLd = {
   "@type": "Organization",
   name: "Especko.cz",
   url: SITE_URL,
-  logo: `${SITE_URL}/images/esp32.jpg`,
+  logo: `${SITE_URL}/images/esp32.png`,
   contactPoint: {
     "@type": "ContactPoint",
     email: "info@especko.cz",

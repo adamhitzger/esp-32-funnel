@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "Reklamační řád | especko.cz",
     description:
       "Reklamační řád e-shopu especko.cz. Jak reklamovat nebo vrátit zboží zakoupené na especko.cz.",
-    images: ["/images/esp32.jpg"],
+    images: ["/images/esp32.png"],
   },
   robots: {
     index: true,

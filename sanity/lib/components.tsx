@@ -1,8 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
+import { SanityImage } from "@/components/sanity-image";
 import { PortableTextComponents } from "next-sanity";
 import { CodeBlock } from "@/components/code-block";
-import { urlFor } from "./image";
 
 export const components: Partial<PortableTextComponents> = {
     list: {
@@ -112,10 +111,11 @@ export const components: Partial<PortableTextComponents> = {
             console.log(value)
             return(
             <figure className="my-8">
-                <Image
+                <SanityImage
                     width={800}
                     height={600}
-                    src={String(urlFor(value)) || "/placeholder.svg"}
+                    sizes="(min-width: 672px) 672px, 100vw"
+                    image={value}
                     alt={value.alt || "ESP32 Blog image"}
                     className="rounded-xl w-full max-w-2xl mx-auto border border-border"
                 />

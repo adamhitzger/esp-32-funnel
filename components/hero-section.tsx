@@ -19,10 +19,10 @@ const features = [
 ]
 
 const galleryImages = [
-  { src: "/images/esp1.png", alt: "ESP32 DevKit - boční pohled" },
-  { src: "/images/esp2.png", alt: "ESP32 DevKit - detailní záběr" },
-  { src: "/images/esp3.png", alt: "ESP32 DevKit - zadní strana PCB" },
-  { src: "/images/esp4.png", alt: "ESP32 DevKit - pohled shora" },
+  { src: "/images/esp1.jpg", alt: "ESP32 DevKit - boční pohled" },
+  { src: "/images/esp2.jpg", alt: "ESP32 DevKit - detailní záběr" },
+  { src: "/images/esp3.jpg", alt: "ESP32 DevKit - zadní strana PCB" },
+  { src: "/images/esp4.jpg", alt: "ESP32 DevKit - pohled shora" },
 ]
 
 export function HeroSection() {
@@ -134,6 +134,7 @@ export function HeroSection() {
                   alt={galleryImages[selectedImage].alt}
                   width={600}
                   height={450}
+                  sizes="(min-width: 1024px) 600px, 100vw"
                   className="w-full h-auto rounded-2xl shadow-xl group-hover:scale-[1.02] transition-transform duration-300"
                   priority
                 />
@@ -160,6 +161,7 @@ export function HeroSection() {
                       src={image.src}
                       alt={image.alt}
                       fill
+                      sizes="80px"
                       className="object-cover"
                     />
                   </button>
@@ -357,6 +359,7 @@ export function HeroSection() {
               alt={galleryImages[selectedImage].alt}
               width={1200}
               height={900}
+              sizes="(min-width: 1024px) 896px, 100vw"
               className="max-h-[80vh] w-auto object-contain rounded-2xl"
             />
           </div>
@@ -386,6 +389,7 @@ export function HeroSection() {
                   src={image.src}
                   alt={image.alt}
                   fill
+                  sizes="56px"
                   className="object-cover"
                 />
               </button>

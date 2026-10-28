@@ -149,6 +149,7 @@ export default function JakObjednatPage() {
                         alt={`Krok ${step.number}: ${step.title}`}
                         width={600}
                         height={400}
+                        sizes="(min-width: 1024px) 600px, 100vw"
                         className="w-full h-auto"
                       />
                     </div>
