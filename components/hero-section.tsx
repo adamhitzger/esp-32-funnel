@@ -308,12 +308,13 @@ export function HeroSection() {
                 className="w-full h-14 text-lg font-semibold bg-electric-cyan hover:bg-electric-cyan/90 text-background shadow-[0_0_30px_rgba(0,200,255,0.4)] hover:shadow-[0_0_50px_rgba(0,200,255,0.6)] transition-all"
               >
                 <Link onClick={() => {
-                                sendGTMEvent({
-                                  event: "begin_checkout",
-                                  currency: "CZK",
-                                  value: totalPrice,
-                                  quantity: quantity
-                                })
+                  sendGTMEvent({ ecommerce: null });
+                  sendGTMEvent({
+                    event: "begin_checkout",
+                    currency: "CZK",
+                    value: totalPrice,
+                    quantity: quantity
+                  })
                                 
                   }} 
                   href={`/checkout?quantity=${quantity}`}

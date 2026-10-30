@@ -103,22 +103,15 @@ function CheckoutContent() {
       if(state.success){
         toast.success(state.message)
         sendGTMEvent({
-            event: "create_payment",
+            event: "add_payment_info",
             quantity: quantity,
             value: finalPrice,
             currency: "CZK",
             transaction_id: state.transaction_id,
             email: String(state.inputs?.email), 
         })
-
-        sendGTMEvent({
-          send_to: 'AW-17997098076/EuZgCM_lroUcENzY14VD',
-          value: finalPrice,
-          currency: 'CZK',
-          transaction_id: state.transaction_id,
-        });
         
-        if(state.redirect_url)redirect(state.redirect_url)
+        if(state.redirect_url) redirect(state.redirect_url)
       }else {
         toast.error(state.message)
       }

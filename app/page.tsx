@@ -11,6 +11,7 @@ import { GET_REVIEWS } from "@/sanity/lib/queries"
 import { ReviewsSection } from "@/components/reviews-section"
 import { ContactSection } from "@/components/contact-section"
 import { CONTACT_EMAIL, CONTACT_PHONE, PRICING_TIERS, ZASILKOVNA_PRICE } from "@/lib/utils"
+import { TrackViewItem } from "@/components/analytics/TrackViewItem"
 const SITE_URL = "https://especko.cz"
 
 const productJsonLd = {
@@ -113,7 +114,7 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
-  
+    <TrackViewItem/>
     <main className="min-h-screen bg-background">
       <HeroSection />
       <FeaturesSection />

@@ -71,3 +71,9 @@ export function formatDate(dateString: string): string {
     year: "numeric",
   })
 }
+
+export const PRODUCT = {
+  item_id: "esp32-devkit",   // uprav – stejné ID pak dáš do feedu
+  item_name: "ESP32 DevKit",  // uprav
+  price: 199,                 // uprav (Kč)
+};

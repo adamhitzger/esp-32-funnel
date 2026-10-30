@@ -19,6 +19,7 @@ import {
 } from "lucide-react"
 import { Order } from "@/types"
 import { IconInvoice } from "@tabler/icons-react"
+import { TrackPurchase } from "@/components/analytics/TrackPurchase"
 
 
 
@@ -67,7 +68,7 @@ const STATUS_TRANSLATION: Record<string, string> = {
 export default async function OrderPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  const order: Order | null = await sanityClient.fetch(GET_ORDER_BY_ID, { id })
+  const order: Order | null = await sanityClient.fetch(GET_ORDER_BY_ID, { id }, {cache: "no-store"})
   console.log(order)
   if (!order) {
     notFound()
@@ -78,6 +79,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
   
   return (
     <div className="min-h-screen bg-background">
+      {order.payment_status === "Zaplacená" && <TrackPurchase order={order} />}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-electric-cyan/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-electric-cyan/3 rounded-full blur-3xl" />
