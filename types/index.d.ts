@@ -150,6 +150,8 @@ export interface Order {
   payment_status: "Zaplacená" | "Nezaplacená";
   invoice?: string | null;
   dobropis?: string | null; 
+  isFirstOrder: boolean;
+  reviewMailSent: boolean;
 }
 
 export interface GetRefunds{

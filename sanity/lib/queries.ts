@@ -13,6 +13,8 @@ export const GET_COUPON = groq`*[_type=="coupons" && name == $name][0]{
     "min_order_value": min_order_val
 }`
 
+export const IS_FIRST_ORDER = groq`count(*[_type == "orders" && email == $email])`
+
 export const GET_ORDER_BY_EMAIL_OR_PHONE = groq`*[_type=="orders" && (email == $search || phone == $search)] | order(_createdAt desc){
   _id,
   firstName,
@@ -22,6 +24,18 @@ export const GET_ORDER_BY_EMAIL_OR_PHONE = groq`*[_type=="orders" && (email == $
   barcode,
   status,
   _createdAt
+}`
+
+export const GET_ORDERS_AFTER_WEEK = groq`*[
+  _type == "orders" 
+  && isFirstOrder == true
+  && reviewMailSent != true
+  && status == "Vyzvednutá"
+  ] | order(_createdAt desc) {
+    _id,
+    firstName,
+    lastName,
+    email,
 }`
 
 export const GET_ORDER_BY_ID = groq`*[_type=="orders" && _id == $id][0]{

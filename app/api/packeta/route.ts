@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getPacketStatus, sendStatusMail } from "@/server/action"
+import { getPacketStatus, sendStatusMail, smtp } from "@/server/action"
 import { sanityClient, sanityFetch } from "@/sanity/lib/client"
 import { Order, OrderStatuses } from "@/types"
 import { GET_PAID_ORDERS } from "@/sanity/lib/queries"
@@ -41,7 +41,9 @@ export async function GET(req: NextRequest) {
           // 🧠 neupdatuj pokud je status stejný
           if (o.status === newStatus) return
 
-          if(newStatus === "Vyzvednutá" && o.cod && o.payment_status === "Nezaplacená") payment_status = "Zaplacená";
+          if(newStatus === "Vyzvednutá" && o.cod && o.payment_status === "Nezaplacená") {
+            payment_status = "Zaplacená"
+          };
 
           const updated = await sanityClient
             .patch(String(o._id))

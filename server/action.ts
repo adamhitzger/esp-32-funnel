@@ -29,7 +29,8 @@ import { sanityClient, sanityFetch } from "@/sanity/lib/client";
 import { 
     GET_COUPON, 
     GET_CUR_USER, 
-    GET_ORDER_BY_EMAIL_OR_PHONE 
+    GET_ORDER_BY_EMAIL_OR_PHONE, 
+    IS_FIRST_ORDER
 } from "@/sanity/lib/queries";
 import { Coupon } from "@/types";
 import { calculateOrderPrice, CONTACT_EMAIL, isCouponApplicable, SITE_URL } from "@/lib/utils";
@@ -68,6 +69,18 @@ const transporter = nodemailer.createTransport({
          pass: process.env.FROM_EMAIL_PASSWORD!,
         }
 });
+
+export async function smtp(){
+    return nodemailer.createTransport({
+            host: "smtp.seznam.cz",
+            port: 587,
+            secure: false,
+            auth: {
+            user: process.env.FROM_EMAIL!,
+            pass: process.env.FROM_EMAIL_PASSWORD!,
+            }
+    })
+}
 
 
 
@@ -612,6 +625,10 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
         })
         console.log("Packeta:",packeta)
 
+        const email = data.email;
+
+        const previousOrders:number = await sanityClient.fetch(IS_FIRST_ORDER, {email}, {cache: "no-store"})
+
         const sanityData = {
             _type: "orders",
             firstName: data.firstName,
@@ -633,10 +650,9 @@ export async function createOrder(prevState: ActionRes<CreateOrderType>, formDat
             payment_status: "Nezaplacená",
             barcode: String(packeta),
             packetaAddress: data.packetaAddress,
+            isFirstOrder: previousOrders === 0
         }
         
-       
-    
         const orderCreate = await sanityClient.create(sanityData)
 
         const orderId: string = orderCreate._id

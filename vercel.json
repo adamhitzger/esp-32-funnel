@@ -3,6 +3,10 @@
     {
       "path": "/api/packeta",
       "schedule": "15 7-21 * * *"
+    },
+    {
+      "path": "/api/review-gift",
+      "schedule": "6 8 * * *"
     }
   ]
 }

@@ -128,5 +128,17 @@ export const orders = defineType({
             title:"Dobropis",
             name: "dobropis", 
         }),
+        defineField({
+            type: "boolean",
+            title:"1. objednávka zákazníka",
+            name: "isFirstOrder", 
+        }),
+        defineField({
+            type: "boolean",
+            title:"Výzva k hodnocení zaslána",
+            name: "reviewMailSent", 
+        }),
+
+        
     ]
 })
